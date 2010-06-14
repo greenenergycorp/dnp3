@@ -69,10 +69,10 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//check that we get a list of sub commands (log should be one)
 	BOOST_REQUIRE(SendAndTest(apLayer, "help run", "log"));
 	
-	//shows that atleast level is a subcommand of set
-	BOOST_REQUIRE(SendAndTest(apLayer, "help set", "level"));
-	//check that the help string is approriate for set level
-	BOOST_REQUIRE(SendAndTest(apLayer, "help set level", "filter levels"));
+	//shows that atleast filter is a subcommand of set
+	BOOST_REQUIRE(SendAndTest(apLayer, "help set", "filter"));
+	//check that the help string is approriate for set filter
+	BOOST_REQUIRE(SendAndTest(apLayer, "help set filter", "filters"));
 	//check that the help string is approriate for set col
 	BOOST_REQUIRE(SendAndTest(apLayer, "help set logcol", "column order"));
 
@@ -107,28 +107,28 @@ void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "set logcol fldm", ">"));
 
 	//test the help string
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level", "usage: "));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter", "usage: "));
 
 	//test that we cant have both all and none
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level an", "Couldn't parse"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter an", "Couldn't parse"));
 	//test that we cant have both all and anything else
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level ad", "Couldn't parse"));
-	//check that a bad level is ignored
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level x", "Couldn't parse"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter ad", "Couldn't parse"));
+	//check that a bad filter is ignored
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter x", "Couldn't parse"));
 	//test that all works
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level a", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter a", ">"));
 	//test that none works
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level n", ">"));
-	//test that setting all of the levels manually works
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level dciwev", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter n", ">"));
+	//test that setting all of the filters manually works
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter dciwev", ">"));
 
 	//leave it set to all to error only
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level e", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter e", ">"));
 
-	//make sure it ignores attempts to set levels on bad devieces
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level dciwev BadDevice", "Unrecognized device"));
+	//make sure it ignores attempts to set filters on bad devieces
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter dciwev BadDevice", "Unrecognized device"));
 	//check that it works for a good device
-	BOOST_REQUIRE(SendAndTest(apLayer, "set level dciwev TestDevice", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "set filter dciwev TestDevice", ">"));
 }
 
 void TestRunCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){

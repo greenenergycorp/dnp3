@@ -62,7 +62,7 @@ class ITimer;
 			//run
 			retcode HandleRunLog(std::vector<std::string>& arTokens);			
 			//set
-			retcode HandleSetLevel(std::vector<std::string>& arTokens);
+			retcode HandleSetFilterOrLevel(std::vector<std::string>& arTokens, bool aSetLevel);
 			retcode HandleSetLogCol(std::vector<std::string>& arTokens);
 
 			retcode HandleStartToFileLogging(std::vector<std::string>& arTokens);

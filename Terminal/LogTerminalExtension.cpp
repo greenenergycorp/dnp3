@@ -86,11 +86,18 @@ namespace apl
 		// set
 		////////////////////////////////////
 
-		cmd.mName = "level";
-		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetLevel, this, _1);
-		cmd.mUsage = "set level [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
+		cmd.mName = "filter";
+		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetFilterOrLevel, this, _1, false);
+		cmd.mUsage = "set filter [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
 		cmd.mUsage += "a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT";
-		cmd.mDesc = "Set or clear log filter levels. If no devices are specified, all devices are affected.";
+		cmd.mDesc = "Set or clear log filters, more than one filter can be set at a time (Ex: wev). If no devices are specified, all devices are affected.";
+		apTerminal->BindCommand(cmd, "set filter");
+
+		cmd.mName = "level";
+		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetFilterOrLevel, this, _1, true);
+		cmd.mUsage = "set filter [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
+		cmd.mUsage += "a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT";
+		cmd.mDesc = "Set or clear log filter level, all \"higher\" filters are also set (Ex: \"set level w\" is equivilant to \"set filter wev\"). If no devices are specified, all devices are affected.";
 		apTerminal->BindCommand(cmd, "set level");
 
 		cmd.mName = "logcol";
@@ -288,7 +295,7 @@ namespace apl
 		return oss.str();
 	}
 
-	retcode LogTerminalExtension::HandleSetLevel(std::vector<std::string>& arTokens)
+	retcode LogTerminalExtension::HandleSetFilterOrLevel(std::vector<std::string>& arTokens, bool aSetLevel)
 	{
 		//need at least one token
 		if(arTokens.size() == 0) return BAD_ARGUMENTS;
@@ -301,6 +308,16 @@ namespace apl
 		{
 			this->Send("Couldn't parse level argument: " + arTokens[0] + "\r\n");
 			return BAD_ARGUMENTS;
+		}
+
+		if(aSetLevel && level > 0)
+		{
+			if (arTokens[0].size() != 1){
+				this->Send("The \'set level\' command needs a single filter level, use the lowest filter only or use \'set filter\' to specify more than one level.\r\n");
+				return BAD_ARGUMENTS;
+			}
+			// bit trick to set all bits below the highest one.
+			level = (level - 1) | level;
 		}
 
 		arTokens.erase(arTokens.begin());
