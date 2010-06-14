@@ -96,7 +96,7 @@ This step will take some time as it retrieves the boost package and builds from
 source for both your platform and for ARM.
 
 When the boost version we are using is updated we will update the references in 
-rakefile.rb and config/boost_includes.vsprops to use the new version name and include
+rakefile.rb and config/boost_*.vsprops to use the new version name and include
 updated installers to compile the new version, if after and update the build suddenly 
 fails with mssing boost include errors errors check that the boost version hasn't 
 been upgraded recently.
