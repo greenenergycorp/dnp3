@@ -40,6 +40,7 @@ namespace apl {
 			void DoOpenSuccess();
 			void DoAsyncRead(byte_t*, size_t);
 			void DoAsyncWrite(const byte_t*, size_t);
+			void DoOpenFailure();
 
 		protected:
 			boost::asio::ip::tcp::socket mSocket;

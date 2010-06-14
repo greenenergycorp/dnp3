@@ -68,5 +68,11 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const byte_t* apBuffer, size_t aNum
 		boost::bind(&PhysicalLayerAsyncBaseTCP::OnWriteCallback, this, placeholders::error, aNumBytes));
 }
 
+void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
+{
+	LOG_BLOCK(LEV_INFO, "Failed socket open, reclosing");
+	DoClose();
+}
+
 }
 
