@@ -1,0 +1,11 @@
+
+/DNP.ncb
+/DNP.suo
+/*/Debug
+/*/Release
+*.user
+/*/pc_cygwin
+/*/pc_linux_arm
+/tools/install_scripts/boost/*/temp
+/CSToCppXMLBinder/bin
+/CSToCppXMLBinder/obj
