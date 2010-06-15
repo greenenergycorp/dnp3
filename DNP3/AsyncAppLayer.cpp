@@ -253,13 +253,13 @@ void AsyncAppLayer::OnUnknownObject(FunctionCodes aCode, const AppControlField& 
 void AsyncAppLayer::OnRequest(const AppControlField& arCtrl, APDU& arAPDU)
 {
 	if(arCtrl.UNS)
-		throw Exception(LOCATION, ALERR_BAD_UNSOL_BIT);
+		throw Exception(LOCATION, "Received request with UNS bit", ALERR_BAD_UNSOL_BIT);
 
 	if(!(arCtrl.FIR && arCtrl.FIN))
-		throw Exception(LOCATION, ALERR_MULTI_FRAGEMENT_REQUEST);
+		throw Exception(LOCATION, "Received non FIR/FIN request", ALERR_MULTI_FRAGEMENT_REQUEST);
 
 	if(mpUser->IsMaster())
-		throw Exception(LOCATION, MERR_FUNC_NOT_SUPPORTED);
+		throw Exception(LOCATION, "Master received request apdu", MERR_FUNC_NOT_SUPPORTED);
 
 	mSolicited.OnRequest(arAPDU);
 }
