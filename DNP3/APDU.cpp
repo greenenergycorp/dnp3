@@ -205,7 +205,7 @@ namespace apl { namespace dnp {
 		pHdr->Get(pStart, hdrData);
 		
 		if(hdrData.Qualifier == QC_UNDEFINED)
-		{ throw Exception(LOCATION, "", ALERR_UNKNOWN_QUALIFIER); }
+		{ throw Exception(LOCATION, "Unknown qualifier", ALERR_UNKNOWN_QUALIFIER); }
 
 		pHdr = this->GetObjectHeader(hdrData.Qualifier);
 		

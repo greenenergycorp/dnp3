@@ -158,7 +158,7 @@ bool LinkLayerReceiver::ValidateHeader()
 	else 
 	{
 		if(user_data_length > 0) {
-			ERROR_BLOCK(LEV_ERROR, "Unexpected LENGTH in frame: " << user_data_length << " with FUNCTION: " << func, DLERR_UNEXPECTED_DATA);
+			ERROR_BLOCK(LEV_ERROR, "Unexpected LENGTH in frame: " << static_cast<int>(user_data_length) << " with FUNCTION: " << func, DLERR_UNEXPECTED_DATA);
 			return false;
 		}
 
@@ -169,7 +169,7 @@ bool LinkLayerReceiver::ValidateHeader()
 			
 		}
 		else {
-			ERROR_BLOCK(LEV_ERROR, "Unexpected LENGTH in frame: " << user_data_length << " with FUNCTION: " << func, DLERR_UNEXPECTED_DATA);
+			ERROR_BLOCK(LEV_ERROR, "Unexpected LENGTH in frame: " << static_cast<int>(user_data_length) << " with FUNCTION: " << func, DLERR_UNEXPECTED_DATA);
 			return false;
 		}
 	}
