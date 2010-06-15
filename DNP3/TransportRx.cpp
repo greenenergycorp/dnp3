@@ -47,13 +47,21 @@ void TransportRx::Reset()
 
 void TransportRx::HandleReceive(const apl::byte_t* apData, size_t aNumBytes)
 {
-	if(aNumBytes < 2 || aNumBytes > TL_MAX_TPDU_LENGTH)
-	{
-		ostringstream oss;
-		oss << "Illegal arg: " << aNumBytes << ", Array length must be in the range [2," << TL_MAX_TPDU_LENGTH << "]";
-		throw ArgumentException(LOCATION, oss.str());
+	switch(aNumBytes) {
+		case(1):
+			ERROR_BLOCK(LEV_WARNING, "Received tpdu with no payload", TLERR_NO_PAYLOAD);
+			return;
+		case(0):		
+			throw ArgumentException(LOCATION, "Zero length invalid");		
+		default:
+		if(aNumBytes > TL_MAX_TPDU_LENGTH)
+		{
+			ostringstream oss;
+			oss << "Illegal arg: " << aNumBytes << " exceeds max tpdu size of " << TL_MAX_TPDU_LENGTH;
+			throw ArgumentException(LOCATION, oss.str());
+		}	
 	}
-
+	
 	byte_t hdr = apData[0];
 	LOG_BLOCK(LEV_INTERPRET, "<- " << AsyncTransportLayer::ToString(hdr));
 	bool first = (hdr & TL_HDR_FIR) != 0;
