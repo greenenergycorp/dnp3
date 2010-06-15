@@ -42,13 +42,13 @@ namespace apl
 	string LogEntry :: LogString()
 	{
 		ostringstream oss;
-		oss 
-			<< GetTimeString() << " - "
+		oss << GetTimeString() << " - "
 			<< GetFilterString( mFilterLevel ) << " - " 
 			<< mDeviceName << " - "
-	//		<< mLocation << " - "
 			<< mMessage;
 
+		if(this->GetErrorCode() != -1) oss << " - " << this->GetErrorCode();
+				
 		return oss.str();
 	}
 
