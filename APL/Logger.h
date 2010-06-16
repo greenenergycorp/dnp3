@@ -53,7 +53,7 @@ namespace apl
 
 			Logger* GetSubLogger(std::string aName);
 			Logger* GetSubLogger(std::string aSubName, int aFilterBits);
-			Logger* GetSubLogger(std::string aSubName, FilterLevel aFilter);
+			Logger* GetSubLogger(std::string aSubName, FilterLevel aFilter);			
 
 		private:
 			

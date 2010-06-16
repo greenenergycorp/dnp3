@@ -38,7 +38,7 @@ namespace po = boost::program_options;
 
 void WaitOnEnterKey()
 {
-	cout << "Press enter to quit " << endl;
+	cout << "Press <enter> to quit " << endl;
 	string s;
 	cin >> s;	
 }

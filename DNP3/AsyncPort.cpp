@@ -29,7 +29,7 @@
 namespace apl { namespace dnp {
 
 AsyncPort::AsyncPort(const std::string& arName, Logger* apLogger, AsyncTaskGroup* apGroup, ITimerSource* apTimerSrc, IPhysicalLayerAsync* apPhys, millis_t aOpenDelay) :
-Loggable(apLogger->GetSubLogger("Port")),
+Loggable(apLogger->GetSubLogger("port")),
 mName(arName),
 mRouter(apLogger, apPhys, apTimerSrc, aOpenDelay),
 mpGroup(apGroup),

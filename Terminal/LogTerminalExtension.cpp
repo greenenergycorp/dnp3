@@ -90,14 +90,14 @@ namespace apl
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetFilterOrLevel, this, _1, false);
 		cmd.mUsage = "set filter [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
 		cmd.mUsage += "a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT";
-		cmd.mDesc = "Set or clear log filters, more than one filter can be set at a time (Ex: wev). If no devices are specified, all devices are affected.";
+		cmd.mDesc = "Set the log filters indivdually, more than one filter can be set at a time (Ex: wev). If no devices are specified, all devices are affected.";
 		apTerminal->BindCommand(cmd, "set filter");
 
 		cmd.mName = "level";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetFilterOrLevel, this, _1, true);
-		cmd.mUsage = "set filter [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
+		cmd.mUsage = "set level [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
 		cmd.mUsage += "a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT";
-		cmd.mDesc = "Set or clear log filter level, all \"higher\" filters are also set (Ex: \"set level w\" is equivilant to \"set filter wev\"). If no devices are specified, all devices are affected.";
+		cmd.mDesc = "Set log level, all \"higher\" filters are also set (Ex: \"set level w\" is equivilant to \"set filter wev\"). If no devices are specified, all devices are affected.";
 		apTerminal->BindCommand(cmd, "set level");
 
 		cmd.mName = "logcol";
@@ -348,10 +348,8 @@ namespace apl
 		
 		//set the log levels
 
-		for(size_t i=0; i<loggers.size(); i++)
-		{
-			if(arTokens.size() != 0 || loggers[i]->GetName() != "Terminal")
-				loggers[i]->SetFilters(level);
+		for(size_t i=0; i<loggers.size(); i++) {
+			loggers[i]->SetFilters(level);
 		}
 
 		
