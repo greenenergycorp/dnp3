@@ -16,26 +16,18 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#ifndef __LOG_TYPES_H_
-#define __LOG_TYPES_H_
+
+#include "LogTypes.h"
 
 namespace apl {
 
-enum FilterLevel 
-{ 
-	LEV_EVENT =		0x01, 
-	LEV_ERROR =		0x02,
-	LEV_WARNING =	0x04,
-	LEV_INFO  =		0x08, 
-	LEV_INTERPRET =	0x10, 
-	LEV_COMM =		0x20, 
-	LEV_DEBUG =		0x40 
-};
-
-/// Converts a filter level enumeration to a mask with all higher levels set
-int FilterLevelToMask(FilterLevel);
-
+int FilterLevelToMask(FilterLevel aFilter)
+{
+	//since FilterLevel is a power of 2 (single bit), subtracting 1 will
+	//set all the bits below the set bit.
+	//set the filter bit and all the bits below it
+	return aFilter | (aFilter-1);
 }
 
-#endif
+}
 

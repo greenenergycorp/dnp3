@@ -36,30 +36,23 @@ namespace apl
 	}
 
 	void Logger::SetFilterLevel(FilterLevel aFilter)
-	{
-		//since FilterLevel is a power of 2 (single bit), subtracting 1 will
-		//set all the bits below the set bit.
-		//set the filter bit and all the bits below it
-		mLevel = aFilter | (aFilter-1);
+	{		
+		mLevel = FilterLevelToMask(aFilter);
 	}
 
 	Logger* Logger::GetSubLogger(std::string aSubName, int aFilterBits)
 	{
 		std::ostringstream oss;
-		oss << mName << "-" << aSubName;
+		oss << mName << "." << aSubName;
 		Logger* pLogger = mpLog->GetLogger(LEV_WARNING, oss.str());
 		pLogger->SetVarName(aSubName);
 		pLogger->mLevel = aFilterBits;
 		return pLogger;
 	}
+
 	Logger* Logger::GetSubLogger(std::string aSubName, FilterLevel aFilter)
 	{
-		std::ostringstream oss;
-		oss << mName << "-" << aSubName;
-		Logger* pLogger = mpLog->GetLogger(LEV_WARNING, oss.str());
-		pLogger->SetVarName(aSubName);
-		pLogger->SetFilterLevel(aFilter);
-		return pLogger;
+		return this->GetSubLogger(aSubName, FilterLevelToMask(aFilter));		
 	}
 
 	Logger* Logger::GetSubLogger(std::string aSubName)

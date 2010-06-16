@@ -34,8 +34,8 @@ mConfirm(2), // only need 2 bytes for a confirm message
 mSending(false),
 mConfirmSending(false),
 mpUser(NULL),
-mSolicited(apLogger->GetSubLogger("Solicited"), this, apTimerSrc, aAppCfg.RspTimeout),
-mUnsolicited(apLogger->GetSubLogger("Unsolicited"), this, apTimerSrc, aAppCfg.RspTimeout),
+mSolicited(apLogger->GetSubLogger("sol"), this, apTimerSrc, aAppCfg.RspTimeout),
+mUnsolicited(apLogger->GetSubLogger("unsol"), this, apTimerSrc, aAppCfg.RspTimeout),
 mNumRetry(aAppCfg.NumRetry)
 {
 	mConfirm.SetFunction(FC_CONFIRM);	

@@ -23,7 +23,7 @@ namespace apl { namespace dnp {
 
 
 AsyncSlaveStack::AsyncSlaveStack(Logger* apLogger, ITimerSource* apTimerSrc, ICommandAcceptor* apCmdAcceptor, const SlaveStackConfig& arCfg) :
-AsyncStack(apLogger, apTimerSrc, arCfg.app, arCfg.link),
+AsyncStack(apLogger->GetSubLogger("slave"), apTimerSrc, arCfg.app, arCfg.link),
 mDB(apLogger),
 mCmdMaster(10000),
 mSlave(apLogger, &mApplication, apTimerSrc, &mTimeSource, &mDB, &mCmdMaster, arCfg.slave)

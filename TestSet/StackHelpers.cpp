@@ -48,7 +48,7 @@ StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel
 	pTermPhys(FGetTerminalPhys(pTermLogger, mTermThread.GetService(), aRemote, aRemotePort)),
 	lte(&log),	    
 	trm(pTermLogger, pTermPhys.get(), &mTimerSrc, "Test Set Terminal (DNP)", true),
-	mgr(log.GetLogger(aLevel, "mgr"))
+	mgr(log.GetLogger(aLevel, "dnp"))
 {
 	trm.AddExtension(&lte);			
 	XmlToConfig::Configure(arList, aLevel, mgr);
@@ -65,7 +65,7 @@ void StackBase::Run() {
 
 SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel) : 
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile, pCfg->Remote, pCfg->RemotePort),
-	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts_stack", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate))),	
+	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate))),	
 	crte(log.GetLogger(LEV_INTERPRET, "Incoming Controls"), pCfg->LinkCommandStatus, pObs),
 	dote(pObs)
 {
@@ -77,7 +77,7 @@ SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLeve
 MasterXMLStack::MasterXMLStack(APLXML_MTS::MasterTestSet_t* pCfg, FilterLevel aLevel) :
 StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile),
 fdo(),
-accept(mgr.AddMaster(pCfg->PhysicalLayer, "mts_stack", aLevel, &fdo, XmlToConfig::GetMasterConfig(pCfg->Master))),
+accept(mgr.AddMaster(pCfg->PhysicalLayer, "mts", aLevel, &fdo, XmlToConfig::GetMasterConfig(pCfg->Master))),
 cte(accept),
 fte(&fdo)
 {
