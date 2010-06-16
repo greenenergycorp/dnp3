@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_RESPONSE_CONTEXT_H_
 #define __ASYNC_RESPONSE_CONTEXT_H_
 
@@ -47,7 +47,7 @@ struct WriteFunc
 /**
  Builds and tracks the state of responses. Interprets FC_READ requests or can be prompted for an unsolicited response fragment.
 
- Coordinates the AsyncDatabase and AsyncSlaveEventBuffer. 
+ Coordinates the AsyncDatabase and AsyncSlaveEventBuffer.
 */
 class AsyncResponseContext : public Loggable
 {
@@ -63,7 +63,7 @@ class AsyncResponseContext : public Loggable
 	Mode GetMode() { return mMode; }
 
 	IAsyncEventBuffer* GetBuffer() { return &mBuffer; }
-	
+
 	/// Setup the response context with a new read request
 	IINField Configure(const APDU& arRequest);
 
@@ -76,7 +76,7 @@ class AsyncResponseContext : public Loggable
 		current state of the event buffer
 	*/
 	bool LoadUnsol(APDU&, const IINField& arIIN, ClassMask aMask);
-	
+
 	/// @return TRUE is all of the response data has already been written
 	bool IsComplete() { return IsEmpty(); }
 
@@ -88,22 +88,22 @@ class AsyncResponseContext : public Loggable
 
 	/// Clear written events and reset the state of the object
 	void ClearAndReset();
-	
+
 
 	private:
-	
+
 	// configure the state for unsol, return true of events exist
 	bool SelectUnsol(ClassMask aMask);
-	
+
 
 	AsyncSlaveEventBuffer mBuffer;
 
-	Mode mMode;	
+	Mode mMode;
 
 	/// @return TRUE if all of the data has been written
 	bool LoadStaticData(APDU&);
 
-	
+
 	/** @param arEventsLoaded Set to true if events were written to the APDU
 		@param arAPDU Events are loaded into this fragment
 		@return TRUE if all of the data has been written
@@ -119,8 +119,8 @@ class AsyncResponseContext : public Loggable
 	void AddIntegrityPoll();
 
 	//bool WriteCTO(const TimeStamp_t& arTime, APDU& arAPDU);
-	
-	AsyncDatabase* mpDB;				/// Pointer to the database for static data	
+
+	AsyncDatabase* mpDB;				/// Pointer to the database for static data
 	bool mFIR;
 	bool mFIN;
 	SlaveResponseTypes* mpRspTypes;
@@ -131,7 +131,7 @@ class AsyncResponseContext : public Loggable
 	struct IterRecord
 	{
 		IterRecord() : pObject(NULL) {}
-		
+
 		typename StaticIter<T>::Type first;				/// Begining of iteration
 		typename StaticIter<T>::Type last;				/// Last element of iteration
 		StreamObject<typename T::MeasType>* pObject;	/// Type to use to write
@@ -144,10 +144,10 @@ class AsyncResponseContext : public Loggable
 		pObj(apObj),
 		count(aCount)
 		{}
-				
+
 		const StreamObject<T>* pObj;	/// Type to use to write
 		size_t count;					/// Number of events to read
-		
+
 	};
 
 	typedef std::deque< IterRecord<BinaryInfo> >			BinaryIterQueue;
@@ -159,7 +159,7 @@ class AsyncResponseContext : public Loggable
 	typedef std::deque< EventRequest<Binary> > BinaryEventQueue;
 	typedef std::deque< EventRequest<Analog> > AnalogEventQueue;
 	typedef std::deque< EventRequest<Counter> > CounterEventQueue;
-	
+
 	//these queues track what static point ranges were requested so that we can split the response over multiple fragments
 	BinaryIterQueue mStaticBinaries;
 	AnalogIterQueue mStaticAnalogs;
@@ -196,7 +196,7 @@ class AsyncResponseContext : public Loggable
 	template <class T>
 	bool IterateContiguous(IterRecord<T>& arIters, APDU& arAPDU);
 
-	// T is the event type	
+	// T is the event type
 	template <class T>
 	size_t IterateIndexed(EventRequest<T>& arIters, typename EvtItr< EventInfo<T> >::Type& arIter, APDU& arAPDU);
 
@@ -243,16 +243,16 @@ bool AsyncResponseContext::LoadEvents(APDU& arAPDU, std::deque< EventRequest<T> 
 		EventRequest<T>& r = arQueue.front();					// how many were requested
 
 		if(r.count > remain) r.count = remain;
-				
+
 		size_t written = r.pObj->UseCTO() ? this->IterateCTO<T>(r.pObj, r.count, itr, arAPDU) : this->IterateIndexed<T>(r, itr, arAPDU);
 		remain -= written;
 
 		if(written > 0) arEventsLoaded = true;					// at least 1 event was loaded
-	
-		if(written == r.count) arQueue.pop_front();				// all events written, we're done with this request		
-		else { //incomplete write			
+
+		if(written == r.count) arQueue.pop_front();				// all events written, we're done with this request
+		else { //incomplete write
 			r.count -= written;
-			return false;			
+			return false;
 		}
 	}
 
@@ -267,16 +267,16 @@ bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPD
 	size_t stop = arIters.last->mIndex;
 
 	ObjectWriteIterator owi = arAPDU.WriteContiguous(arIters.pObject, start, stop);
-	
+
 	for(size_t i=start; i<=stop; ++i)
-	{	
+	{
 		if(owi.IsEnd()) return false; // out of space in the fragment
-		arWriter(*owi, arIters.first->mValue, i);		
+		arWriter(*owi, arIters.first->mValue, i);
 		++arIters.first; //increment the iterators
 		++owi;
 	}
 
-	return true;	
+	return true;
 }*/
 
 template <class T>
@@ -285,13 +285,13 @@ bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPD
 	size_t start = arIters.first->mIndex;
 	size_t stop = arIters.last->mIndex;
 	StreamObject<typename T::MeasType>* pObj = arIters.pObject;
-	
+
 	ObjectWriteIterator owi = arAPDU.WriteContiguous(arIters.pObject, start, stop);
-	
+
 	for(size_t i=start; i<=stop; ++i)
-	{	
-		if(owi.IsEnd()) return false; // out of space in the fragment		
-		pObj->Write(*owi, arIters.first->mValue);		
+	{
+		if(owi.IsEnd()) return false; // out of space in the fragment
+		pObj->Write(*owi, arIters.first->mValue);
 		++arIters.first; //increment the iterators
 		++owi;
 	}
@@ -306,11 +306,11 @@ bool AsyncResponseContext::IterateContiguous(IterRecord<T>& arIters, APDU& arAPD
 template <class T>
 size_t AsyncResponseContext::IterateIndexed(EventRequest<T>& arRequest, typename EvtItr< EventInfo<T> >::Type& arIter, APDU& arAPDU)
 {
-	size_t max_index = mpDB->MaxIndex(T::MeasEnum);	
+	size_t max_index = mpDB->MaxIndex(T::MeasEnum);
 	IndexedWriteIterator write = arAPDU.WriteIndexed(arRequest.pObj, arRequest.count, max_index);
-	
+
 	for(size_t i = 0; i < arRequest.count; ++i)
-	{	
+	{
 		if(write.IsEnd()) return i;										//that's all we can get into this fragment
 
 		write.SetIndex(arIter->mIndex);
@@ -354,12 +354,12 @@ size_t AsyncResponseContext::IterateCTO(const StreamObject<T>* apObj, size_t aCo
 	// predetermine how many results you're going to be able to fit given the time differences
 	size_t num = this->CalcPossibleCTO<T>(arIter, aCount);
 	IndexedWriteIterator write = arAPDU.WriteIndexed(apObj, num, max_index); //start the object write
-	
+
 	for(size_t i = 0; i < num; ++i)
-	{	
+	{
 		if(write.IsEnd()) return i;										// that's all we can get into this fragment
 
-		T tmp = arIter->mValue;											// make a copy and adjust the time		
+		T tmp = arIter->mValue;											// make a copy and adjust the time
 		tmp.SetTime(tmp.GetTime()-start);
 
 		write.SetIndex(arIter->mIndex);

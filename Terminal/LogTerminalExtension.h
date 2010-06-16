@@ -16,25 +16,25 @@ class ITimer;
 	{
 		public:
 			LogTerminalExtension(EventLog*);
-			
+
 			virtual ~LogTerminalExtension();
 
 			void RedirectedLine(const std::string&);
-			
+
 			/// Implements INotifier so that we can process new log messages
-			void Notify();	
+			void Notify();
 
 		private:
-			
+
 			EventLog* mpLog;
-			ITimerSource* mpTimerSrc;			
+			ITimerSource* mpTimerSrc;
 
 			//implement from ITerminalExtension
 			void _BindToTerminal(ITerminal* apTerminal);
 
 			std::string GetLogString(LogEntry& arEntry);
 			void ResetActiveColumns();
-			void HandleLogTimer();			
+			void HandleLogTimer();
 
 			enum LogColumns
 			{
@@ -46,28 +46,28 @@ class ITimer;
 			};
 
 			void StopLoggingToFile();
-		
+
 			std::vector<LogColumns> mActiveColumns;
 			LogEntryCircularBuffer mBuffer;
 			MetricBuffer mMetrics;
 			LogToFile* mpFileLogger;
-			
+
 			//clear
 			retcode HandleClearScreen(std::vector<std::string>&);
-			
-			//print			
+
+			//print
 			retcode HandlePrintLog(std::vector<std::string>&);
 			retcode HandlePrintLoggers(std::vector<std::string>&);
 			retcode HandlePrintVars(std::vector<std::string>&);
 			//run
-			retcode HandleRunLog(std::vector<std::string>& arTokens);			
+			retcode HandleRunLog(std::vector<std::string>& arTokens);
 			//set
 			retcode HandleSetFilterOrLevel(std::vector<std::string>& arTokens, bool aSetLevel);
 			retcode HandleSetLogCol(std::vector<std::string>& arTokens);
 
 			retcode HandleStartToFileLogging(std::vector<std::string>& arTokens);
 			retcode HandleStopToFileLogging(std::vector<std::string>& arTokens);
-			
+
 			void PrintLog();
 	};
 }

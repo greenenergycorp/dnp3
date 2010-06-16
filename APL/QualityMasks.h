@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __QUALITY_MASKS_H_
 #define __QUALITY_MASKS_H_
 
@@ -24,7 +24,7 @@
 
 namespace apl
 {
-	
+
 	/**
 		Bitmasks that make make up the quality field for binaries. The first 5 field are common across all of the data types.
 	 */
@@ -63,14 +63,14 @@ namespace apl
 		Bitmasks that make make up the quality field for counters. See BinaryQuality for common (unlabeled) bitmasks.
 	 */
 	enum CounterQuality
-	{		
+	{
 		CQ_ONLINE = 0x01,
 		CQ_RESTART= 0x02,
 		CQ_COMM_LOST = 0x04,
 		CQ_REMOTE_FORCED_DATA = 0x08,
 		CQ_LOCAL_FORCED_DATA = 0x10,
 		CQ_ROLLOVER = 0x20,				//!< used to indicate that the counter filled up and rolledover, cleared automatically after reading
-		CQ_DISCONTINUITY = 0x40,		//!< indicates an unusual change in value 
+		CQ_DISCONTINUITY = 0x40,		//!< indicates an unusual change in value
 		CQ_RESERVED = 0x80
 	};
 

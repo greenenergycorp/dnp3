@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __PHYSICAL_LAYER_ASYNC_BASE_H_
 #define __PHYSICAL_LAYER_ASYNC_BASE_H_
 
@@ -46,7 +46,7 @@ namespace apl {
 			bool CanClose();
 			bool CanRead();
 			bool CanWrite();
-			
+
 			bool CallbacksPending();
 			bool CheckForClose();
 
@@ -59,7 +59,7 @@ namespace apl {
 			/// destructor should only be called once the object is totally finished with all of its async operations
 			/// to avoid segfaulting. There are a # of asserts that make sure the object has been shutdown properly.
 			virtual ~PhysicalLayerAsyncBase() {}
-			
+
 			bool IsReading() { return mState.mReading; }
 			bool IsWriting() { return mState.mWriting; }
 			bool IsClosing() { return mState.mClosing; }
@@ -75,7 +75,7 @@ namespace apl {
 			// Not an event delegated to the states
 			void SetHandler(IHandlerAsync* apHandler);
 
-			/* Actions taken by the states - These must be implemented by the concrete 
+			/* Actions taken by the states - These must be implemented by the concrete
 			classes inherited from this class */
 			virtual void DoOpen() = 0;
 			virtual void DoClose() = 0;
@@ -86,7 +86,7 @@ namespace apl {
 			// These can be optionally overriden to do something more interesting, i.e. specific logging
 			virtual void DoOpenSuccess() {}
 			virtual void DoOpenFailure() {}
-			
+
 			void DoWriteSuccess();
 			void DoThisLayerDown();
 			void DoReadCallback(byte_t*, size_t);
@@ -95,14 +95,14 @@ namespace apl {
 			Logger* GetLogger() { return mpLogger; }
 
 		protected:
-			
+
 			//Internally produced events
 			void OnOpenCallback(const boost::system::error_code& arError);
 			void OnReadCallback(const boost::system::error_code& arError, byte_t*, size_t aSize);
 			void OnWriteCallback(const boost::system::error_code& arError, size_t aSize);
-			
+
 			/// "user" object that recieves the callbacks
-			IHandlerAsync* mpHandler;	
+			IHandlerAsync* mpHandler;
 
 			/// State object that tracks the activities of the class, state pattern too heavy
 			PhysicalLayerAsyncBase::State mState;

@@ -22,14 +22,14 @@ class Logger;
 	*/
 	class PhysicalLayerSyncProxy : public PhysicalLayerAsyncBase, private Threadable
 	{
-		public:			
+		public:
 			PhysicalLayerSyncProxy(Logger*, boost::asio::io_service*);
-									
+
 			void DoOpen();
-			void DoClose();			
+			void DoClose();
 			void DoAsyncRead(byte_t*, size_t);
 			void DoAsyncWrite(const byte_t*, size_t);
-			
+
 			static const boost::system::error_code mSuccessCode;
 			static const boost::system::error_code mErrorCode;
 
@@ -41,7 +41,7 @@ class Logger;
 			/// Blocking write defined in base class
 			virtual void Write(const std::string&) = 0;
 
-			
+
 
 		private:
 
@@ -52,15 +52,15 @@ class Logger;
 			void CheckForRead();
 
 			boost::asio::io_service* mpService;
-			
+
 			bool mReading;
 			size_t mNumToRead;
 			byte_t* mpBuffer;
-			
-			SigLock mWaitLock;			
+
+			SigLock mWaitLock;
 			std::deque<std::string> mLineQueue;
 			Thread mThread;
-			
+
 	};
 }
 

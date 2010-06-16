@@ -17,15 +17,15 @@ class Logger;
 	*/
 	class PhysicalLayerIOStreamAsync : public PhysicalLayerSyncProxy
 	{
-		public:			
+		public:
 			PhysicalLayerIOStreamAsync(Logger*, boost::asio::io_service*);
-												
+
 		private:
 
-			
+
 			//implement virtual members of PhysicalLayerSyncProxy
 
-			std::string Read();			
+			std::string Read();
 			void Write(const std::string&);
 	};
 }

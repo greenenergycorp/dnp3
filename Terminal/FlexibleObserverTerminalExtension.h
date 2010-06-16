@@ -16,7 +16,7 @@ namespace apl {
 	class FlexibleDataObserver;
 
 namespace dnp {
-	
+
 	struct ShowRange
 	{
 		enum Type { ST_ALL, ST_BI, ST_AI, ST_C, ST_BOS, ST_SS };
@@ -33,7 +33,7 @@ namespace dnp {
 	class FlexibleObserverTerminalExtension : public ITerminalExtension
 	{
 		public:
-			
+
 			FlexibleObserverTerminalExtension(FlexibleDataObserver* apObserver);
 
 			FlexibleObserverTerminalExtension(FlexibleDataObserver* apObserver, const DeviceTemplate& arTmp);
@@ -61,7 +61,7 @@ namespace dnp {
 			retcode HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter);
 			retcode HandleSetShow(std::vector<std::string>& arArgs);
 			retcode HandleShowStats(std::vector<std::string>& arArgs);
-			
+
 			//implement from ITerminalExtension
 			void _BindToTerminal(ITerminal* apTerminal);
 	};

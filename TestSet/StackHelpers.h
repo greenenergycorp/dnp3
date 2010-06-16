@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __STACK_HELPERS_H_
 #define __STACK_HELPERS_H_
 
@@ -49,23 +49,23 @@ public:
 	StackBase(const APLXML_Base::PhysicalLayerList_t&, FilterLevel aLevel, const std::string& arLogFile = "-", bool aRemote = false, apl::uint_16_t aRemotePort = 4998);
 
 	void Run();
-	
+
 protected:
 
 	EventLog log;
 	LogToFile logToFile;
 	Logger* pTermLogger;
-	
+
 	IOService mService;
 	IOServiceThread mTermThread;
 	TimerSourceASIO mTimerSrc;
 	auto_ptr<IPhysicalLayerAsync> pTermPhys;
 
 	LogTerminalExtension lte;
-	
+
 	Terminal trm;
 	AsyncStackManager mgr;
-	
+
 };
 
 class SlaveXMLStack : public StackBase
@@ -76,10 +76,10 @@ public:
 	IDataObserver* GetDataObs() { return pObs; }
 
 private:
-	
-	IDataObserver* pObs;	
+
+	IDataObserver* pObs;
 	ControlResponseTE crte;
-	DOTerminalExtension dote;			
+	DOTerminalExtension dote;
 };
 
 class MasterXMLStack : public StackBase
@@ -90,10 +90,10 @@ public:
 	ICommandAcceptor* GetCmdAcceptor() { return accept; }
 
 private:
-	FlexibleDataObserver fdo;	
+	FlexibleDataObserver fdo;
 	ICommandAcceptor* accept;
 	ControlTerminalExtension cte;
-	FlexibleObserverTerminalExtension fte;	
+	FlexibleObserverTerminalExtension fte;
 };
 
 

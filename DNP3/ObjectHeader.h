@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __OBJECT_HEADER_H_
 #define __OBJECT_HEADER_H_
 
@@ -47,7 +47,7 @@ namespace apl { namespace dnp {
 	struct ObjectHeaderField
 	{
 		ObjectHeaderField(){};
-		ObjectHeaderField(apl::byte_t aGroup, apl::byte_t aVariation, QualifierCode aQualifier) : 
+		ObjectHeaderField(apl::byte_t aGroup, apl::byte_t aVariation, QualifierCode aQualifier) :
 		Group(aGroup),
 		Variation(aVariation),
 		Qualifier(aQualifier)
@@ -75,7 +75,7 @@ namespace apl { namespace dnp {
 			virtual ~IObjectHeader(){}
 			virtual size_t GetSize() const = 0; // depends on the subtype, default size is 3
 			virtual ObjectHeaderTypes GetType() const = 0;
-			
+
 			void Get(const apl::byte_t* apStart, ObjectHeaderField& arData) const;
 			void Set(apl::byte_t* apStart, byte_t aGrp, byte_t aVar, QualifierCode aQual) const;
 
@@ -114,26 +114,26 @@ namespace apl { namespace dnp {
 	class RangedHeader : public IRangeHeader
 	{
 		MACRO_SINGLETON_INSTANCE(RangedHeader)
-		
+
 		size_t GetSize() const { return Size; }
 		ObjectHeaderTypes GetType() const { return U; }
 
 		void GetRange(const apl::byte_t* apStart, RangeInfo& arInfo) const
-		{ 
+		{
 			arInfo.Start = T::Read(apStart+3);
 			arInfo.Stop = T::Read(apStart+3+T::Size);
 		}
 
 		void SetRange(apl::byte_t* apStart, const RangeInfo& arInfo) const
-		{ 
+		{
 			if(arInfo.Start > arInfo.Stop) throw ArgumentException(LOCATION, "stop > start");
 			if(arInfo.Stop > T::Max) throw ArgumentException(LOCATION, "stop > max");
-			
+
 			T::Write(apStart+3, static_cast<typename T::Type>(arInfo.Start));
 			T::Write(apStart+3+T::Size, static_cast<typename T::Type>(arInfo.Stop));
 		}
 
-		static size_t MaxRange() 
+		static size_t MaxRange()
 		{ return T::Max; }
 
 		const static size_t Size = 3+2*T::Size;
@@ -155,7 +155,7 @@ namespace apl { namespace dnp {
 
 		void SetCount(apl::byte_t* apStart, size_t aCount) const
 		{
-			if(aCount > T::Max) throw ArgumentException(LOCATION);			
+			if(aCount > T::Max) throw ArgumentException(LOCATION);
 			T::Write(apStart+3, static_cast<typename T::Type>(aCount));
 		}
 
@@ -172,7 +172,7 @@ namespace apl { namespace dnp {
 	typedef RangedHeader<apl::UInt8, OHT_RANGED_2_OCTET>	Ranged2OctetHeader;
 	typedef RangedHeader<apl::UInt16LE, OHT_RANGED_4_OCTET> Ranged4OctetHeader;
 	typedef RangedHeader<apl::UInt32LE, OHT_RANGED_8_OCTET> Ranged8OctetHeader;
-		
+
 	typedef CountHeader<apl::UInt8, OHT_COUNT_1_OCTET>		Count1OctetHeader;
 	typedef CountHeader<apl::UInt16LE, OHT_COUNT_2_OCTET>	Count2OctetHeader;
 	typedef CountHeader<apl::UInt32LE, OHT_COUNT_4_OCTET>	Count4OctetHeader;

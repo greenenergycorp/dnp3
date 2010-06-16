@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_LINK_LAYER_H_
 #define __ASYNC_LINK_LAYER_H_
 
@@ -36,7 +36,7 @@ namespace apl {  namespace dnp {
 
 	///	@section desc Implements the contextual state of DNP3 Data Link Layer
 	class AsyncLinkLayer : public ILowerLayer, public ILinkContext
-	{	
+	{
 		public:
 
 		AsyncLinkLayer(apl::Logger*, ITimerSource*, const LinkConfig& arConfig);
@@ -45,7 +45,7 @@ namespace apl {  namespace dnp {
 
 		// ILinkContext interface
 		void OnLowerLayerUp();
-		void OnLowerLayerDown();		
+		void OnLowerLayerDown();
 
 		// IFrameSink interface
 		void Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc);
@@ -63,10 +63,10 @@ namespace apl {  namespace dnp {
 		void ChangeState(SecStateBase*);
 
 		Logger* GetLogger() { return mpLogger; }
-		
+
 		void DoDataUp(const byte_t* apData, size_t aLength)
 		{ if(mpUpperLayer) mpUpperLayer->OnReceive(apData, aLength); }
-		
+
 		void DoSendSuccess()
 		{ if(mpUpperLayer) mpUpperLayer->OnSendSuccess(); }
 
@@ -83,7 +83,7 @@ namespace apl {  namespace dnp {
 
 		// Helpers for sending frames
 		void SendAck();
-		void SendLinkStatus();		
+		void SendLinkStatus();
 		void SendResetLinks();
 		void SendUnconfirmedUserData(const byte_t* apData, size_t aLength);
 		void SendDelayedUserData(bool aFCB);
@@ -116,10 +116,10 @@ namespace apl {  namespace dnp {
 
 		bool mNextReadFCB;
 		bool mNextWriteFCB;
-		bool mIsOnline;		
+		bool mIsOnline;
 
 		bool Validate(bool aIsMaster, uint_16_t aSrc, uint_16_t aDest);
-		
+
 		/* Events - NVII delegates from ILayerDown and Events produced internally */
 		void _Send(const apl::byte_t*, size_t);
 

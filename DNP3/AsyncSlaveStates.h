@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_SLAVE_STATES_H_
 #define __ASYNC_SLAVE_STATES_H_
 
@@ -25,9 +25,9 @@
 #include <APL/CommandInterfaces.h>
 #include <DNP3/AsyncAppInterfaces.h>
 
-namespace apl 
+namespace apl
 {
-	class ITaskCompletion; 
+	class ITaskCompletion;
 	class Logger;
 	class BinaryOutput;
 	class Setpoint;
@@ -38,7 +38,7 @@ namespace apl { namespace dnp {
 class AsyncSlave;
 class APDU;
 
-/** @section desc 
+/** @section desc
 Base class for all slave transaction states
 */
 class AS_Base
@@ -87,8 +87,8 @@ class AS_Base
 	void ChangeState(AsyncSlave*, AS_Base*);
 };
 
-/** @section desc 
-The application layer has not informed the slave yet that it is up 
+/** @section desc
+The application layer has not informed the slave yet that it is up
 */
 class AS_Closed : public AS_Base
 {
@@ -106,14 +106,14 @@ class AS_OpenBase : public AS_Base
 	void OnLowerLayerDown(AsyncSlave*);
 };
 
-/** @section desc 
-The app layer is online, but the slave is not doing or waiting on anything 
+/** @section desc
+The app layer is online, but the slave is not doing or waiting on anything
 */
 class AS_Idle : public AS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AS_Idle);
 
-	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);	
+	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
 	void OnDataUpdate(AsyncSlave*);
 	void OnUnsolExpiration(AsyncSlave*);
 	void OnUnknown(AsyncSlave*);
@@ -125,7 +125,7 @@ class AS_Idle : public AS_OpenBase
 };
 
 
-/** @section desc 
+/** @section desc
 The slave is waiting for a response to complete
 */
 class AS_WaitForRspSuccess : public AS_OpenBase
@@ -137,7 +137,7 @@ class AS_WaitForRspSuccess : public AS_OpenBase
 	void OnSolSendSuccess(AsyncSlave*);
 };
 
-/** @section desc 
+/** @section desc
 The slave is waiting for an unsolicited response to complete
 */
 class AS_WaitForUnsolSuccess : public AS_OpenBase
@@ -146,10 +146,10 @@ class AS_WaitForUnsolSuccess : public AS_OpenBase
 
 	void OnRequest(AsyncSlave*, const APDU&, SequenceInfo);
 	void OnUnsolFailure(AsyncSlave*);
-	void OnUnsolSendSuccess(AsyncSlave*);	
+	void OnUnsolSendSuccess(AsyncSlave*);
 };
 
-/** @section desc 
+/** @section desc
 The slave is waiting for an unsolicited response and a solicited response to complete
 */
 class AS_WaitForSolUnsolSuccess : public AS_OpenBase
@@ -160,7 +160,7 @@ class AS_WaitForSolUnsolSuccess : public AS_OpenBase
 	void OnSolFailure(AsyncSlave*);
 	void OnSolSendSuccess(AsyncSlave*);
 	void OnUnsolFailure(AsyncSlave*);
-	void OnUnsolSendSuccess(AsyncSlave*);	
+	void OnUnsolSendSuccess(AsyncSlave*);
 };
 
 

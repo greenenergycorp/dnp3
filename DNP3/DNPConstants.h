@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __DNP_CONSTANTS_H_
 #define __DNP_CONSTANTS_H_
 
@@ -79,17 +79,17 @@ namespace apl { namespace dnp {
 		/* TRANSPORT Layer */
 
 		TLERR_NEW_FIR,
-		TLERR_MESSAGE_WITHOUT_FIR, 
+		TLERR_MESSAGE_WITHOUT_FIR,
 		TLERR_NO_PAYLOAD,
-		TLERR_BAD_SEQUENCE, 
-		TLERR_BAD_LENGTH, 
+		TLERR_BAD_SEQUENCE,
+		TLERR_BAD_LENGTH,
 		TLERR_BUFFER_FULL,
 		TLERR_TIMEOUT,
 
 		//used in linkframeparser
 		DLERR_CRC,				//	CRC failure in header or data payload
 		DLERR_INVALID_LENGTH,	//	length parameter outside range [0,255]
-		DLERR_UNEXPECTED_DATA,	//  length > 5 for non-user data func code	
+		DLERR_UNEXPECTED_DATA,	//  length > 5 for non-user data func code
 		DLERR_NO_DATA,			//  length == 5 but func code indicates data
 		DLERR_UNKNOWN_FUNC,		//  unknown function code
 		DLERR_UNEXPECTED_FCV,	//	FCV bit set unexpectedly, ie set on wrong func code
@@ -117,7 +117,7 @@ namespace apl { namespace dnp {
 
 
 	};
-	
+
 }}
 
 #endif

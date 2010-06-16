@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_TRANSPORT_LAYER_H_
 #define __ASYNC_TRANSPORT_LAYER_H_
 
@@ -52,11 +52,11 @@ namespace apl { namespace dnp {
 		void TransmitTPDU(const byte_t* apData, size_t aNumBytes);
 		void ReceiveAPDU(const byte_t* apData, size_t aNumBytes);
 		void ReceiveTPDU(const byte_t* apData, size_t aNumBytes);
-		
-		bool ContinueSend(); /// return true if 
-		void SignalSendSuccess(); 
+
+		bool ContinueSend(); /// return true if
+		void SignalSendSuccess();
 		void SignalSendFailure();
-		
+
 		/* Events - NVII delegates from ILayerUp/ILayerDown and Events produced internally */
 		static std::string ToString(byte_t aHeader);
 
@@ -70,7 +70,7 @@ namespace apl { namespace dnp {
 		void _OnSendSuccess();
 		void _OnSendFailure();
 		void _OnLowerLayerShutdown();
-		
+
 		/* Members and Helpers */
 		TLS_Base* mpState;
 

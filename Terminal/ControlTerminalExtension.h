@@ -16,13 +16,13 @@ namespace apl
 	class ControlTerminalExtension : public ITerminalExtension
 	{
 		public:
-			
-			ControlTerminalExtension(ICommandAcceptor* apCmdAcceptor) : 
+
+			ControlTerminalExtension(ICommandAcceptor* apCmdAcceptor) :
 			mSequence(0),
 			mpCmdAcceptor(apCmdAcceptor),
 			mRspQueue()
 			{
-			
+
 			}
 
 			std::string Name() { return "ControlTerminalExtension"; }
@@ -39,11 +39,11 @@ namespace apl
 			void WaitForResponse();
 			retcode HandleIssueBO(std::vector<std::string>& arArgs);
 			retcode HandleIssueST(std::vector<std::string>& arArgs);
-			
+
 			//implement from ITerminalExtension
 			void _BindToTerminal(ITerminal* apTerminal);
 
-			
+
 	};
 }
 

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 
 #ifndef __OBJECTS_H_
 #define __OBJECTS_H_
@@ -58,7 +58,7 @@
 #define MACRO_DECLARE_TIME(packer, position) \
 		Pack<packer,position> mTime; \
 		bool HasTime() const { return true; }
-		
+
 
 #define MACRO_GROUP_VAR_FUNC(group, var)\
 int GetGroup() const { return group; }\
@@ -74,10 +74,10 @@ namespace apl {
 	class SetpointStatus;
 	class ControlStatus;
 }
-		
+
 namespace apl { namespace dnp {
 
-	
+
 
 	//////////////////////////////////////////////
 	//	Binary Input Types
@@ -100,7 +100,7 @@ namespace apl { namespace dnp {
 		MACRO_NAME_SINGLETON_INSTANCE(Group1Var2)
 		MACRO_GROUP_VAR_SIZE_FUNC(1, 2, 1)
 		MACRO_DECLARE_QUALITY(UInt8,0)
-		MACRO_DECLARE_STREAM_TYPE(Binary)		
+		MACRO_DECLARE_STREAM_TYPE(Binary)
 	};
 
 	struct Group2Var0 : public PlaceHolderObject
@@ -114,7 +114,7 @@ namespace apl { namespace dnp {
 		MACRO_NAME_SINGLETON_INSTANCE(Group2Var1)
 		MACRO_GROUP_VAR_SIZE_FUNC_WITH_EVENTS(2, 1, 1)
 		MACRO_DECLARE_QUALITY(UInt8,0)
-		MACRO_DECLARE_STREAM_TYPE(Binary)					
+		MACRO_DECLARE_STREAM_TYPE(Binary)
 	};
 
 	struct Group2Var2 : public StreamObject<Binary>
@@ -129,12 +129,12 @@ namespace apl { namespace dnp {
 	struct Group2Var3 : public StreamObject<Binary>
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group2Var3)
-		MACRO_GROUP_VAR_SIZE_FUNC_WITH_EVENTS(2, 3, 3)		
+		MACRO_GROUP_VAR_SIZE_FUNC_WITH_EVENTS(2, 3, 3)
 		MACRO_DECLARE_QUALITY(UInt8, 0)
 		MACRO_DECLARE_TIME(UInt16LE, 1)
 		MACRO_DECLARE_STREAM_TYPE(Binary)
 
-		bool UseCTO() const { return true; }		
+		bool UseCTO() const { return true; }
 	};
 
 	//////////////////////////////////////////////
@@ -158,7 +158,7 @@ namespace apl { namespace dnp {
 		MACRO_NAME_SINGLETON_INSTANCE(Group10Var2)
 		MACRO_GROUP_VAR_SIZE_FUNC(10, 2, 1)
 		MACRO_DECLARE_QUALITY(UInt8, 0)
-		MACRO_DECLARE_STREAM_TYPE(ControlStatus);						
+		MACRO_DECLARE_STREAM_TYPE(ControlStatus);
 	};
 
 	//////////////////////////////////////////////
@@ -166,7 +166,7 @@ namespace apl { namespace dnp {
 	//////////////////////////////////////////////
 
 	struct Group12Var1 : public CommandObject<BinaryOutput>
-	{ 
+	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group12Var1)
 		MACRO_GROUP_VAR_SIZE_FUNC(12, 1, 11)
 		MACRO_DECLARE_STREAM_TYPE(BinaryOutput);
@@ -191,7 +191,7 @@ namespace apl { namespace dnp {
 		Pack<UInt32LE, 6>	mOffTime;
 		Pack<UInt8, 10>		mStatus;
 	};
-	
+
 	struct Group12Var3 : public BitfieldObject
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group12Var3)
@@ -214,8 +214,8 @@ namespace apl { namespace dnp {
 		MACRO_GROUP_VAR_SIZE_FUNC(20, 1, 5)
 		MACRO_DECLARE_QUALITY(UInt8, 0);
 		MACRO_DECLARE_VALUE(UInt32LE, 1);
-		MACRO_DECLARE_STREAM_TYPE(Counter);		
-		
+		MACRO_DECLARE_STREAM_TYPE(Counter);
+
 	};
 
 	struct Group20Var2 : public StreamObject<Counter>
@@ -224,7 +224,7 @@ namespace apl { namespace dnp {
 		MACRO_GROUP_VAR_SIZE_FUNC(20, 2, 3)
 		MACRO_DECLARE_QUALITY(UInt8, 0);
 		MACRO_DECLARE_VALUE(UInt16LE, 1);
-		MACRO_DECLARE_STREAM_TYPE(Counter);						
+		MACRO_DECLARE_STREAM_TYPE(Counter);
 	};
 
 	struct Group20Var3 : public StreamObject<Counter>
@@ -233,7 +233,7 @@ namespace apl { namespace dnp {
 		MACRO_GROUP_VAR_SIZE_FUNC(20, 3, 5)
 		MACRO_DECLARE_QUALITY(UInt8, 0);
 		MACRO_DECLARE_VALUE(UInt32LE, 1);
-		MACRO_DECLARE_STREAM_TYPE(Counter);		
+		MACRO_DECLARE_STREAM_TYPE(Counter);
 	};
 
 	struct Group20Var4 : public StreamObject<Counter>
@@ -242,8 +242,8 @@ namespace apl { namespace dnp {
 		MACRO_GROUP_VAR_SIZE_FUNC(20, 4, 3)
 		MACRO_DECLARE_QUALITY(UInt8, 0);
 		MACRO_DECLARE_VALUE(UInt16LE, 1);
-		MACRO_DECLARE_STREAM_TYPE(Counter);				
-		
+		MACRO_DECLARE_STREAM_TYPE(Counter);
+
 	};
 
 	struct Group20Var5 : public StreamObject<Counter>
@@ -554,7 +554,7 @@ namespace apl { namespace dnp {
 	//////////////////////////////////////////////
 
 	struct Group30Var0 : public PlaceHolderObject
-	{ 
+	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group30Var0)
 		MACRO_GROUP_VAR_FUNC(30, 0)
 	};
@@ -574,7 +574,7 @@ namespace apl { namespace dnp {
 		MACRO_GROUP_VAR_SIZE_FUNC(30, 2, 3)
 		MACRO_DECLARE_QUALITY(UInt8, 0)
 		MACRO_DECLARE_VALUE_OVERRANGE(Int16LE, 1, AQ_OVERRANGE)
-		MACRO_DECLARE_STREAM_TYPE(Analog)	
+		MACRO_DECLARE_STREAM_TYPE(Analog)
 	};
 
 	struct Group30Var3 : public StreamObject<Analog>
@@ -634,7 +634,7 @@ namespace apl { namespace dnp {
 		MACRO_NAME_SINGLETON_INSTANCE(Group31Var2)
 		MACRO_GROUP_VAR_SIZE_FUNC(31, 2, 3)
 		MACRO_DECLARE_QUALITY(UInt8, 0)
-		MACRO_DECLARE_VALUE_OVERRANGE(Int16LE, 1, AQ_OVERRANGE)	
+		MACRO_DECLARE_VALUE_OVERRANGE(Int16LE, 1, AQ_OVERRANGE)
 	};
 
 	struct Group31Var3 : public FixedObject
@@ -642,7 +642,7 @@ namespace apl { namespace dnp {
 		MACRO_NAME_SINGLETON_INSTANCE(Group31Var3)
 		MACRO_GROUP_VAR_SIZE_FUNC(31, 3, 11)
 		MACRO_DECLARE_QUALITY(UInt8, 0)
-		MACRO_DECLARE_VALUE_OVERRANGE(Int32LE, 1, AQ_OVERRANGE)	
+		MACRO_DECLARE_VALUE_OVERRANGE(Int32LE, 1, AQ_OVERRANGE)
 		MACRO_DECLARE_TIME(UInt48LE, 5)
 	};
 
@@ -905,7 +905,7 @@ namespace apl { namespace dnp {
 		Pack<UInt8, 4> mStatus;
 		MACRO_DECLARE_STREAM_TYPE(Setpoint)
 
-		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;		
+		apl::CopyableBuffer GetValueBytes(const apl::byte_t*) const;
 	};
 
 	struct Group41Var2 : public CommandObject<Setpoint>
@@ -1029,7 +1029,7 @@ namespace apl { namespace dnp {
 	struct Group110Var0 : public VariableByVariationObject
 	{
 		MACRO_NAME_SINGLETON_INSTANCE(Group110Var0)
-		MACRO_GROUP_VAR_FUNC(110, 0)		
+		MACRO_GROUP_VAR_FUNC(110, 0)
 	};
 
 	struct Group111Var0 : public VariableByVariationObject

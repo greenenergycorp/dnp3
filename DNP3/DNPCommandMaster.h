@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __DNP_COMMAND_MASTER_H_
 #define __DNP_COMMAND_MASTER_H_
 
@@ -38,7 +38,7 @@ namespace apl { namespace dnp {
 	struct CommandRequestInfo
 	{
 		CommandRequestInfo() : group(0), var(0), qual(QC_UNDEFINED), seqInfo(SI_OTHER), seqAPDU(-1) {}
-		CommandRequestInfo(const T& aCmd, int aGroup, int aVar, QualifierCode aQual, SequenceInfo aSeqInfo, int aSeqAPDU) 
+		CommandRequestInfo(const T& aCmd, int aGroup, int aVar, QualifierCode aQual, SequenceInfo aSeqInfo, int aSeqAPDU)
 			: cmd(aCmd), group(aGroup), var(aVar), qual(aQual), seqInfo(aSeqInfo), seqAPDU(aSeqAPDU) {}
 
 		T cmd;
@@ -75,7 +75,7 @@ namespace apl { namespace dnp {
 		Handles DNP3 control/setpoint behavior, using a DeviceTemplate for start-up characterization of binary and analog outputs. Keeps
 		a map to match operates to previous selects, with a separate control path for direct operates. If command requests are validated
 		they are passed to the user code through ICommandAcceptor, which responds with success/failure.
-		
+
 	*/
 	class DNPCommandMaster: public IDNPCommandMaster, public apl::IResponseAcceptor
 	{
@@ -84,8 +84,8 @@ namespace apl { namespace dnp {
 		struct CommandInfo
 		{
 			CommandInfo():mSelectTime(0){}
-			size_t mRemoteIndex; 
-			apl::ICommandAcceptor* mpAcceptor; 
+			size_t mRemoteIndex;
+			apl::ICommandAcceptor* mpAcceptor;
 			CommandModes mMode;
 			apl::TimeStamp_t mSelectTime;
 			bool mIsSelected;
@@ -141,7 +141,7 @@ namespace apl { namespace dnp {
 			CommandModes mCommandMode;
 	};
 
-	
+
 	template <typename T>
 	void DNPCommandMaster::BindCommand(std::map<size_t, CommandInfo<T> >& aMap, apl::CommandTypes aType, size_t aLocalIndex, size_t aRemoteIndex, CommandModes aMode, millis_t aSelectTimeoutMS, apl::ICommandAcceptor* apAcceptor)
 	{
@@ -172,12 +172,12 @@ namespace apl { namespace dnp {
 			CommandInfo<T>& info = i->second;
 
 			if(info.mMode == CM_DO_ONLY) return false;
-			
+
 			info.mSelectTime = TimeStamp::GetTimeStamp();
 			info.mIsSelected = true;
 			info.mSelectSequence = aCmd.seqAPDU;
 			info.mRequest = aCmd;
-			
+
 			return true;
 		}
 	}
@@ -207,7 +207,7 @@ namespace apl { namespace dnp {
 				info.mIsSelected = false;
 				return CS_NO_SELECT;
 			}
-			
+
 			info.mIsSelected = false;
 			info.mpAcceptor->AcceptCommand(arType.cmd, info.mRemoteIndex, aSequence, this);
 			return CS_SUCCESS;
@@ -231,7 +231,7 @@ namespace apl { namespace dnp {
 
 			if(info.mMode == CM_SBO_ONLY)
 				return CS_NOT_SUPPORTED;
-			
+
 			info.mIsSelected = false;
 			info.mpAcceptor->AcceptCommand(arType.cmd, info.mRemoteIndex, aSequence, this);
 			return CS_SUCCESS;
@@ -239,7 +239,7 @@ namespace apl { namespace dnp {
 	}
 
 
-	
+
 }}
 
 #endif

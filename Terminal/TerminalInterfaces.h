@@ -87,8 +87,8 @@ namespace apl
 
 		virtual ~ITerminal() {}
 
-		virtual void BindCommand(const CommandNode& arNode, const std::string &arFullCommand) = 0;		
-		virtual void QueueSend(const std::string& arData, bool aLog = true) = 0;						
+		virtual void BindCommand(const CommandNode& arNode, const std::string &arFullCommand) = 0;
+		virtual void QueueSend(const std::string& arData, bool aLog = true) = 0;
 		virtual void SetRedirect(const RedirectFunc&) = 0;
 		virtual void ClearRedirect() = 0;
 		virtual void Post(const ExpirationHandler& arHandler) = 0;
@@ -103,11 +103,11 @@ namespace apl
 
 			ITerminalExtension() : mpTerminal(NULL) {}
 			virtual ~ITerminalExtension() {}
-											
+
 			void BindToTerminal(ITerminal* apTerminal)
-			{ 
-			  assert(apTerminal != NULL); 
-			  assert(mpTerminal == NULL); 
+			{
+			  assert(apTerminal != NULL);
+			  assert(mpTerminal == NULL);
 			  mpTerminal = apTerminal;
 			  this->_BindToTerminal(apTerminal);
 			}
@@ -117,23 +117,23 @@ namespace apl
 				mpTerminal->Post(arHandler);
 			}
 
-			void SetRedirect(const RedirectFunc& arRedirect) 
+			void SetRedirect(const RedirectFunc& arRedirect)
 			{
 				mpTerminal->SetRedirect(arRedirect);
 			}
 
-			void ClearRedirect() 
+			void ClearRedirect()
 			{
 				mpTerminal->ClearRedirect();
 			}
 
 		protected:
 
-			void Send(const std::string& arData, bool aClearSrc = false) 
-			{ 
-				assert(mpTerminal != NULL); 
+			void Send(const std::string& arData, bool aClearSrc = false)
+			{
+				assert(mpTerminal != NULL);
 				mpTerminal->QueueSend(arData, aClearSrc);
-			}			
+			}
 
 		private:
 

@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __RESPONSE_LOADER_H_
 #define __RESPONSE_LOADER_H_
 
@@ -54,8 +54,8 @@ class ResponseLoader : Loggable
 
 		template <class T>
 		void ReadBitfield(HeaderReadIterator& arHeader);
-		
-		IDataObserver* mpPublisher;		
+
+		IDataObserver* mpPublisher;
 		Transaction mTransaction;
 		TimeStamp_t mTime;
 		CTOHistory mCTO;
@@ -67,7 +67,7 @@ void ResponseLoader::ReadCTO(HeaderReadIterator& arIter)
 	ObjectReadIterator i = arIter.BeginRead();
 
 	if(i.Count() != 1)
-	{ 
+	{
 		LOG_BLOCK(LEV_WARNING, "Invalid number of CTO objects");
 		return;
 	}
@@ -80,7 +80,7 @@ template <class T>
 void ResponseLoader::Read(HeaderReadIterator& arIter, StreamObject<T>* apObj)
 {
 	TimeStamp_t t(0); //base time
-	if(apObj->UseCTO() && !mCTO.GetCTO(t)) {			
+	if(apObj->UseCTO() && !mCTO.GetCTO(t)) {
 				LOG_BLOCK(LEV_ERROR, "No CTO for relative time type " << apObj->Name());
 				return;
 	}
@@ -91,7 +91,7 @@ void ResponseLoader::Read(HeaderReadIterator& arIter, StreamObject<T>* apObj)
 	{
 		size_t index = obj->Index();
 		T value = apObj->Read(*obj);
-				
+
 		//Make sure the value has time information
 		if(apObj->UseCTO()) value.SetTime(t+value.GetTime());
 		else if(!apObj->HasTime())
@@ -101,7 +101,7 @@ void ResponseLoader::Read(HeaderReadIterator& arIter, StreamObject<T>* apObj)
 
 		//Make sure the value has quality information
 		if(!apObj->HasQuality()) value.SetQuality(T::ONLINE);
-		
+
 		mpPublisher->Update(value, index);
 	}
 }
@@ -117,7 +117,7 @@ void ResponseLoader::ReadBitfield(HeaderReadIterator& arIter)
 	for(; !obj.IsEnd(); ++obj)
 	{
 		bool val = BitfieldObject::StaticRead(*obj, obj->Start(), obj->Index());
-		b.SetValue(val);		
+		b.SetValue(val);
 		mpPublisher->Update(b, obj->Index());
 	}
 }

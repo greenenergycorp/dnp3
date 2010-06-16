@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __CONTROL_TYPES_H_
 #define __CONTROL_TYPES_H_
 
@@ -25,7 +25,7 @@
 
 namespace apl
 {
-	
+
 	enum CommandModes
 	{
 		CM_SBO_ONLY,	   	   // Point must be selected before operation
@@ -41,7 +41,7 @@ namespace apl
 	};
 
 	/**
-		When a command is recieved from a master the application sends a code to 
+		When a command is recieved from a master the application sends a code to
 		indicate if it was successfull or if not what class of error was encountered.
 		Each code has a description that indicates its customary meaning.
 	*/
@@ -62,14 +62,14 @@ namespace apl
 
 	CommandStatus ByteToCommandStatus(byte_t aField);
 	std::string ToString(CommandStatus aType);
-	
+
 	/**
 		There are a number of types of controls. The best way to understand this difference is to
 		think about the hardware controls the communication protocols are emulating. The most common to use
 		are CC_PULSE, CC_LATCH_ON and CC_LATCH_OFF
 
 		NOTE: Current implementation doesn't support queue/clear
-	*/ 
+	*/
 	enum ControlCode
 	{
 		CC_NULL = 0,			//!< illegal command code (used internally)
@@ -90,7 +90,7 @@ namespace apl
 		public:
 		CommandTypes GetType() const  { return mType; }
 		CommandStatus mStatus;
-		
+
 		protected:
 		//only invokable from super class
 		CommandRequest(CommandTypes);
@@ -100,10 +100,10 @@ namespace apl
 		CommandRequest();
 		CommandTypes mType;
 	};
-	
+
 	/**
-		Describes an incoming control request from the master. It is the applications responsibility to handle 
-		the request and return an approiate status code.The PULSE_CLOSE and PULSE_TRIP ControlCodes require 
+		Describes an incoming control request from the master. It is the applications responsibility to handle
+		the request and return an approiate status code.The PULSE_CLOSE and PULSE_TRIP ControlCodes require
 		setting the mOnTimeMS,mOffTimeMS and mCount variables, otherwise just use the defaults.
 	*/
 	class BinaryOutput : public CommandRequest
@@ -122,9 +122,9 @@ namespace apl
 		uint_32_t mOffTimeMS;
 
 		std::string ToString() const;
-		
+
 		bool operator==(const BinaryOutput& arRHS) const
-		{ 
+		{
 			return (mRawCode == arRHS.mRawCode) && (mCount == arRHS.mCount) && (mOnTimeMS == arRHS.mOnTimeMS) && (mOffTimeMS == arRHS.mOffTimeMS);
 		}
 
@@ -146,20 +146,20 @@ namespace apl
 	};
 
 	/**
-		The object to represent a setpoint request from the master. Think of this like turning a 
-		dial on the front of a machine to desired setting.  A setpoint is natively repersented as 
+		The object to represent a setpoint request from the master. Think of this like turning a
+		dial on the front of a machine to desired setting.  A setpoint is natively repersented as
 		a double but can be used to send both floating point and integer values. The key field is
 		mEncodingType which informs the protocol buffers how to treat and format the values. There
 		are smart defaults and behaviors to automatically determine the correct type of encoding
 		to use in most cases (by default uses smallest type that can handle the number). This can be
-		overridden with the SetEncodingType() function. 
+		overridden with the SetEncodingType() function.
 	*/
 	class Setpoint : public CommandRequest
 	{
 	public:
 		Setpoint(int_16_t aValue); // this constructor is necessary to stop the compiler from having to guess which upcast to use
 		Setpoint(int_32_t aValue);
-		
+
 		Setpoint(double aValue);
 
 		// blank constructor, care must be used, an exception will be thrown if someone tries to access

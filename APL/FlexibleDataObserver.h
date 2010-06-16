@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __FLEXIBLE_DATA_OBSERVER_H_
 #define __FLEXIBLE_DATA_OBSERVER_H_
 
@@ -44,7 +44,7 @@ namespace apl
 			template <typename T>
 			struct PointMap
 			{ typedef std::map<size_t, T> Type; };
-			
+
 			// allow direct access to the maps
 			PointMap<Binary>::Type mBinaryMap;
 			PointMap<Analog>::Type mAnalogMap;
@@ -52,8 +52,8 @@ namespace apl
 			PointMap<ControlStatus>::Type mControlStatusMap;
 			PointMap<SetpointStatus>::Type mSetpointStatusMap;
 
-			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex) 
-			{ 
+			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex)
+			{
 				byte_t qual = aQuality;
 				if(aValue) qual |= BQ_STATE;
 				return Check<Binary, bool>(mBinaryMap, aValue, qual, aIndex);
@@ -66,23 +66,23 @@ namespace apl
 				PointMap<Analog>::Type::iterator i = mAnalogMap.find(aIndex);
 				if(i == mAnalogMap.end()) return false;
 				if(i->second.GetQuality() != aQuality) return false;
-				return apl::FloatEqual(aValue, i->second.GetValue());				
+				return apl::FloatEqual(aValue, i->second.GetValue());
 			}
 
 
 			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex)
 			{ return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality, aIndex); }
 			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex)
-			{ 
+			{
 				byte_t qual = aQuality;
 				if(aValue) qual |= TQ_STATE;
-				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual, aIndex); 
+				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual, aIndex);
 			}
 			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex)
 			{ return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aIndex); }
 
-			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex, TimeStamp_t aTime) 
-			{ 
+			bool Check(bool aValue, BinaryQuality aQuality, size_t aIndex, TimeStamp_t aTime)
+			{
 				byte_t qual = aQuality;
 				if(aValue) qual |= BQ_STATE;
 				return Check<Binary, bool>(mBinaryMap, aValue, qual, aTime, aIndex);
@@ -92,10 +92,10 @@ namespace apl
 			bool Check(uint_32_t aValue, CounterQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{ return Check<Counter, uint_32_t>(mCounterMap, aValue, aQuality,  aTime, aIndex); }
 			bool Check(bool aValue, ControlQuality aQuality, size_t aIndex, TimeStamp_t aTime)
-			{ 
+			{
 				byte_t qual = aQuality;
 				if(aValue) qual |= TQ_STATE;
-				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual,  aTime, aIndex); 
+				return Check<ControlStatus, bool>(mControlStatusMap, aValue, qual,  aTime, aIndex);
 			}
 			bool Check(int_32_t aValue, SetpointQuality aQuality, size_t aIndex, TimeStamp_t aTime)
 			{ return Check<SetpointStatus, int_32_t>(mSetpointStatusMap, aValue, aQuality, aTime, aIndex); }
@@ -126,12 +126,12 @@ namespace apl
 			SigLock mLock;
 
 			void _Start()	{ mLock.Lock(); }
-			void _End()		
+			void _End()
 			{
 				bool notify = mNewData;
 				mNewData = false;
-				mLock.Unlock(); 
-				if(notify) this->NotifyAll(); 
+				mLock.Unlock();
+				if(notify) this->NotifyAll();
 			}
 
 			void _Update(const Binary& arPoint, size_t aIndex) { Load(arPoint, mBinaryMap, aIndex); }
@@ -139,8 +139,8 @@ namespace apl
 			void _Update(const Counter& arPoint, size_t aIndex) { Load(arPoint, mCounterMap, aIndex); }
 			void _Update(const ControlStatus& arPoint, size_t aIndex) { Load(arPoint, mControlStatusMap, aIndex); }
 			void _Update(const SetpointStatus& arPoint, size_t aIndex) { Load(arPoint, mSetpointStatusMap, aIndex); }
-						
-			
+
+
 			template <class T, class U>
 			bool Check(typename PointMap<T>::Type& arMap, U aValue, byte_t aQual, size_t aIndex);
 
@@ -214,7 +214,7 @@ namespace apl
 		{ std::cout << j << ", " << i->second.GetValue() << ", " << static_cast<int>(i->second.GetQuality()) << std::endl; ++j; }
 	}
 
-	
+
 
 }
 

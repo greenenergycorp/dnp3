@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_DATABASE_H_
 #define __ASYNC_DATABASE_H_
 
@@ -35,7 +35,7 @@
 #undef max
 #endif
 
-namespace apl { 
+namespace apl {
 class INotifier;
 class EventLog;
 }
@@ -43,8 +43,8 @@ class EventLog;
 namespace apl { namespace dnp {
 
 	struct DeviceTemplate;
-	
-	/**	
+
+	/**
 	Manages the static data model of a DNP3 slave. Dual-interface to update data points and read current values.
 
 	Passes data updates to an associated event buffer for event generation/management.
@@ -56,12 +56,12 @@ namespace apl { namespace dnp {
 			AsyncDatabase(Logger* apLogger);
 
 			virtual ~AsyncDatabase();
-			
+
 			/* Configuration functions */
 
 			void Configure(const DeviceTemplate& arTmp);
 			void Configure(apl::DataTypes aType, size_t aNumPoints, bool aStartOnline = false);
-			
+
 			size_t NumType(apl::DataTypes aType);
 			size_t MaxIndex(DataTypes aType);
 			void SetDeadband(apl::DataTypes, size_t aIndex, double aDeadband);
@@ -78,7 +78,7 @@ namespace apl { namespace dnp {
 			void Begin(ControlIterator& arIter)		{ arIter = mControlStatusVec.begin(); }
 			void Begin(SetpointIterator& arIter)	{ arIter = mSetpointStatusVec.begin(); }
 
-			
+
 		private:
 
 			// ITransactable  functions, no lock on this structure.
@@ -133,14 +133,14 @@ namespace apl { namespace dnp {
 	template<typename T>
 	inline void AsyncDatabase::SetAllOnline( std::vector< PointInfo<T> >& arVector )
 	{
-		for(size_t i=0; i<arVector.size(); i++) 
+		for(size_t i=0; i<arVector.size(); i++)
 		{ arVector[i].mValue.SetQuality(T::ONLINE); }
 	}
 
 	template<typename T>
 	inline void AsyncDatabase::AssignIndices( std::vector< PointInfo<T> >& arVector )
 	{
-		for(size_t i=0; i<arVector.size(); i++) 
+		for(size_t i=0; i<arVector.size(); i++)
 		{ arVector[i].mIndex = i; }
 	}
 
@@ -150,7 +150,7 @@ namespace apl { namespace dnp {
 		if(aIndex >= arVec.size()) throw apl::IndexOutOfBoundsException(LOCATION);
 
 		T& value = arVec[aIndex].mValue;
-		
+
 		if(value.ShouldGenerateEvent(arValue, arVec[aIndex].mDeadband, arVec[aIndex].mLastEventValue))
 		{
 			value = arValue;

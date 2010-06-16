@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __EXCEPTION_H_
 #define __EXCEPTION_H_
 
@@ -64,7 +64,7 @@ namespace apl {
 	class ObjectException : public Exception
 	{
 		public:
-			ObjectException(const std::string& aSource, const std::string& aMessage) throw() : 
+			ObjectException(const std::string& aSource, const std::string& aMessage) throw() :
 			Exception(aSource, aMessage)
 			{}
 	};
@@ -72,7 +72,7 @@ namespace apl {
 	class ReadTimeoutException : public Exception
 	{
 		public:
-			ReadTimeoutException(const std::string& aSource, const std::string& aMessage) throw() : 
+			ReadTimeoutException(const std::string& aSource, const std::string& aMessage) throw() :
 			Exception(aSource, aMessage)
 			{}
 	};
@@ -80,7 +80,7 @@ namespace apl {
 	class InvalidStateException : public Exception
 	{
 		public:
-			InvalidStateException(const std::string& aSource, const std::string& aState) throw() : 
+			InvalidStateException(const std::string& aSource, const std::string& aState) throw() :
 			Exception(aSource, "Invalid operation for state: " + aState)
 			{}
 	};
@@ -88,7 +88,7 @@ namespace apl {
 	class ArgumentException : public Exception
 	{
 		public:
-			ArgumentException(const std::string& aSource, const std::string& aMessage = "") throw() : 
+			ArgumentException(const std::string& aSource, const std::string& aMessage = "") throw() :
 			Exception(aSource, aMessage)
 			{}
 	};
@@ -96,7 +96,7 @@ namespace apl {
 	class NotImplementedException : public Exception
 	{
 		public:
-			NotImplementedException(const std::string& aSource) throw() : 
+			NotImplementedException(const std::string& aSource) throw() :
 			Exception(aSource, "Function not implemented.")
 			{}
 	};
@@ -104,7 +104,7 @@ namespace apl {
 	class IndexOutOfBoundsException : public Exception
 	{
 		public:
-			IndexOutOfBoundsException(const std::string& aSource) throw() : 
+			IndexOutOfBoundsException(const std::string& aSource) throw() :
 			Exception(aSource, "Index out of bounds.")
 			{}
 	};

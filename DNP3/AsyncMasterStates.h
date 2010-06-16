@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_MASTER_STATES_H_
 #define __ASYNC_MASTER_STATES_H_
 
@@ -26,9 +26,9 @@
 
 #include "ObjectInterfaces.h"
 
-namespace apl 
+namespace apl
 {
-	class ITaskCompletion; 
+	class ITaskCompletion;
 	class Logger;
 	class BinaryOutput;
 	class Setpoint;
@@ -50,7 +50,7 @@ class AMS_Base
 	virtual void EventPoll(AsyncMaster*, ITaskCompletion* apTask, int aClassMask);
 	virtual void ChangeUnsol(AsyncMaster*, ITaskCompletion* apTask, bool aEnable, int aClassMask);
 	virtual void SyncTime(AsyncMaster*, ITaskCompletion* apTask);
-	virtual void Execute(AsyncMaster*, const BinaryOutput&, size_t); 
+	virtual void Execute(AsyncMaster*, const BinaryOutput&, size_t);
 	virtual void Execute(AsyncMaster*, const Setpoint&, size_t);
 
 	/* Events from application layer */
@@ -63,7 +63,7 @@ class AMS_Base
 
 	virtual void OnPartialResponse(AsyncMaster*, const APDU&);
 	virtual void OnFinalResponse(AsyncMaster*, const APDU&);
-	virtual void OnUnsolResponse(AsyncMaster*, const APDU&);		
+	virtual void OnUnsolResponse(AsyncMaster*, const APDU&);
 
 	virtual std::string Name() const = 0;
 
@@ -107,7 +107,7 @@ class AMS_Closed : public AMS_Base
 class AMS_OpenBase : public AMS_Base
 {
 	public:
-	void OnUnsolResponse(AsyncMaster*, const APDU&);	
+	void OnUnsolResponse(AsyncMaster*, const APDU&);
 };
 
 /* AMS_Idle */

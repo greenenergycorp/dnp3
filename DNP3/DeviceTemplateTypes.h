@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __DEVICE_TEMPLATE_TYPES_H_
 #define __DEVICE_TEMPLATE_TYPES_H_
 
@@ -39,7 +39,7 @@ struct PointRecord
 /// Event point records also have a class
 struct EventPointRecord : public PointRecord
 {
-	EventPointRecord(const std::string& arName, PointClass aPointClass) : 
+	EventPointRecord(const std::string& arName, PointClass aPointClass) :
 	PointRecord(arName),
 	EventClass(aPointClass)
 	{}
@@ -47,7 +47,7 @@ struct EventPointRecord : public PointRecord
 	EventPointRecord() : EventClass(PC_CLASS_1) {}
 
 	/// when the point changes, it will generate an event unless EventClass == PC_CLASS_0
-	PointClass EventClass; 
+	PointClass EventClass;
 };
 
 /// Adds a deadband parameter
@@ -67,7 +67,7 @@ struct DeadbandPointRecord : public EventPointRecord
 /// Todo - Add properties that determine how controls are handled - i.e. DO/SBO/etc
 struct ControlRecord : public PointRecord
 {
-	ControlRecord(const std::string& arName = "", CommandModes aMode = CM_SBO_ONLY, millis_t aSelectTimeoutMS = 5000) : 
+	ControlRecord(const std::string& arName = "", CommandModes aMode = CM_SBO_ONLY, millis_t aSelectTimeoutMS = 5000) :
 	PointRecord(arName),
 		CommandMode(aMode),
 		SelectTimeoutMS(aSelectTimeoutMS)

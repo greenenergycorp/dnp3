@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_SLAVE_H_
 #define __ASYNC_SLAVE_H_
 
@@ -45,11 +45,11 @@ namespace apl { namespace dnp {
 
 class AS_Base;
 
-/** @section desc DNP3 outstation. 
+/** @section desc DNP3 outstation.
 
 	Manages a state machine that handles events from the user layer and the application layer to provide DNP outstation services.
 
-	ResponseContext and AsyncSlaveEventBuffer objects manage data/event responses to master requests, and the IDNPCommandMaster 
+	ResponseContext and AsyncSlaveEventBuffer objects manage data/event responses to master requests, and the IDNPCommandMaster
 	implementation verifies control/setpoint behavior and passes valid commands to the user code.
 
 	SlaveConfig structure represents the slave behavioral configuration, the AsyncDatabase is in charge of the data model itself.
@@ -87,11 +87,11 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 
 	void OnUnsolFailure();
 	void OnSolFailure();
-	
+
 	// Only have to override OnRequest since we're a slave
 	void OnRequest(const APDU&, SequenceInfo);
 	void OnUnknownObject();
-	
+
 	///////////////////////////////////
 	// End - External events
 	///////////////////////////////////
@@ -101,12 +101,12 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	IDataObserver* GetDataObserver() { return &mChangeBuffer; }
 
 	private:
-						
+
 	ChangeBuffer<SigLock> mChangeBuffer;	/// how client code gives us updates
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the change queue / vto
 	IAsyncAppLayer* mpAppLayer;				/// lower application layer
 	ITimerSource* mpTimerSrc;				/// used for post and timers
-	AsyncDatabase* mpDatabase;				/// holds static data	
+	AsyncDatabase* mpDatabase;				/// holds static data
 	IDNPCommandMaster* mpCmdMaster;			/// how commands are selected/operated
 	int mSequence;							/// control sequence
 	CommandResponseQueue mRspQueue;			/// how command responses are received
@@ -115,7 +115,7 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	SlaveResponseTypes mRspTypes;			/// converts the group/var in the config to dnp singletons
 
 	ITimer* mpUnsolTimer;					/// timer for sending unsol responsess
-	
+
 	IINField mIIN;							/// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
 	IINField mRspIIN;						/// Transient IIN bits that get merged before a response is issued
 	APDU mResponse;							/// APDU used to form responses
@@ -129,14 +129,14 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 
 	ITimeManager* mpTime;
 
-	// Flags that tell us that some action has been Deferred 
+	// Flags that tell us that some action has been Deferred
 	// until the slave is in a state capable of handling it.
-	
+
 	bool mDeferredUpdate;					/// Indicates that a data update has been Deferred
 	bool mDeferredRequest;					/// Indicates that a request has been Deferred
 	bool mDeferredUnsol;						/// Indicates that the unsol timer expired, but the event was Deferred
 	bool mDeferredUnknown;
-	
+
 	bool mStartupNullUnsol;					/// Tracks whether the device has completed the NULL unsol startup message
 
 	void OnDataUpdate();					/// internal event dispatched when user code commits an update to mChangeBuffer
@@ -154,15 +154,15 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	void HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
 	void HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInfo);
 	void HandleEnableUnsolicited(const APDU& arRequest, bool aIsEnable);
-	void HandleUnknown(); 
-	
-	
+	void HandleUnknown();
+
+
 	void ConfigureDelayMeasurement(const APDU& arRequest);
 	void CreateResponseContext(const APDU& arRequest);
 
 	// Helpers
 
-	size_t FlushUpdates();	
+	size_t FlushUpdates();
 	void FlushDeferredEvents();
 	void StartUnsolTimer(millis_t aTimeout);
 
@@ -218,7 +218,7 @@ void AsyncSlave::RespondToCommands(const StreamObject<T>* apObj, ObjectReadItera
 
 template <class T>
 CommandStatus AsyncSlave::Select(T& arCmd, size_t aIndex, const HeaderInfo& aHdr, SequenceInfo aSeqInfo, int aAPDUSequence)
-{	
+{
 	CommandStatus res = mpCmdMaster->Select(CommandRequestInfo<T>(arCmd, aHdr.GetObjectType(), aHdr.GetVariation(), aHdr.GetQualifier(), aSeqInfo, aAPDUSequence), aIndex) ? CS_SUCCESS : CS_NOT_SUPPORTED;
 	LOG_BLOCK(LEV_INFO, "Selecting " << arCmd.ToString() << " Index: " << aIndex << " Result: " << ToString(res));
 	if ( res == CS_NOT_SUPPORTED )

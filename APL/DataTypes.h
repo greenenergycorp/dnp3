@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __DATA_TYPES_H_
 #define __DATA_TYPES_H_
 
@@ -55,14 +55,14 @@ namespace apl
 	// useful template for pairing a value with an index
 	template <class T>
 	struct Change
-	{ 
+	{
 		Change(){}
 		Change(const T& arVal, size_t aIndex) :
 		mValue(arVal),
 		mIndex(aIndex)
 		{}
 
-		T mValue; 
+		T mValue;
 		size_t mIndex;
 	};
 
@@ -72,16 +72,16 @@ namespace apl
 		DT_ANALOG,
 		DT_COUNTER,
 		DT_CONTROL_STATUS,
-		DT_SETPOINT_STATUS		
+		DT_SETPOINT_STATUS
 	};
 
 	std::string GetDataTypeName(DataTypes aType);
 
 	/**
 	  Base class shared by all of the DataPoint types. There are 5 major data types and they all have
-	  a value, timestamp and a quality field. The timestamp should reflect when the value was measured 
-	  or calculated. The quality field should be set approriately depending on the data type. Each datatype 
-	  has a its own defintion of the quality field that indicate specific conditions but all of the 
+	  a value, timestamp and a quality field. The timestamp should reflect when the value was measured
+	  or calculated. The quality field should be set approriately depending on the data type. Each datatype
+	  has a its own defintion of the quality field that indicate specific conditions but all of the
 	  datatypes define an XX_ONLINE bit, that is the default "nominal" value. This quality field is not
 	  for applying alarming information, that needs to be done with Binaries or in other channels.
 	*/
@@ -89,13 +89,13 @@ namespace apl
 	{
 		public:
 		virtual ~DataPoint(){}
-		
+
 		DataTypes GetType() const;
 		TimeStamp_t GetTime() const;
-		
+
 		virtual byte_t GetQuality() const;
 		bool CheckQualityBit(byte_t aQualMask) const;
-		
+
 		virtual void SetQuality(byte_t aQuality);
 		void SetTime(const TimeStamp_t arTime);
 		void SetToNow();
@@ -103,10 +103,10 @@ namespace apl
 		virtual std::string ToString() const = 0;
 
 		protected:
-		
+
 		//These constructors can only be invoked by super classes
 		DataPoint(byte_t aQuality, DataTypes aType);
-		
+
 		byte_t mQuality;	//	bitfield that stores type specific quality information
 		TimeStamp_t mTime;		//	the time that the measurement was made
 
@@ -132,7 +132,7 @@ namespace apl
 
 		bool GetValue() const;
 		void SetValue(bool aValue);
-		
+
 		byte_t GetQuality() const;
 		void SetQuality(byte_t aQuality);
 
@@ -148,15 +148,15 @@ namespace apl
 		protected:
 		//BoolDataPoint(const BoolDataPoint& arRHS);
 		BoolDataPoint(byte_t aQuality, DataTypes aType, byte_t aValueMask);
-		
+
 		private:
 		BoolDataPoint();
 		// bool data points store their value as a bit in the quality field
 		byte_t mValueMask;
 	};
-	
+
 	inline void BoolDataPoint::SetValue(bool aValue)
-	{ 
+	{
 		mQuality = (aValue) ? (mQuality|mValueMask) : (mQuality&(~mValueMask));
 	}
 	inline bool BoolDataPoint::GetValue() const { return (mQuality&mValueMask) != 0; }
@@ -169,8 +169,8 @@ namespace apl
 	}
 
 	inline void BoolDataPoint::SetQuality(byte_t aQuality)
-	{ 
-		mQuality = (mQuality & (mValueMask)); 
+	{
+		mQuality = (mQuality & (mValueMask));
 		mQuality |= aQuality;
 	}
 
@@ -179,11 +179,11 @@ namespace apl
 
 	template <class T>
 	bool ExceedsDeadband(const T& val1, const T& val2, double aDeadband)
-	{		
+	{
 		//T can be unsigned data type so std::abs won't work since it only directly supports signed data types
 		//If one uses std::abs and T is unsigned one will get an ambiguous override error.
 		uint_32_t diff;
-		
+
 		if (val1 < val2){
 			diff = val2 - val1;
 		}else{
@@ -195,7 +195,7 @@ namespace apl
 
 	template <>
 	bool ExceedsDeadband<double>(const double& val1, const double& val2, double aDeadband);
-	
+
 	//Common subclass to analogs and counters
 	template <class T>
 	class TypedDataPoint : public DataPoint
@@ -205,7 +205,7 @@ namespace apl
 		T GetValue() const { return mValue; }
 		void SetValue(T aValue) { mValue = aValue; }
 
-		bool ShouldGenerateEvent(const TypedDataPoint<T>& arRHS, double aDeadband, T aLastReportedVal) const;	
+		bool ShouldGenerateEvent(const TypedDataPoint<T>& arRHS, double aDeadband, T aLastReportedVal) const;
 
 		typedef T Type;
 
@@ -213,17 +213,17 @@ namespace apl
 		static const T MIN_VALUE;
 
 		std::string ToString() const;
-		
+
 		bool operator==(const TypedDataPoint<T>& rhs)
 		{ return GetValue() == rhs.GetValue() && GetQuality() == rhs.GetQuality(); }
-		
+
 		protected:
 		// IntDataPoints have seperate fields for quality and value
 		//IntDataPoint(const IntDataPoint& arRHS);
 		TypedDataPoint(byte_t aQuality, DataTypes aType);
 		T mValue;
 
-		private:	
+		private:
 		TypedDataPoint();
 	};
 
@@ -234,11 +234,11 @@ namespace apl
 	const T TypedDataPoint<T>::MIN_VALUE = MaxMinWrapper<T>::Min();
 
 	template <class T>
-	TypedDataPoint<T>::TypedDataPoint(byte_t aQuality, DataTypes aType) : 
-	DataPoint(aQuality, aType), 
-	mValue(0) 
+	TypedDataPoint<T>::TypedDataPoint(byte_t aQuality, DataTypes aType) :
+	DataPoint(aQuality, aType),
+	mValue(0)
 	{
-	
+
 	}
 
 	template <class T>
@@ -246,7 +246,7 @@ namespace apl
 	{
 		if (mQuality != arRHS.mQuality)	return true;
 
-		return ExceedsDeadband<T>(arRHS.GetValue(), aLastReportedVal, aDeadband);		
+		return ExceedsDeadband<T>(arRHS.GetValue(), aLastReportedVal, aDeadband);
 	}
 
 	template <class T>
@@ -255,7 +255,7 @@ namespace apl
 		std::ostringstream oss;
 		oss << "Value: " << GetValue() << " Quality: " << static_cast<int>(GetQuality());
 		return oss.str();
-	}	
+	}
 
 #ifdef SWIG
 %template(DoublePoint) apl::TypedDataPoint<double>;
@@ -274,7 +274,7 @@ namespace apl
 	class Binary : public BoolDataPoint
 	{
 		public:
-		Binary(bool aValue, byte_t aQuality = BQ_RESTART) : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE) 
+		Binary(bool aValue, byte_t aQuality = BQ_RESTART) : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE)
 		{
 			SetValue(aValue);
 			SetQuality(aQuality);
@@ -285,7 +285,7 @@ namespace apl
 
 		/// Describes the static data type of the measurement as an enum
 		static const DataTypes MeasEnum = DT_BINARY;
-		
+
 		static const int ONLINE = BQ_ONLINE;
 
 		operator ValueType() const { return this->GetValue(); }
@@ -300,7 +300,7 @@ namespace apl
 	class ControlStatus : public BoolDataPoint
 	{
 		public:
-		
+
 		ControlStatus(bool aValue, byte_t aQuality = TQ_RESTART) : BoolDataPoint(TQ_RESTART, DT_CONTROL_STATUS, TQ_STATE)
 		{
 			SetValue(aValue);
@@ -328,14 +328,14 @@ namespace apl
 	{
 		public:
 		Analog() : TypedDataPoint<double>(AQ_RESTART, DT_ANALOG) {}
-			
+
 		Analog(double aVal, byte_t aQuality = AQ_RESTART) : TypedDataPoint<double>(AQ_RESTART, DT_ANALOG)
 		{
 			SetValue(aVal);
 			SetQuality(aQuality);
 		}
 
-				
+
 		typedef double ValueType;
 
 		static const DataTypes MeasEnum = DT_ANALOG;
@@ -345,7 +345,7 @@ namespace apl
 		operator ValueType() const { return this->GetValue(); }
 		ValueType operator=(ValueType aValue) { this->SetValue(aValue); return GetValue(); }
 
-		
+
 	};
 
 	/**
@@ -395,7 +395,7 @@ namespace apl
 		operator ValueType() const { return this->GetValue(); }
 		ValueType operator=(ValueType aValue) { this->SetValue(aValue); return GetValue(); }
 	};
-	
+
 }
 
 #endif

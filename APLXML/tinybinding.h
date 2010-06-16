@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef _TINY_BINDING_H_
 #define _TINY_BINDING_H_
 
@@ -60,7 +60,7 @@ public:
 	inline static bool FromString_bool(TiXmlNode* apParent, const char * aStr);
 	inline static std::string FromString_string(TiXmlNode* apParent, const char * aStr);
 	inline static float FromString_float(TiXmlNode* apParent, const char * aStr);
-	
+
 	inline static std::string ToString_int(int aValue);
 	inline static std::string ToString_double(double aValue);
 	inline static std::string ToString_bool(bool aValue);
@@ -93,7 +93,7 @@ public:
 			return aDefault;
 		}
 	}
-	
+
 	template <typename T>
 	std::string IXMLDataBound::ToString_T(T aValue){
 		std::ostringstream oss;
@@ -118,7 +118,7 @@ public:
 	inline float IXMLDataBound::FromString_float(TiXmlNode* apParent, const char * aStr){
 		return FromString_T<float>(apParent, aStr, "float", 0);
 	}
-	
+
 	inline std::string IXMLDataBound::ToString_int(int aValue){return ToString_T<int>(aValue);}
 	inline std::string IXMLDataBound::ToString_double(double aValue){return ToString_T<double>(aValue);}
 	inline std::string IXMLDataBound::ToString_bool(bool aValue){return ToString_T<bool>(aValue);}

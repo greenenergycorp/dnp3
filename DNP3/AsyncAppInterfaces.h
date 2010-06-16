@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_APP_INTERFACES_H_
 #define __ASYNC_APP_INTERFACES_H_
 
@@ -33,16 +33,16 @@ class APDU;
 	SEQUENCE #.
 */
 class IAsyncAppLayer
-{	
+{
 	public:
 
 	/** Start a response transaction with optional confirmation.
 
 		The incrementing of the sequence number is controlled
 		by the FIR bit. If FIR is not set, the sequence is incremented.
-		
+
 		A callback to one of the following is guaranteed:
-		
+
 		OnFailure() - The transaction failed, either because the send failed or
 		the confirmation timed out.
 
@@ -53,14 +53,14 @@ class IAsyncAppLayer
 	*/
 	virtual void SendResponse(APDU&) = 0;
 
-	/** Start an unsolicited transaction with optional confirmation and retries. This 
+	/** Start an unsolicited transaction with optional confirmation and retries. This
 		sequence is almost identical to a response transaction.
 
 		FIR and FIN must both be set for unsolcited responses since they cannot
 		be multifragmented.
-		
+
 		A callback to one of the following is gauranteed:
-		
+
 		OnFailure() - The transaction failed, either because the send failed or
 		the confirmation timed out.
 
@@ -73,9 +73,9 @@ class IAsyncAppLayer
 
 	/** Start a send transaction with optional confirmation and retries,
 		that should result in a resposne.
-		
+
 		Callbacks are as follows:
-		
+
 		OnFailure() - The transaction failed, either because the send failed or
 		the confirmation timed out.
 
@@ -83,7 +83,7 @@ class IAsyncAppLayer
 
 		OnPartialResponse(APDU) - A non-FIN response was received. The client should
 		process the response and continue waiting for:
-				
+
 				- More partial responses
 				- A failure
 				- A final response
@@ -125,20 +125,20 @@ class IAsyncAppUser
 		virtual void OnSolFailure() = 0;						/// A transaction has failed for some reason
 
 		virtual bool IsMaster() = 0;						/// controls which types of messages are sent upwards
-		
+
 		/// A non-final response has been received
 		virtual void OnPartialResponse(const APDU&);
 		/// A final response has been received
-		virtual void OnFinalResponse(const APDU&);		
+		virtual void OnFinalResponse(const APDU&);
 
 		/// Process unsolicited data
-		virtual void OnUnsolResponse(const APDU&);		
+		virtual void OnUnsolResponse(const APDU&);
 		/// Process request fragment
 		virtual void OnRequest(const APDU&, SequenceInfo);
 		// Unknown Object
 		virtual void OnUnknownObject();
 };
-	
+
 }} //end ns
 
 #endif

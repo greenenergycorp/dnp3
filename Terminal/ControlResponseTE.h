@@ -18,7 +18,7 @@ namespace apl
 	public:
 
 		CommandResponder(Logger* apLogger, bool aLinkStatuses = false, IDataObserver* apObs = NULL);
-		
+
 		void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
 		void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
 
@@ -44,9 +44,9 @@ namespace apl
 	class ControlResponseTE : public ITerminalExtension
 	{
 		public:
-			
+
 			ControlResponseTE(Logger* apLogger, bool aLinkStatuses = false, IDataObserver* apObs = NULL);
-			
+
 			std::string Name() { return "ControlResponseTE"; }
 			ICommandAcceptor* GetCmdAcceptor() { return &mHandler; }
 
@@ -56,7 +56,7 @@ namespace apl
 
 			retcode HandleSetResponse(std::vector<std::string>& arArgs);
 
-			CommandResponder mHandler;									
+			CommandResponder mHandler;
 	};
 }
 

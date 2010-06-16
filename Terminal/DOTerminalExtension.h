@@ -19,17 +19,17 @@ namespace apl
 	{
 		public:
 			DOTerminalExtension(IDataObserver* apObserver) : mpObserver(apObserver) {}
-			
+
 			virtual ~DOTerminalExtension() {}
 
 		private:
 
 			retcode HandleQueueBinary(std::vector<std::string>& arArgs)
-			{ return HandleQueue<Binary>(arArgs); }		
-			
+			{ return HandleQueue<Binary>(arArgs); }
+
 			retcode HandleQueueAnalog(std::vector<std::string>& arArgs)
 			{ return HandleQueue<Analog>(arArgs); }
-			
+
 			retcode HandleQueueCounter(std::vector<std::string>& arArgs)
 			{ return HandleQueue<Counter>(arArgs); }
 
@@ -37,7 +37,7 @@ namespace apl
 			retcode HandleQueue(std::vector<std::string>& arArgs);
 			retcode HandleDoTransaction(std::vector<std::string>& arArgs);
 			IDataObserver* mpObserver;
-			
+
 			//implement from ITerminalExtension
 			void _BindToTerminal(ITerminal* apTerminal);
 
@@ -46,7 +46,7 @@ namespace apl
 
 	template <class T>
 	retcode DOTerminalExtension::HandleQueue(std::vector<std::string>& arArgs)
-	{		
+	{
 		size_t index;
 		typename T::ValueType value;
 		size_t quality = AQ_ONLINE; // byte_t is interpreted as a '1' instead of 0x01
@@ -60,13 +60,13 @@ namespace apl
 				break;
 			default:
 				return BAD_ARGUMENTS;
-		}		
+		}
 
-		T p(value, static_cast<byte_t>(quality));		
+		T p(value, static_cast<byte_t>(quality));
 		p.SetToNow();
 		Transaction tr(&mBuffer);
 		mBuffer.Update(p, index);
-		
+
 		return SUCCESS;
 	}
 }

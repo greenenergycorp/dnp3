@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __ASYNC_MASTER_H_
 #define __ASYNC_MASTER_H_
 
@@ -74,7 +74,7 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	typedef boost::function<apl::CopyableBuffer (bool aSelect)> CommandFormatter;
 	typedef boost::function<CommandStatus (const APDU&)> CommandValidator;
 	typedef boost::function<bool (const APDU&, millis_t&)> DelayValidator;
-	
+
 	public:
 
 	AsyncMaster(Logger*, MasterConfig aCfg, IAsyncAppLayer*, IDataObserver*, AsyncTaskGroup*, ITimerSource*, ITimeSource* apTimeSrc = TimeSource::Inst());
@@ -92,7 +92,7 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	void ExecuteCommand();
 
 	/* Implement IAsyncAppUser - callbacks from the app layer */
-	
+
 	void OnLowerLayerUp();
 	void OnLowerLayerDown();
 
@@ -105,12 +105,12 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	// override the response functions
 	void OnPartialResponse(const APDU&);
 	void OnFinalResponse(const APDU&);
-	void OnUnsolResponse(const APDU&);		
+	void OnUnsolResponse(const APDU&);
 
 	bool IsMaster() { return true; }
 
 	private:
-														
+
 	IINField mLastIIN;									/// last IIN received from the outstation
 
 	void ProcessIIN(const IINField& arIIN);				/// Analyze IIN bits and react accordingly
@@ -120,12 +120,12 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	void CompleteCommandTask(CommandStatus aStatus);	/// finalize the execution of the command task
 
 	void ProcessDataResponse(const APDU&);	/// Read data output of solicited or unsolicited response and publish
-	
+
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / vto
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
 	AMS_Base* mpState;						/// Pointer to active state, start in TLS_Closed
 	ITaskCompletion* mpTask;				/// Pointer to active task, NULL if no task
-	
+
 	APDU mRequest;							/// APDU that gets reused for requests
 
 	IAsyncAppLayer* mpAppLayer;				 /// lower application layer
@@ -144,7 +144,7 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	DelayValidator mDelayValidator;
 
 	bool ValidateDelayMeas(const APDU&, boost::posix_time::ptime aStart, millis_t& arDelay);
-		
+
 	CopyableBuffer FormatSetpoint(const Setpoint& arCmd, CommandObject<Setpoint>*, size_t aIndex, bool aIsSelect);
 	CopyableBuffer FormatBinaryOutput(const BinaryOutput& arCmd, size_t aIndex, bool aIsSelect);
 
@@ -159,7 +159,7 @@ CommandStatus AsyncMaster::ValidateCommandResponse(const APDU& arAPDU, CommandOb
 	if(hdr.Count() == 1)
 	{
 		int grp = hdr->GetGroup();
-		int var = hdr->GetVariation();		
+		int var = hdr->GetVariation();
 
 		if(grp == apObj->GetGroup() && var == apObj->GetVariation())
 		{
@@ -169,7 +169,7 @@ CommandStatus AsyncMaster::ValidateCommandResponse(const APDU& arAPDU, CommandOb
 				//compare what was written to what was received
 				T cmd = apObj->Read(*obj);
 				if(arData == apObj->GetValueBytes(*obj)) return cmd.mStatus;
-				else return CS_FORMAT_ERROR; 				
+				else return CS_FORMAT_ERROR;
 			}
 		}
 	}

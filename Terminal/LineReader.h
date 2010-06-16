@@ -17,13 +17,13 @@ class LineReader : public AsyncPhysLayerMonitor, private Uncopyable
 {
 	public:
 		LineReader(Logger* apLogger, IPhysicalLayerAsync* apPhysical, ITimerSource* apTimerSrc, size_t aBuffSize);
-		
+
 		virtual void AcceptLine(const std::string&) = 0;
 		virtual void _Up() = 0;
 		virtual void _Down() = 0;
-						
+
 	private:
-		CopyableBuffer mBuffer;		
+		CopyableBuffer mBuffer;
 		size_t mNumBytes;
 		bool mHasCR;
 

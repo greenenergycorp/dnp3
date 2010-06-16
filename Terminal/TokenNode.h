@@ -15,19 +15,19 @@ namespace apl
 
 		public:
 
-			TokenNode(T aValue) 
+			TokenNode(T aValue)
 				:
 				mHasDefault(true),
 				mValue(aValue)
 			{
-		
+
 			}
 
-			TokenNode() 
+			TokenNode()
 				:
 				mHasDefault(false)
 			{
-	
+
 			}
 
 			~TokenNode()
@@ -65,7 +65,7 @@ namespace apl
 				mMap[arToken] = pToken;
 				return pToken;
 			}
-			
+
 
 			void SetValue(T aValue)
 			{
@@ -78,17 +78,17 @@ namespace apl
 				typename TokenMap::iterator i = mMap.begin();
 				for(; i != mMap.end(); i++) arNames.push_back(i->first);
 			}
-			
+
 
 		private:
 
 			bool mHasDefault;
 
 			T mValue;
-			
+
 			TokenMap mMap;
 
-			
+
 	};
 }
 

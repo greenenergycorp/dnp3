@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __HEADER_READ_ITERATOR_H_
 #define __HEADER_READ_ITERATOR_H_
 
@@ -31,12 +31,12 @@
 
 class IObjectHeader;
 
-namespace apl { namespace dnp {	
+namespace apl { namespace dnp {
 
 	class ObjectReadIterator;
-	
+
 	class HeaderInfo
-	{ 
+	{
 		public:
 
 		HeaderInfo(const ObjectHeaderField& arData, size_t aCount, size_t aPrefixSize, IObjectHeader* apHeader, ObjectBase* apObject, size_t aPos) :
@@ -63,7 +63,7 @@ namespace apl { namespace dnp {
 		const ObjectBase* GetBaseObject() const { return mpObjectBase; }
 		const IObjectHeader* GetHeader() const { return mpHeader; }
 		size_t GetPosition() const { return mPos; }
-		
+
 		private:
 
 		size_t mPos;
@@ -76,11 +76,11 @@ namespace apl { namespace dnp {
 
 	/// An interator that clients can use to loop over the object headers in an APDU
 	class HeaderReadIterator
-	{	
+	{
 		friend class APDU;
-		
+
 		public:
-		
+
 		const HeaderInfo* operator->() const;
 		const apl::byte_t* operator*() const;
 		const HeaderReadIterator& operator++();
@@ -90,14 +90,14 @@ namespace apl { namespace dnp {
 		ObjectReadIterator BeginRead();
 		size_t Count() { return mpHeaders->size(); }
 		bool IsEnd() { return mIndex >= mpHeaders->size(); }
-		
+
 		private:
-			
+
 		HeaderReadIterator(const std::vector<HeaderInfo>* apHeaders, const byte_t* apBuffer, bool aHasData);
 		const std::vector<HeaderInfo>* mpHeaders;
 		const byte_t* mpBuffer;
 		bool mHasData;
-		size_t mIndex;			
+		size_t mIndex;
 	};
 
 	inline const HeaderInfo& HeaderReadIterator::info() const
@@ -122,15 +122,15 @@ namespace apl { namespace dnp {
 	}
 
 	inline const HeaderReadIterator& HeaderReadIterator::operator++()
-	{ 
+	{
 		if(mIndex >= mpHeaders->size())
 		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
-		++mIndex; 
+		++mIndex;
 		return (*this);
 	}
 
 	inline const HeaderReadIterator HeaderReadIterator::operator++(int)
-	{ 
+	{
 		if(mIndex >= mpHeaders->size())
 		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
 		HeaderReadIterator tmp(*this);

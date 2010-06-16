@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __APP_HEADER_H_
 #define __APP_HEADER_H_
 
@@ -35,7 +35,7 @@ namespace apl { namespace dnp {
 	struct AppControlField
 	{
 		AppControlField(){};
-		AppControlField(bool aFIR, bool aFIN, bool aCON, bool aUNS, int aSEQ = 0) : 
+		AppControlField(bool aFIR, bool aFIN, bool aCON, bool aUNS, int aSEQ = 0) :
 		FIR(aFIR),
 		FIN(aFIN),
 		CON(aCON),
@@ -57,7 +57,7 @@ namespace apl { namespace dnp {
 
 		IINField(apl::byte_t aLSB = 0, apl::byte_t aMSB = 0) : 	mLSB(aLSB), mMSB(aMSB)
 		{
-		
+
 		}
 
 #define MACRO_GET_BIT(value, mask) const { return (mask&value) != 0; }
@@ -71,7 +71,7 @@ namespace apl { namespace dnp {
 		bool GetLocalControl()			MACRO_GET_BIT(mLSB, IIN_LSB_LOCAL_CONTROL)
 		bool GetDeviceTrouble()			MACRO_GET_BIT(mLSB, IIN_LSB_DEVICE_TROUBLE)
 		bool GetDeviceRestart()			MACRO_GET_BIT(mLSB, IIN_LSB_DEVICE_RESTART)
-		
+
 		// MSB
 		bool GetFuncNotSupported()		MACRO_GET_BIT(mMSB, IIN_MSB_FUNC_NOT_SUPPORTED)
 		bool GetObjectUnknown()			MACRO_GET_BIT(mMSB, IIN_MSB_OBJECT_UNKNOWN)
@@ -109,10 +109,10 @@ namespace apl { namespace dnp {
 		apl::byte_t GetMSB() const { return mMSB; }
 		void SetLSB(apl::byte_t aLSB) { mLSB = aLSB; }
 		void SetMSB(apl::byte_t aMSB) { mMSB = aMSB; }
-		
-		void Zero() 
+
+		void Zero()
 		{ mLSB = mMSB = 0; }
-		
+
 		void BitwiseOR(const IINField& arIIN)
 		{ mLSB |= arIIN.mLSB;  mMSB |= arIIN.mMSB; }
 
@@ -162,7 +162,7 @@ namespace apl { namespace dnp {
 		void SetIIN(apl::byte_t* apStart, const IINField& arIIN) const;
 		IINField GetIIN(const apl::byte_t* apStart) const;
 	};
-	
+
 }}
 
 #endif

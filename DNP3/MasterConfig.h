@@ -1,4 +1,4 @@
-// 
+//
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
@@ -6,16 +6,16 @@
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
-// 
+//
 // http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing,
 // software distributed under the License is distributed on an
 // "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-// 
+//
 #ifndef __MASTER_CONFIG_H_
 #define __MASTER_CONFIG_H_
 
@@ -49,34 +49,34 @@ struct MasterConfig
 		@param aPeriod		Period of the scan in milliseconds
 	*/
 	void AddExceptionScan(int aClassMask, millis_t aPeriod)
-	{ 
+	{
 		ExceptionScan ex = { aClassMask, aPeriod };
 		mScans.push_back(ex);
 	}
 
 	/// Maximum fragment size to use for requests
-	size_t FragSize;			
+	size_t FragSize;
 
 	/// If true, the master will do time syncs when it sees the time IIN bit from the slave
-	bool AllowTimeSync;		
+	bool AllowTimeSync;
 
 	/// If true, the master will enable/disable unsol on startup
-	bool DoUnsolOnStartup;		
+	bool DoUnsolOnStartup;
 
 	/// If DoUnsolOnStartup == true, the master will use this bit to decide wether to enable (true) or disable (false)
-	bool EnableUnsol;			
+	bool EnableUnsol;
 
 	///	Bitwise mask used determine which classes are enabled/disabled for unsol
-	int UnsolClassMask;			
+	int UnsolClassMask;
 
 	/// Period for integrity scans (class 0), -1 for non periodic
-	millis_t IntegrityRate;		
+	millis_t IntegrityRate;
 
 	/// Time delay between task retries
-	millis_t TaskRetryRate;		
+	millis_t TaskRetryRate;
 
 	///vector that holds exception scans
-	std::vector<ExceptionScan> mScans;	
+	std::vector<ExceptionScan> mScans;
 };
 
 }}
