@@ -783,7 +783,6 @@ void SlaveConfig_t :: fromXml(TiXmlNode* pNode){
 	MaxBinaryEvents = FromString_int(pEm, pEm->Attribute("MaxBinaryEvents"));
 	MaxAnalogEvents = FromString_int(pEm, pEm->Attribute("MaxAnalogEvents"));
 	MaxCounterEvents = FromString_int(pEm, pEm->Attribute("MaxCounterEvents"));
-	OpenLayerDelay = FromString_int(pEm, pEm->Attribute("OpenLayerDelay"));
 	StaticRsp.fromXml(pNode->FirstChildElement("StaticRsp"));
 	EventRsp.fromXml(pNode->FirstChildElement("EventRsp"));
 	TimeIINTask.fromXml(pNode->FirstChildElement("TimeIINTask"));
@@ -802,7 +801,6 @@ void SlaveConfig_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVa
 	pEm->SetAttribute("MaxBinaryEvents", ToString_int(MaxBinaryEvents));
 	pEm->SetAttribute("MaxAnalogEvents", ToString_int(MaxAnalogEvents));
 	pEm->SetAttribute("MaxCounterEvents", ToString_int(MaxCounterEvents));
-	pEm->SetAttribute("OpenLayerDelay", ToString_int(OpenLayerDelay));
 	StaticRsp.toXml(pEm, true, aIgnoreValid);
 	EventRsp.toXml(pEm, true, aIgnoreValid);
 	TimeIINTask.toXml(pEm, true, aIgnoreValid);

@@ -108,8 +108,7 @@
             </xs:all>
             <xs:attribute name="MaxBinaryEvents" type="xs:int" use="required" />
             <xs:attribute name="MaxAnalogEvents" type="xs:int" use="required" />
-            <xs:attribute name="MaxCounterEvents" type="xs:int" use="required" />
-            <xs:attribute name="OpenLayerDelay" type="xs:int" use="required"/>
+            <xs:attribute name="MaxCounterEvents" type="xs:int" use="required" />            
           </xs:complexType>
         </xs:element>
 

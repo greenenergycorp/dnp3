@@ -403,7 +403,6 @@ public:
 	int MaxBinaryEvents;
 	int MaxAnalogEvents;
 	int MaxCounterEvents;
-	int OpenLayerDelay;
 #ifdef SWIG
 %immutable StaticRsp;
 #endif

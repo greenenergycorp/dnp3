@@ -61,8 +61,7 @@ namespace apl{ namespace dnp{
 		arSlave.SlaveConfig.MaxAnalogEvents = 100;
 		arSlave.SlaveConfig.MaxCounterEvents = 100;		
 		arSlave.SlaveConfig.UnsolDefaults.PackDelayMS = 200;
-		arSlave.SlaveConfig.UnsolDefaults.RetryMS = 2000;
-		arSlave.SlaveConfig.OpenLayerDelay = 200;
+		arSlave.SlaveConfig.UnsolDefaults.RetryMS = 2000;		
 		
 		arSlave.SlaveConfig.StaticRsp.BinaryGrpVar.Grp = 1;
 		arSlave.SlaveConfig.StaticRsp.BinaryGrpVar.Var = 2;
