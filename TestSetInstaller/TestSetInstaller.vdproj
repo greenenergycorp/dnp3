@@ -15,6 +15,30 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_06639457B6034CBBBA61FF62C542015A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_26684E6E2AE44D038E2A3EEF56421EB0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_515D6B07AD824454B6DDFD3AD33D108E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5EDC4D3604BB4DB29C7408531072F8C9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6A312EAB7E9140DC81E3439C767051CA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -23,6 +47,12 @@
         {
         "MsmKey" = "8:_81D00EDA021FC53443A8A4E552FBC39E"
         "OwnerKey" = "8:_6A312EAB7E9140DC81E3439C767051CA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -43,6 +73,17 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                }
+            }
         }
         "Release"
         {
@@ -101,6 +142,86 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_06639457B6034CBBBA61FF62C542015A"
+            {
+            "SourcePath" = "8:icons\\square_dnp_48.ico"
+            "TargetName" = "8:square_dnp_48.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_26684E6E2AE44D038E2A3EEF56421EB0"
+            {
+            "SourcePath" = "8:icons\\square_dnp_16.ico"
+            "TargetName" = "8:square_dnp_16.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_515D6B07AD824454B6DDFD3AD33D108E"
+            {
+            "SourcePath" = "8:icons\\square_dnp_32.ico"
+            "TargetName" = "8:square_dnp_32.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5EDC4D3604BB4DB29C7408531072F8C9"
+            {
+            "SourcePath" = "8:EULA.rtf"
+            "TargetName" = "8:EULA.rtf"
+            "Tag" = "8:"
+            "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_81D00EDA021FC53443A8A4E552FBC39E"
             {
             "SourcePath" = "8:MSWSOCK.dll"
@@ -119,6 +240,26 @@
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_96C0F18DB7814CE0834AADB9EA6D5317"
+            {
+            "SourcePath" = "8:icons\\dnp_banner.bmp"
+            "TargetName" = "8:dnp_banner.bmp"
+            "Tag" = "8:"
+            "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
         }
@@ -140,7 +281,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_9C472356ABDA4F198CFB74D8416F04A0"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFilesFolder]\\dnp3"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -186,25 +327,25 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:DNP3 Testset"
-        "ProductCode" = "8:{480068F0-23AA-414C-A57B-E12BBEBD43B6}"
-        "PackageCode" = "8:{09BD4F26-1094-43A6-B1ED-7FEDF8D6D5D0}"
+        "ProductName" = "8:DNP3 Test Set"
+        "ProductCode" = "8:{73C3B9AD-3CC6-498E-873B-F1CF59C08F52}"
+        "PackageCode" = "8:{5BABDAB5-78C5-4CCD-A866-05F0E720ED64}"
         "UpgradeCode" = "8:{F07912E9-9BAF-4F92-ADE2-8C169AAFB16E}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Green Energy Corp"
+        "ProductVersion" = "8:0.9.0"
+        "Manufacturer" = "8:http://code.google.com/p/dnp3/"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:DNP3 Testset"
+        "Title" = "8:DNP3 Test Set"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Green Energy Corp"
+        "ARPCONTACT" = "8:http://code.google.com/p/dnp3/"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:slave/master testset for DNP3"
-        "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPURLINFOABOUT" = "8:http://code.google.com/p/dnp3/"
+        "ARPPRODUCTICON" = "8:_515D6B07AD824454B6DDFD3AD33D108E"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -318,7 +459,7 @@
             "Target" = "8:_6A312EAB7E9140DC81E3439C767051CA"
             "Folder" = "8:_314E7AD011F54D158D9A53847B2F7C24"
             "WorkingFolder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
-            "Icon" = "8:"
+            "Icon" = "8:_515D6B07AD824454B6DDFD3AD33D108E"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AD05C05D5426462590DC0DB7BAEB7438"
@@ -332,7 +473,7 @@
             "Target" = "8:_6A312EAB7E9140DC81E3439C767051CA"
             "Folder" = "8:_314E7AD011F54D158D9A53847B2F7C24"
             "WorkingFolder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
-            "Icon" = "8:"
+            "Icon" = "8:_515D6B07AD824454B6DDFD3AD33D108E"
             "Feature" = "8:"
             }
         }
@@ -405,7 +546,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "ShowProgress"
@@ -449,7 +591,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "UpdateText"
@@ -621,6 +764,54 @@
             "Attributes" = "3:1"
                 "Dialogs"
                 {
+                    "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_5FDD084C0DA24CA88619039BD7B619AB"
+                    {
+                    "Sequence" = "3:110"
+                    "DisplayName" = "8:License Agreement"
+                    "UseDynamicProperties" = "11:TRUE"
+                    "IsDependency" = "11:FALSE"
+                    "SourcePath" = "8:<VsdDialogDir>\\VsdLicenseDlg.wid"
+                        "Properties"
+                        {
+                            "BannerBitmap"
+                            {
+                            "Name" = "8:BannerBitmap"
+                            "DisplayName" = "8:#1001"
+                            "Description" = "8:#1101"
+                            "Type" = "3:8"
+                            "ContextData" = "8:Bitmap"
+                            "Attributes" = "3:4"
+                            "Setting" = "3:2"
+                            "Value" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "EulaText"
+                            {
+                            "Name" = "8:EulaText"
+                            "DisplayName" = "8:#1008"
+                            "Description" = "8:#1108"
+                            "Type" = "3:6"
+                            "ContextData" = "8:"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:2"
+                            "Value" = "8:_5EDC4D3604BB4DB29C7408531072F8C9"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                            "Sunken"
+                            {
+                            "Name" = "8:Sunken"
+                            "DisplayName" = "8:#1007"
+                            "Description" = "8:#1107"
+                            "Type" = "3:5"
+                            "ContextData" = "8:4;True=4;False=0"
+                            "Attributes" = "3:0"
+                            "Setting" = "3:0"
+                            "Value" = "3:4"
+                            "DefaultValue" = "3:4"
+                            "UsePlugInResources" = "11:TRUE"
+                            }
+                        }
+                    }
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_63ED1C7021EB4E9E88F8465775A58DBA"
                     {
                     "Sequence" = "3:300"
@@ -638,7 +829,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
                             "UsePlugInResources" = "11:TRUE"
                             }
                         }
@@ -660,7 +852,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "InstallAllUsersVisible"
@@ -695,7 +888,8 @@
                             "Type" = "3:8"
                             "ContextData" = "8:Bitmap"
                             "Attributes" = "3:4"
-                            "Setting" = "3:1"
+                            "Setting" = "3:2"
+                            "Value" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "CopyrightWarning"
@@ -719,8 +913,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1203"
+                            "Setting" = "3:2"
+                            "Value" = "8:The installer will guide you through the steps required to install [Title] on your computer."
                             "DefaultValue" = "8:#1203"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -736,7 +930,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6A312EAB7E9140DC81E3439C767051CA"
             {
-            "SourcePath" = "8:..\\TestSet\\Debug\\TestSet.exe"
+            "SourcePath" = "8:..\\TestSet\\Release\\TestSet.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
