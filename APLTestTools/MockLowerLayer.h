@@ -38,11 +38,13 @@ class MockLowerLayer : public ILowerLayer, public BufferTestObject
 		void ThisLayerUp();
 		void ThisLayerDown();
 
-		void SetAutoSuccess(bool aAuto) { mAutoSuccess = aAuto; }
+		void EnableAutoSendCallback(bool aIsSuccess);
+		void DisableAutoSendCallback();
 	
 	private:
 
-		bool mAutoSuccess;
+		bool mAutoSendCallback;
+		bool mIsSuccess;
 
 		virtual std::string SendString() const { return " MockLowerLayer ->"; }
 

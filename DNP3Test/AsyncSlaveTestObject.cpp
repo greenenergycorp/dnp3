@@ -33,7 +33,7 @@ cmd_master(10000),
 slave(mLog.GetLogger(aLevel, "slave"), &app, &mts, &fakeTime, &db, &cmd_master, arCfg),
 mpLogger(mLog.GetLogger(aLevel, "test"))
 {
-	
+	app.SetUser(&slave);
 }
 
 void AsyncSlaveTestObject::SendToSlave(const std::string& arData, SequenceInfo aSeq)
@@ -49,31 +49,8 @@ void AsyncSlaveTestObject::SendToSlave(const std::string& arData, SequenceInfo a
 std::string AsyncSlaveTestObject::Read()
 {
 	mAPDU = app.Read();
-	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);
-
-	if(mAPDU.GetFunction() == FC_UNSOLICITED_RESPONSE) slave.OnUnsolSendSuccess();
-	else slave.OnSolSendSuccess(); 
-	
+	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);	
 	return hex;
-}
-
-std::string AsyncSlaveTestObject::Peek()
-{
-	mAPDU = app.Peek();
-	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);
-	return hex;
-}
-
-void AsyncSlaveTestObject::Pop(bool aFailPacket, bool aDeferResponse)
-{
-	FunctionCodes f = app.Peek().GetFunction();
-	app.Pop();
-	if(!aDeferResponse) {
-		if(aFailPacket) 
-			(f == FC_UNSOLICITED_RESPONSE) ? slave.OnUnsolFailure() : slave.OnSolFailure();
-		else 
-			(f == FC_UNSOLICITED_RESPONSE) ? slave.OnUnsolSendSuccess() : slave.OnSolSendSuccess();
-	}
 }
 
 }}

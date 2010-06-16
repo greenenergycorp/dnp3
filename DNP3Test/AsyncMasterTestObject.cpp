@@ -35,7 +35,7 @@ fdo(),
 app(mLog.GetLogger(aLevel, "MockAppLayer")),
 master(mLog.GetLogger(aLevel,"master"), cfg, &app, &fdo, ats.NewGroup(), &mts, &fake_time)
 {
-	
+	app.SetUser(&master);
 }
 
 void AsyncMasterTestObject::RespondToMaster(const std::string& arData, bool aFinal)
@@ -51,21 +51,8 @@ void AsyncMasterTestObject::RespondToMaster(const std::string& arData, bool aFin
 std::string AsyncMasterTestObject::Read()
 {
 	mAPDU = app.Read();
-	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);
-	master.OnSolSendSuccess(); //whenever we read out a packet, tell the master that the data was succesfully transfered
+	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);	
 	return hex;
-}
-
-std::string AsyncMasterTestObject::Peek()
-{
-	mAPDU = app.Peek();
-	std::string hex = toHex(mAPDU.GetBuffer(), mAPDU.Size(), true);
-	return hex;
-}
-
-void AsyncMasterTestObject::Pop()
-{
-	app.Pop();
 }
 
 }} //end ns

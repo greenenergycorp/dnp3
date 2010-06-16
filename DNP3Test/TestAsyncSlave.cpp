@@ -33,6 +33,7 @@ using namespace boost;
 
 
 BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
+
 	BOOST_AUTO_TEST_CASE(InitialState)
 	{
 		SlaveConfig cfg;
@@ -85,7 +86,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();			
 
 		t.SendToSlave("C0 10"); // func = initialize application (16)
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); // IIN = device restart + func not supported
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); // IIN = device restart + func not supported
 	}
 
 	BOOST_AUTO_TEST_CASE(WriteIIN)
@@ -95,7 +96,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 50 01 00 07 07 00");
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 00 00");
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(WriteIINEnabled)
@@ -105,7 +106,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 50 01 00 07 07 01");
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04");
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04");
 	}
 
 	BOOST_AUTO_TEST_CASE(WriteIINWrongBit)
@@ -115,7 +116,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 50 01 00 04 04 01");
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04");
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04");
 	}
 	
 	BOOST_AUTO_TEST_CASE(WriteNonWriteObject)
@@ -125,7 +126,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 02 02 01 00 07 07 00");
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01");
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");
 	}
 
 	BOOST_AUTO_TEST_CASE(DelayMeasure)
@@ -135,7 +136,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 17"); //delay measure
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 34 02 07 01 00 00"); // response, Grp51Var2, count 1, value == 00 00
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 34 02 07 01 00 00"); // response, Grp51Var2, count 1, value == 00 00
 	}
 	
 	BOOST_AUTO_TEST_CASE(WriteTimeDate)
@@ -147,7 +148,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		t.SendToSlave("C0 02 32 01 07 01 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
 		BOOST_REQUIRE_EQUAL(t.fakeTime.GetTime(), 1234);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00"); 
 	}
 	BOOST_AUTO_TEST_CASE(WriteTimeDateNotAsking)
 	{
@@ -158,7 +159,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		t.SendToSlave("C0 02 32 01 07 01 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
 		BOOST_REQUIRE_EQUAL(t.fakeTime.GetTime(), 0);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 	}
 	BOOST_AUTO_TEST_CASE(WriteTimeDateMultipleObjects)
 	{
@@ -169,7 +170,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		t.SendToSlave("C0 02 32 01 07 02 D2 04 00 00 00 00 D2 04 00 00 00 00"); //write Grp50Var1, value = 1234 ms after epoch
 		BOOST_REQUIRE_EQUAL(t.fakeTime.GetTime(), 0);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 90 04"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 90 04");
 	}
 
 	BOOST_AUTO_TEST_CASE(BlankIntegrityPoll)
@@ -179,7 +180,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 01 3C 01 06"); // Read class 0
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(BlankExceptionScan)
@@ -189,7 +190,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 01 3C 02 06"); // Read class 1
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadClass0MultiFrag)
@@ -209,10 +210,10 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		
 		// Response should be (30,1)x2 per fragment, quality ONLINE, value 0
 		// 4 fragment response, first 3 fragments should be confirmed, last one shouldn't be
-		BOOST_REQUIRE_EQUAL(t.Peek(), "A0 81 80 00 1E 01 00 00 01 01 00 00 00 00 01 00 00 00 00"); t.Pop();
-		BOOST_REQUIRE_EQUAL(t.Peek(), "20 81 80 00 1E 01 00 02 03 01 00 00 00 00 01 00 00 00 00"); t.Pop();
-		BOOST_REQUIRE_EQUAL(t.Peek(), "20 81 80 00 1E 01 00 04 05 01 00 00 00 00 01 00 00 00 00"); t.Pop();
-		BOOST_REQUIRE_EQUAL(t.Peek(), "40 81 80 00 1E 01 00 06 07 01 00 00 00 00 01 00 00 00 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "A0 81 80 00 1E 01 00 00 01 01 00 00 00 00 01 00 00 00 00");
+		BOOST_REQUIRE_EQUAL(t.Read(), "20 81 80 00 1E 01 00 02 03 01 00 00 00 00 01 00 00 00 00");
+		BOOST_REQUIRE_EQUAL(t.Read(), "20 81 80 00 1E 01 00 04 05 01 00 00 00 00 01 00 00 00 00");
+		BOOST_REQUIRE_EQUAL(t.Read(), "40 81 80 00 1E 01 00 06 07 01 00 00 00 00 01 00 00 00 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadClass1)
@@ -232,12 +233,12 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		}
 
 		t.SendToSlave("C0 01 3C 02 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "E0 81 80 00 20 01 17 02 05 01 02 00 00 00 17 01 39 30 00 00"); // 12345 in Little endian hex is 39 30 00 00
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "E0 81 80 00 20 01 17 02 05 01 02 00 00 00 17 01 39 30 00 00"); // 12345 in Little endian hex is 39 30 00 00
+		
 
 		t.SendToSlave("C0 01 3C 02 06");			// Repeat read class 1
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00");	// Buffer should have been cleared
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");	// Buffer should have been cleared
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(NullUnsolOnStartup)
@@ -247,24 +248,21 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 		
 		// Null UNSOL, FIR, FIN, CON, UNS, w/ restart and need-time IIN
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 90 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 90 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolRetryDelay)
 	{
 		SlaveConfig cfg;
 		AsyncSlaveTestObject t(cfg);
+		t.app.EnableAutoSendCallback(false); //will respond with failure
 		t.slave.OnLowerLayerUp();
-
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0); // no active timers
-
+		
 		// check for the startup null unsol packet, but fail the transaction
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop(true); 
-
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1); // this should cause a timer to become active
 		BOOST_REQUIRE(t.mts.DispatchOne());
-
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolData)
@@ -285,11 +283,11 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		BOOST_REQUIRE(t.mts.DispatchOne()); //dispatch the data update event
 
 		t.slave.OnLowerLayerUp();
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 
 		// should immediately try to send another unsol packet, 
 		// Grp2Var1, qual 0x17, count 1, index 0, quality+val == 0x01
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 00 01"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");
 
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
 	}
@@ -304,7 +302,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 
 		t.slave.OnLowerLayerUp();
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no more frags are sent			
 
@@ -321,9 +319,9 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		BOOST_REQUIRE(t.mts.DispatchOne()); //dispatch the unsol pack timer
 
 		// Only enough room to in the APDU to carry a single value
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 01 01"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 01 01");
 		// should immediately try to send another unsol packet
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 00 01"); t.Pop();	
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");	
 	}
 
 	// Test that non-read fragments are immediately responded to while waiting for a 
@@ -337,20 +335,20 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 		
 		{
 			Transaction tr(t.slave.GetDataObserver());
 			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
 		}
 
+		t.app.DisableAutoSendCallback();
 		BOOST_REQUIRE(t.mts.DispatchOne());
-
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 00 81"); t.Pop(false, true);
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 81");
 
 		//now send a write IIN request, and test that the slave answers immediately
 		t.SendToSlave("C0 02 50 01 00 07 07 00");
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 00 00"); t.Pop();
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
 
 		t.slave.OnUnsolSendSuccess();
 		BOOST_REQUIRE_EQUAL(t.Count(), 0);
@@ -365,21 +363,21 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 		
 		{
 			Transaction tr(t.slave.GetDataObserver());
 			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
 		}
 
+		t.app.DisableAutoSendCallback();
 		BOOST_REQUIRE(t.mts.DispatchOne());
-
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 00 81"); t.Pop(false, true);
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 81");
 		
 		t.SendToSlave("C0 01 3C 02 06");
 
 		t.slave.OnUnsolSendSuccess();
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00");
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadWriteDuringUnsol)
@@ -391,23 +389,23 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00");
 		
 		{
 			Transaction tr(t.slave.GetDataObserver());
 			t.slave.GetDataObserver()->Update(Binary(true, BQ_ONLINE), 0);
 		}
 
+		t.app.DisableAutoSendCallback();
 		BOOST_REQUIRE(t.mts.DispatchOne());
-
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 00 81"); t.Pop(false, true);
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 81");
 		
 		t.SendToSlave("C0 01 3C 01 06");
 
 		//now send a write IIN request, and test that the slave answers immediately
 		t.SendToSlave("C0 02 50 01 00 07 07 00");
 		t.slave.OnUnsolSendSuccess();
-	    BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 00 00");
+	    BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 00 00");
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectCROB)
@@ -418,7 +416,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 	BOOST_AUTO_TEST_CASE(SelectCROBTooMany)
 	{
@@ -431,7 +429,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 02 03 01 01 01 00 00 00 01 00 00 00 00 04 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 02 03 01 01 01 00 00 00 01 00 00 00 00 04 01 01 01 00 00 00 01 00 00 00 08"); // 0x08 status == CS_TOO_MANY_OPS
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 02 03 01 01 01 00 00 00 01 00 00 00 00 04 01 01 01 00 00 00 01 00 00 00 08"); // 0x08 status == CS_TOO_MANY_OPS
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROB)
@@ -443,15 +441,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBWrongSequence)
@@ -463,15 +461,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C2 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffQual)
@@ -483,15 +481,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with 0x23 as qual)
 		t.SendToSlave("C1 04 0C 01 28 01 00 03 00 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 28 01 00 03 00 01 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 28 01 00 03 00 01 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffCode)
@@ -503,15 +501,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with control code 02)
 		t.SendToSlave("C1 04 0C 01 17 01 03 02 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 02 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 02 01 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffCount)
@@ -523,15 +521,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with control code 02)
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffOnTime)
@@ -543,15 +541,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with on time as 2 instead of 1)
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 02 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 02 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 02 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBDiffOffTime)
@@ -563,15 +561,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate (with off time as 2 instead of 1)
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 02 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 02 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 02 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBRetry)
@@ -583,20 +581,20 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
+		
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_PREV);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateCROBRetryDifferent)
@@ -608,20 +606,20 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00");
+		
 
 		// operate
 		t.SendToSlave("C1 04 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 00", SI_PREV); // byte changed (count)
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 02 01 00 00 00 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectDirectOperateFails)
@@ -633,15 +631,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 12 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_OTHER);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate
 		t.SendToSlave("C1 05 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 00", SI_CORRECT);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 0C 01 17 01 03 01 01 01 00 00 00 01 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var1)
@@ -652,7 +650,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 29 01 17 01 03 00 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04 29 01 17 01 03 00 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 29 01 17 01 03 00 00 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var1TooMany)
@@ -666,7 +664,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 29 01 17 02 03 00 00 00 00 00 04 00 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 01 17 02 03 00 00 00 00 00 04 00 00 00 00 08"); // 0x08 status == CS_TOO_MANY_OPS
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 02 03 00 00 00 00 00 04 00 00 00 00 08"); // 0x08 status == CS_TOO_MANY_OPS
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var2)
@@ -677,7 +675,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 2, count = 1, index = 3
 		t.SendToSlave("C0 03 29 02 17 01 03 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04 29 02 17 01 03 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 29 02 17 01 03 00 00 04"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var3)
@@ -688,7 +686,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 3, count = 1, index = 1, value = 100.0
 		t.SendToSlave("C0 03 29 03 17 01 01 00 00 C8 42 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04 29 03 17 01 01 00 00 C8 42 04"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 29 03 17 01 01 00 00 C8 42 04"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectGroup41Var4)
@@ -699,7 +697,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 4, count = 1, index = 1, value = 100.0
 		t.SendToSlave("C0 03 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 04 29 04 17 01 01 00 00 00 00 00 00 59 40 04"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 04 29 04 17 01 01 00 00 00 00 00 00 59 40 04"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
 	
@@ -713,15 +711,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 29 01 17 01 03 00 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 04 29 01 17 01 03 00 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var1DiffVal)
@@ -733,15 +731,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C0 03 29 01 17 01 03 00 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 04 29 01 17 01 03 01 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 01 17 01 03 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 01 00 00 00 02"); // 0x02 status == CS_NO_SELECT
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var2)
@@ -753,15 +751,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 2, count = 1, index = 3
 		t.SendToSlave("C0 03 29 02 17 01 03 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 04 29 02 17 01 03 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectOperateGroup41Var3)
@@ -773,15 +771,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 3, count = 1, index = 1
 		t.SendToSlave("C0 03 29 03 17 01 01 00 00 C8 42 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate group 41 Var 3, count = 1, index = 1
 		t.SendToSlave("C1 04 29 03 17 01 01 00 00 C8 42 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
+		
 
 		Setpoint s = t.cmd_acceptor.NextSetpoint();
 
@@ -799,15 +797,15 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 4, count = 1, index = 1
 		t.SendToSlave("C0 03 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
+		
 
 		t.cmd_acceptor.Queue(CS_SUCCESS);
 
 		// operate group 41 Var 4, count = 1, index = 1
 		t.SendToSlave("C1 04 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
+		
 
 		Setpoint s = t.cmd_acceptor.NextSetpoint();
 
@@ -827,8 +825,8 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 05 29 01 17 01 03 00 00 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 01 17 01 03 00 00 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var2)
 	{
@@ -841,8 +839,8 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select group 41 Var 1, count = 1, index = 3
 		t.SendToSlave("C1 05 29 02 17 01 03 00 00 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 02 17 01 03 00 00 00"); // 0x00 status == CS_SUCCESS
+		
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var3)
 	{
@@ -855,8 +853,8 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// operate group 41 Var 3, count = 1, index = 1
 		t.SendToSlave("C1 05 29 03 17 01 01 00 00 C8 42 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 03 17 01 01 00 00 C8 42 00"); // 0x00 status == CS_SUCCESS
+		
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateGroup41Var4)
 	{
@@ -869,8 +867,8 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// operate group 41 Var 4, count = 1, index = 1
 		t.SendToSlave("C1 05 29 04 17 01 01 00 00 00 00 00 00 59 40 00");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
-		t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 29 04 17 01 01 00 00 00 00 00 00 59 40 00"); // 0x00 status == CS_SUCCESS
+		
 	}
 
 	BOOST_AUTO_TEST_CASE(SelectBadObject)
@@ -881,7 +879,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Select a binary input
 		t.SendToSlave("C0 03 02 01 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
 	BOOST_AUTO_TEST_CASE(OperateBadObject)
@@ -892,7 +890,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Operate a binary input
 		t.SendToSlave("C0 04 02 01 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 	BOOST_AUTO_TEST_CASE(DirectOperateBadObject)
 	{
@@ -902,7 +900,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 
 		// Operate a binary input
 		t.SendToSlave("C0 05 02 01 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); // 0x04 status == CS_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); // 0x04 status == CS_NOT_SUPPORTED
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolEnable)
@@ -913,7 +911,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop(); //Null UNSOL
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00"); //Null UNSOL
 
 		// do a transaction to show that unsol data is not being reported yet
 		{
@@ -925,10 +923,10 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no unsol packets are generated
 
 		t.SendToSlave("C0 14 3C 02 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00");
 
 		// should automatically send the previous data as unsol
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00 02 01 17 01 00 01");			
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00 02 01 17 01 00 01");			
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolEnableBadObject)
@@ -939,7 +937,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.db.SetClass(DT_BINARY, PC_CLASS_1);
 		t.slave.OnLowerLayerUp();
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "F0 82 80 00"); t.Pop(); //Null UNSOL
+		BOOST_REQUIRE_EQUAL(t.Read(), "F0 82 80 00"); //Null UNSOL
 
 		// do a transaction to show that unsol data is not being reported yet
 		{
@@ -951,7 +949,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //check that no unsol packets are generated
 
 		t.SendToSlave("C0 14 01 02 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); t.Pop();		
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01");		
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsolEnableDisableFailure)
@@ -963,7 +961,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 14 3C 02 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); t.Pop(); //FUNC_NOT_SUPPORTED
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); //FUNC_NOT_SUPPORTED
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadFuncNotSupported)
@@ -973,7 +971,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 		
 		t.SendToSlave("C0 01 0C 01 06"); //try to read 12/1 (control block)
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 01"); //restart/func not supported
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 01"); //restart/func not supported
 	}
 
 	void TestStaticRead(const std::string& arRequest, const std::string& arResponse)
@@ -988,7 +986,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave(arRequest);
-		BOOST_REQUIRE_EQUAL(t.Peek(), arResponse);
+		BOOST_REQUIRE_EQUAL(t.Read(), arResponse);
 	}
 
 	/* ---- Static data reads ----- */
@@ -1002,7 +1000,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.SendToSlave("C0 01 01 01 06");
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 00 01 01 00 00 00 00 00"); // 1 byte start/stop, 2 bytes for bitfield with 9 members
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 00 01 01 00 00 00 00 00"); // 1 byte start/stop, 2 bytes for bitfield with 9 members
 	}*/
 
 	BOOST_AUTO_TEST_CASE(ReadGrp1Var0)
@@ -1056,7 +1054,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		}
 
 		t.SendToSlave(arRequest);
-		BOOST_REQUIRE_EQUAL(t.Peek(), arResponse);
+		BOOST_REQUIRE_EQUAL(t.Read(), arResponse);
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp2Var0)
@@ -1096,7 +1094,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		t.slave.OnLowerLayerUp();
 
 		t.slave.OnUnknownObject();
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 81 80 02"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 81 80 02");
 	}
 
 
@@ -1133,7 +1131,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		
 		
 		t.SendToSlave(request);
-		BOOST_REQUIRE_EQUAL(t.Peek(), rsp);
+		BOOST_REQUIRE_EQUAL(t.Read(), rsp);
 	}
 
 	template <class PointType, class T> 
@@ -1151,7 +1149,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		}
 
 		t.SendToSlave("C0 01 3C 01 06"); // Read class 0
-		BOOST_REQUIRE_EQUAL(t.Peek(), aRsp);
+		BOOST_REQUIRE_EQUAL(t.Read(), aRsp);
 	}
 
 	template <class T>
@@ -1228,7 +1226,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		}
 
 		t.SendToSlave("C0 01 3C 01 06"); // Read class 0
-		BOOST_REQUIRE_EQUAL(t.Peek(), aRsp);
+		BOOST_REQUIRE_EQUAL(t.Read(), aRsp);
 	}
 
 	BOOST_AUTO_TEST_CASE(ReadGrp10Var2)
