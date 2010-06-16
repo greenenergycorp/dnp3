@@ -295,8 +295,7 @@ void AsyncSlave::HandleWrite(const APDU& arRequest)
 				break;
 			default:
 				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "", SERR_OBJ_FUNC_MISMATCH);
-				this->ConfigureAndSendSimpleResponse();
+				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
 				break;				
 		}
 	}
@@ -336,7 +335,7 @@ void AsyncSlave::HandleSelect(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 			default:
 				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "", SERR_OBJ_FUNC_MISMATCH);
+				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
 				break;
 		}
 	}
@@ -377,7 +376,7 @@ void AsyncSlave::HandleOperate(const APDU& arRequest, SequenceInfo aSeqInfo)
 
 			default:
 				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "", SERR_OBJ_FUNC_MISMATCH);
+				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
 				break;
 		}
 	}
@@ -415,7 +414,7 @@ void AsyncSlave::HandleDirectOperate(const APDU& arRequest, SequenceInfo aSeqInf
 
 			default:
 				mRspIIN.SetFuncNotSupported(true);
-				ERROR_BLOCK(LEV_WARNING, "", SERR_OBJ_FUNC_MISMATCH);
+				ERROR_BLOCK(LEV_WARNING, "Object/Function mismatch", SERR_OBJ_FUNC_MISMATCH);
 				break;
 		}
 	}

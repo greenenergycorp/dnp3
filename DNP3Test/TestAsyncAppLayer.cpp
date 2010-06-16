@@ -81,12 +81,13 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 	{
 		AppLayerTest t(true); // master
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
+		t.lower.DisableAutoSendCallback();
 		t.SendUp(FC_UNSOLICITED_RESPONSE, true, true, true, true, 0); ++t.state.NumUnsol;
 		BOOST_REQUIRE(t.IsLogErrorFree());
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE(t.CheckSentAPDU(FC_CONFIRM, true, true, false, true, 0));
 		
-		// if frame requiring confirmation is sent before confirm send success,
+		// if frame requiring confirmation is sent before confirm send success
 		// it gets ignored and logged
 		t.SendUp(FC_UNSOLICITED_RESPONSE, true, true, true, true, 0);
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
@@ -172,9 +173,9 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 		t.SendResponse(FC_RESPONSE, true, true, false, false); // no confirmation
 		BOOST_REQUIRE(t.CheckSentAPDU(FC_RESPONSE, true, true, false, false, 4)); //check correct seq
+		++t.state.NumSolSendSuccess;
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		t.app.OnSendSuccess(); ++t.state.NumSolSendSuccess;
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
+		
 	}
 
 	/// Test a simple send without confirm transaction
@@ -182,10 +183,10 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 	{
 		AppLayerTest t(false);	// slave
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
+		t.lower.EnableAutoSendCallback(false);
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
-		t.SendResponse(FC_RESPONSE, true, true, false, false); // no confirmation
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		t.app.OnSendFailure(); ++t.state.NumSolFailure;
+		t.SendResponse(FC_RESPONSE, true, true, false, false); // no confirmation		
+		++t.state.NumSolFailure;
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
 
@@ -195,10 +196,8 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		AppLayerTest t(false);	// slave
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
-		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
-		t.app.OnSendSuccess(); // this should trigger the app layer ask for a timer
+		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation, should start on timer
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
 		t.SendUp(FC_CONFIRM, true, true, false, false, 4); ++t.state.NumSolSendSuccess;
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
@@ -211,6 +210,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		AppLayerTest t(false);	// slave
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
+		t.lower.DisableAutoSendCallback();
 		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
@@ -233,9 +233,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
 		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
-		t.app.OnSendSuccess(); // this should trigger the app layer ask for a timer
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
 
 		t.app.CancelResponse(); ++t.state.NumSolFailure;
@@ -250,9 +248,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
 		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
-		t.app.OnSendSuccess(); // this should trigger the app layer ask for a timer
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
 
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
@@ -260,9 +256,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0); //the timer should get canceled
 		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
-		t.app.OnSendSuccess(); // this should trigger the app layer ask for a timer
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
 	}
 
@@ -273,9 +267,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
 		t.SendResponse(FC_RESPONSE, true, false, true, false); // with confirmation
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
-		t.app.OnSendSuccess(); // this should trigger the app layer ask for a timer
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE(t.mts.DispatchOne()); ++t.state.NumSolFailure;
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
@@ -288,7 +280,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 		t.SendUp(FC_READ, true, true, false, false, 4); ++t.state.NumRequest;
 		t.SendResponse(FC_RESPONSE, false, false, true, false); //non-FIR, will increment seq number
-		t.app.OnSendSuccess();
+		
 		t.SendUp(FC_CONFIRM, true, true, false, false, 2); //wrong seq number
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), ALERR_UNEXPECTED_CONFIRM);
@@ -319,8 +311,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		AppLayerTest t(false);	// slave
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 	
-		t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, true);
-		t.app.OnSendSuccess(); 
+		t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, true);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
 		t.SendUp(FC_CONFIRM, true, true, false, false, 0); // solicited confirm, should do nothing
 		BOOST_REQUIRE_EQUAL(t.NextErrorCode(), ALERR_UNEXPECTED_CONFIRM); 
@@ -334,8 +325,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 	{
 		AppLayerTest t(false);	// slave
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
-		t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, true);
-		t.app.OnSendSuccess();
+		t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, true);		
 		BOOST_REQUIRE(t.mts.DispatchOne()); ++t.state.NumUnsolFailure;
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
@@ -345,8 +335,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 	{
 		AppLayerTest t(true);	// master
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
-		t.SendRequest(FC_READ, true, true, false, false);
-		t.app.OnSendSuccess(); 
+		t.SendRequest(FC_READ, true, true, false, false);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1); //check that we're waiting for a response
 		t.SendUp(FC_RESPONSE, true, true, false, false, 0); ++t.state.NumFinalRsp; // final response
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);
@@ -358,9 +347,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 	{
 		AppLayerTest t(true);	// master
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
-	
-		t.SendRequest(FC_READ, true, true, false, false);
-		t.app.OnSendSuccess();
+		t.SendRequest(FC_READ, true, true, false, false);		
 		BOOST_REQUIRE(t.mts.DispatchOne()); ++t.state.NumSolFailure;
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
@@ -371,8 +358,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		AppLayerTest t(true);	// master
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 	
-		t.SendRequest(FC_READ, true, true, false, false);
-		t.app.OnSendSuccess(); 
+		t.SendRequest(FC_READ, true, true, false, false);		
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1); //check that we're waiting for a response
 
 		t.SendUp(FC_RESPONSE, false, true, false, false, 0); // check that bad FIR is rejected
@@ -414,16 +400,12 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		
 		// this should queue a confirm and pass the data up immediately
 		t.SendUp(FC_UNSOLICITED_RESPONSE, true, true, true, true, 5); ++t.state.NumUnsol;
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-
-		t.app.OnSendSuccess(); // this should cause the previous request to clear and the confirm to send
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		BOOST_REQUIRE(t.CheckSentAPDU(FC_CONFIRM, true, true, false, true, 5)); //verify and clear the buffer
-		t.app.OnSendSuccess(); //make the confirm succeed
 
 		t.SendUp(FC_RESPONSE, true, true, true, false, 0); ++t.state.NumFinalRsp;
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		BOOST_REQUIRE(t.CheckSentAPDU(FC_CONFIRM, true, true, false, false, 0)); // check that the response gets confirmed
-		t.app.OnSendSuccess();
+		BOOST_REQUIRE(t.CheckSentAPDU(FC_CONFIRM, true, true, false, false, 0)); // check that the response gets confirmed		
 	}
 
 	/** The SendUnsolicited transaction needs to gracefully pass up
@@ -439,9 +421,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		
 		// this should queue a confirm and pass the data up immediately
 		t.SendUp(FC_READ, true, true, false, false, 0); ++t.state.NumRequest;
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
-		t.app.OnSendSuccess();
-		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
+		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);		
 		t.SendUp(FC_CONFIRM, true, true, false, true, 0); ++t.state.NumUnsolSendSuccess; //confirm the unsolicited
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
 	}
@@ -453,8 +433,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
 						
 		t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, true);
-		BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), 1);
-		t.lower.SendSuccess();			// successful transmission
+		BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), 1);		
 		BOOST_REQUIRE(t.mts.DispatchOne()); ++t.state.NumUnsolFailure;// timeout the unsol confirm
 		BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), 1);
 		BOOST_REQUIRE_EQUAL(t.state, t.user.mState);
@@ -471,8 +450,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.SendUnsolicited(FC_UNSOLICITED_RESPONSE, true, true, true, true);
 					
 		for(size_t i=0; i<(RETRIES+1); ++i) {				
-			BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), i+1);				
-			t.lower.SendSuccess();						// successful transmission
+			BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), i+1);							
 			BOOST_REQUIRE(t.mts.DispatchOne());				// timeout the confirm							
 		}
 
@@ -491,9 +469,8 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		t.SendRequest(FC_OPERATE, true, true, false, false);
 					
 		for(size_t i=0; i<(RETRIES+1); ++i) {				
-			BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), i+1);				
-			t.lower.SendSuccess();						// successful transmission
-			BOOST_REQUIRE(t.mts.DispatchOne());				// timeout the response							
+			BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), i+1);							
+			BOOST_REQUIRE(t.mts.DispatchOne());	 // timeout the response							
 		}
 
 		++t.state.NumSolFailure;
@@ -506,8 +483,7 @@ BOOST_AUTO_TEST_SUITE(AsyncAppLayerSuite)
 		const size_t RETRIES = 1;
 
 		AppLayerTest t(true, RETRIES);	// master
-		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;
-		t.lower.SetAutoSuccess(true); // re-entrantly confirm sends
+		t.lower.ThisLayerUp(); ++t.state.NumLayerUp;		
 
 		t.SendRequest(FC_OPERATE, true, true, false, false);
 		BOOST_REQUIRE_EQUAL(t.lower.NumWrites(), 1);			

@@ -103,14 +103,14 @@ namespace apl { namespace dnp {
 	inline const HeaderInfo& HeaderReadIterator::info() const
 	{
 		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
+		{ throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS); }
 		return (*mpHeaders)[mIndex];
 	}
 
 	inline const apl::byte_t* HeaderReadIterator::operator*() const
 	{
 		if(mIndex >= mpHeaders->size())
-		{ throw apl::Exception(LOCATION, "", ALERR_ITERATOR_OUT_OF_BOUNDS); }
+		{ throw apl::Exception(LOCATION, "Iter out of bounds", ALERR_ITERATOR_OUT_OF_BOUNDS); }
 		return mpBuffer+(*mpHeaders)[mIndex].GetPosition();
 	}
 

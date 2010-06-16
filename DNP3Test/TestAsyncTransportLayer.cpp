@@ -160,6 +160,8 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	{
 		TransportTestObject test(true);
 		
+		test.lower.DisableAutoSendCallback();
+
 		// this puts the layer into the Sending state
 		test.upper.SendDown("11"); 
 		BOOST_REQUIRE(test.lower.BufferEquals("C0 11")); //FIR/FIN SEQ=0
@@ -182,6 +184,8 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 	BOOST_AUTO_TEST_CASE(TestSendFailure)
 	{
 		TransportTestObject test(true);
+
+		test.lower.DisableAutoSendCallback();
 		
 		// this puts the layer into the Sending state
 		test.upper.SendDown("11"); 
@@ -208,13 +212,10 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 		test.upper.SendDown("11");
 		BOOST_REQUIRE(test.lower.BufferEquals("C0 11")); //FIR/FIN SEQ=0
 		test.lower.ClearBuffer();
-		test.lower.SendSuccess();
-
+		
 		// this puts the layer into the Sending state
 		test.upper.SendDown("11");
-		BOOST_REQUIRE(test.lower.BufferEquals("C1 11")); //FIR/FIN SEQ=1
-		test.lower.SendSuccess();
-
+		BOOST_REQUIRE(test.lower.BufferEquals("C1 11")); //FIR/FIN SEQ=1		
 		BOOST_REQUIRE_EQUAL(test.upper.GetState().mSuccessCnt, 2);
 	}
 
@@ -237,6 +238,7 @@ BOOST_AUTO_TEST_SUITE(AsyncTransportSuite)
 
 		vector<string> packets;
 		std::string apdu = test.GeneratePacketSequence(packets, num_packets, last_packet_length);
+		test.lower.DisableAutoSendCallback();
 		test.upper.SendDown(apdu);
 
 		BOOST_FOREACH(string tpdu, packets) //verify that each packet is received correctly

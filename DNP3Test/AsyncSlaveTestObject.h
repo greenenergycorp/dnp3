@@ -39,9 +39,7 @@ class AsyncSlaveTestObject : public LogTester
 
 	void SendToSlave(const std::string& arData, SequenceInfo aSeq = SI_OTHER);
 	std::string Read();
-	std::string Peek();
 	size_t Count() { return app.Count(); }
-	void Pop(bool aFailPacket = false, bool aDeferResponse = false);
 	
 
 	//MockTimeSource fake_time;

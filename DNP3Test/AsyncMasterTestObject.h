@@ -37,9 +37,7 @@ class AsyncMasterTestObject : public LogTester
 	AsyncMasterTestObject(MasterConfig, FilterLevel aLevel = LEV_INFO, bool aImmediate = false);
 
 	void RespondToMaster(const std::string& arData, bool aFinal = true);
-	std::string Read();
-	std::string Peek();
-	void Pop();
+	std::string Read();	
 
 	MockTimeSource fake_time;
 	MockTimerSource mts;

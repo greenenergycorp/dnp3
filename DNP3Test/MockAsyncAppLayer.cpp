@@ -27,14 +27,46 @@ namespace apl { namespace dnp {
 
 MockAsyncAppLayer::MockAsyncAppLayer(Logger* apLogger) :
 Loggable(apLogger),
-mNumCancel(0)
+mNumCancel(0),
+mpUser(NULL),
+mAutoSendCallback(true),
+mIsSuccess(true)
 {
 	
 }
 
-MockAsyncAppLayer::~MockAsyncAppLayer()
+void MockAsyncAppLayer::SetUser(IAsyncAppUser* apUser)
 {
-	
+	mpUser = apUser;
+}
+
+void MockAsyncAppLayer::EnableAutoSendCallback(bool aIsSuccess)
+{
+	mAutoSendCallback = true;
+	mIsSuccess = aIsSuccess;
+}
+
+void MockAsyncAppLayer::DisableAutoSendCallback()
+{
+	mAutoSendCallback = false;
+}
+
+void MockAsyncAppLayer::DoSendUnsol()
+{
+	if(mAutoSendCallback) {
+		assert(mpUser != NULL);
+		if(mIsSuccess) mpUser->OnUnsolSendSuccess();
+		else mpUser->OnUnsolFailure();
+	}
+}
+
+void MockAsyncAppLayer::DoSendSol()
+{
+	if(mAutoSendCallback) {
+		assert(mpUser != NULL);
+		if(mIsSuccess) mpUser->OnSolSendSuccess();
+		else mpUser->OnSolFailure();
+	}
 }
 
 void MockAsyncAppLayer::SendResponse(APDU& arAPDU)
@@ -42,6 +74,8 @@ void MockAsyncAppLayer::SendResponse(APDU& arAPDU)
 	LOG_BLOCK(LEV_COMM, "=> " << toHex(arAPDU.GetBuffer(), arAPDU.Size(), true));
 	LOG_BLOCK(LEV_INTERPRET, "=> " << arAPDU.ToString());
 	mFragments.push_back(arAPDU);
+	this->DoSendSol();
+	
 }
 
 void MockAsyncAppLayer::SendUnsolicited(APDU& arAPDU)
@@ -49,13 +83,14 @@ void MockAsyncAppLayer::SendUnsolicited(APDU& arAPDU)
 	LOG_BLOCK(LEV_COMM, "=> " << toHex(arAPDU.GetBuffer(), arAPDU.Size(), true));
 	LOG_BLOCK(LEV_INTERPRET, "=> " << arAPDU.ToString());
 	mFragments.push_back(arAPDU);
+	this->DoSendUnsol();
 }
 
 void MockAsyncAppLayer::SendRequest(APDU& arAPDU)
 {
 	LOG_BLOCK(LEV_COMM, "=> " << toHex(arAPDU.GetBuffer(), arAPDU.Size(), true));
 	LOG_BLOCK(LEV_INTERPRET, "=> " << arAPDU.ToString());
-	mFragments.push_back(arAPDU);
+	mFragments.push_back(arAPDU);	
 }
 
 APDU MockAsyncAppLayer::Read()
@@ -65,20 +100,6 @@ APDU MockAsyncAppLayer::Read()
 	frag.Interpret();
 	mFragments.pop_front();
 	return frag;
-}
-
-APDU MockAsyncAppLayer::Peek()
-{
-	if(mFragments.size() == 0) throw InvalidStateException(LOCATION, "no more fragments");
-	APDU frag = mFragments.front();
-	frag.Interpret();
-	return frag;
-}
-
-void MockAsyncAppLayer::Pop()
-{
-	if(mFragments.size() == 0) throw InvalidStateException(LOCATION, "no more fragments");
-	mFragments.pop_front();	
 }
 
 FunctionCodes MockAsyncAppLayer::ReadFunction()

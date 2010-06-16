@@ -25,6 +25,8 @@
 #include <APL/Exception.h>
 #include <APL/Logger.h>
 
+#include <sstream>
+
 namespace apl { namespace dnp {
 
 void AS_Base::OnLowerLayerUp(AsyncSlave*)
@@ -71,8 +73,8 @@ void AS_Base::SwitchOnFunction(AsyncSlave* c, AS_Base* apNext, const APDU& arReq
 	{
 		case(FC_READ):
 		{
-			c->mRspContext.Reset();
 			ChangeState(c, apNext);
+			c->mRspContext.Reset();			
 			IINField iin = c->mRspContext.Configure(arRequest);
 			c->mRspContext.LoadResponse(c->mResponse);
 			c->Send(c->mResponse, iin);
@@ -98,7 +100,7 @@ void AS_Base::SwitchOnFunction(AsyncSlave* c, AS_Base* apNext, const APDU& arReq
 			c->HandleDirectOperate(arRequest, aSeqInfo);
 			c->Send(c->mResponse);
 			break;
-		case(FC_DIRECT_OPERATE_NO_ACK):
+		case(FC_DIRECT_OPERATE_NO_ACK):			
 			c->HandleDirectOperate(arRequest, aSeqInfo);
 			break;
 		case(FC_ENABLE_UNSOLICITED):
@@ -117,8 +119,11 @@ void AS_Base::SwitchOnFunction(AsyncSlave* c, AS_Base* apNext, const APDU& arReq
 			c->Send(c->mResponse);
 			break;
 		default:
-			throw NotSupportedException(LOCATION, "Function not supported.", SERR_FUNC_NOT_SUPPORTED);
-			break;
+		{
+			std::ostringstream oss;
+			oss << "Function not supported: " << arRequest.GetFunction();
+			throw NotSupportedException(LOCATION, oss.str(), SERR_FUNC_NOT_SUPPORTED);			
+		}
 	}
 }
 
@@ -132,17 +137,17 @@ void AS_Base::DoRequest(AsyncSlave* c, AS_Base* apNext, const APDU& arAPDU, Sequ
 	}
 	catch(ParameterException ex)
 	{
-		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());
-		c->mRspIIN.SetParameterError(true);
-		c->ConfigureAndSendSimpleResponse();
 		ChangeState(c, apNext);
+		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());		
+		c->mRspIIN.SetParameterError(true);
+		c->ConfigureAndSendSimpleResponse();		
 	}
 	catch(NotSupportedException ex)
 	{
-		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());
-		c->mRspIIN.SetFuncNotSupported(true);
-		c->ConfigureAndSendSimpleResponse();
 		ChangeState(c, apNext);
+		ERROR_LOGGER_BLOCK(c->mpLogger, LEV_ERROR, ex.Message(), ex.ErrorCode());		
+		c->mRspIIN.SetFuncNotSupported(true);
+		c->ConfigureAndSendSimpleResponse();		
 	}
 
 	c->mLastRequest = arAPDU;
@@ -159,6 +164,7 @@ void AS_Base::ChangeState(AsyncSlave* c, AS_Base* apState)
 			c->mpTimeTimer = NULL;
 		}
 	}
+	LOGGER_BLOCK(c->mpLogger, LEV_DEBUG, "State changed from " << c->mpState->Name() << " to " << apState->Name());
 	c->mpState = apState;
 }
 

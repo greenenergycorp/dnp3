@@ -55,6 +55,10 @@ namespace apl {
 			std::string mSource;	// The funciton or module that produced the exception
 			std::string mMessage;	// A textual description of the exception
 			std::string mWhat;
+
+		private:
+
+			void SetWhat();
 	};
 
 	class ObjectException : public Exception

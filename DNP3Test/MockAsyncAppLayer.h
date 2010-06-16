@@ -37,7 +37,10 @@ class MockAsyncAppLayer : public IAsyncAppLayer, public Loggable
 {
 	public:
 		MockAsyncAppLayer(Logger*);
-		virtual ~MockAsyncAppLayer();		
+		virtual ~MockAsyncAppLayer() {}
+
+
+		void SetUser(IAsyncAppUser*);
 
 		void SendResponse(APDU&);
 		void SendUnsolicited(APDU&);
@@ -46,17 +49,22 @@ class MockAsyncAppLayer : public IAsyncAppLayer, public Loggable
 
 		size_t mNumCancel;
 
-		APDU Read();
-		APDU Peek();
-		void Pop();
+		void EnableAutoSendCallback(bool aIsSuccess);
+		void DisableAutoSendCallback();
+
+		APDU Read();		
 		size_t Count() { return mFragments.size(); }
-
 		FunctionCodes ReadFunction();
-
 		size_t NumAPDU() { return mFragments.size(); }
 
 	private:
 
+		void DoSendUnsol();
+		void DoSendSol();
+
+		IAsyncAppUser* mpUser;
+		bool mAutoSendCallback;
+		bool mIsSuccess;		
 		std::deque<APDU> mFragments;		
 };
 

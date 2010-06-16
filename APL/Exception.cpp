@@ -18,27 +18,34 @@
 // 
 #include "Exception.h"
 
+#include <sstream>
+
 using namespace std;
 
+namespace apl {
 
-
-namespace apl
-{
 	Exception::Exception(const string& aSource, const string& aMessage, int aErrorCode, int aSubCode) throw() : 
-    mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage(aMessage), mWhat(aSource + ": " + mMessage)
+    mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage(aMessage)
 	{
-
+		this->SetWhat();
 	}
 
 	Exception::Exception(const std::string& aSource, int aErrorCode, int aSubCode) throw() :
-	mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage(""), mWhat(aSource + ": " + mMessage)
+	mErrorCode(aErrorCode), mSubCode(aSubCode), mSource(aSource), mMessage("")
 	{
+		this->SetWhat();
+	}
 
+	void Exception::SetWhat()
+	{
+		ostringstream oss;
+		oss << mSource << ": " << mMessage << ", " << mErrorCode;
+		mWhat = oss.str();		
 	}
 
 	Exception::~Exception() throw()
 	{
-		//if(mWhat != NULL) delete mWhat;
+		
 	}
 
 	const std::string& Exception :: Source() const
