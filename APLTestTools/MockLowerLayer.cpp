@@ -26,13 +26,31 @@ namespace apl {
 MockLowerLayer::MockLowerLayer(Logger* apLogger) : 
 Loggable(apLogger),
 ILowerLayer(apLogger),
-mAutoSuccess(false)
-{}
+mAutoSendCallback(true),
+mIsSuccess(true)
+{
+
+}
+
+
+void MockLowerLayer::EnableAutoSendCallback(bool aIsSuccess)
+{
+	mAutoSendCallback = true;
+	mIsSuccess = aIsSuccess;
+}
+
+void MockLowerLayer::DisableAutoSendCallback()
+{
+	mAutoSendCallback = false;
+}
 
 void MockLowerLayer::_Send(const apl::byte_t* apData, size_t aNumBytes) 
 {
 	this->WriteToBuffer(apData, aNumBytes);
-	if(mAutoSuccess && mpUpperLayer != NULL) mpUpperLayer->OnSendSuccess();
+	if(mAutoSendCallback && mpUpperLayer != NULL) {
+		if(mIsSuccess) mpUpperLayer->OnSendSuccess();
+		else mpUpperLayer->OnSendFailure();
+	}
 }
 
 void MockLowerLayer::SendUp(const byte_t* apData, size_t aNumBytes)

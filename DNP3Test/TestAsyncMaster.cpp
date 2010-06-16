@@ -32,7 +32,7 @@ using namespace boost;
 
 	void TestForIntegrityPoll(AsyncMasterTestObject& t)
 	{
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
 		t.RespondToMaster("C0 81 00 00");
 	}
 
@@ -48,7 +48,7 @@ using namespace boost;
 		// Group 12 Var1, 1 byte count/index, index = 1, time on/off = 1000, CS_SUCCESS
 		std::string crob = "0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00";
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 03 " + crob); t.Pop(); // SELECT
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + crob);
 	}
 
 	void DoControlSelectOperate(AsyncMasterTestObject& t, CommandResponseQueue& q)
@@ -63,9 +63,9 @@ using namespace boost;
 		// Group 12 Var1, 1 byte count/index, index = 1, time on/off = 1000, CS_SUCCESS
 		std::string crob = "0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00";
 
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 03 " + crob); t.Pop(); // SELECT
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + crob); // SELECT
 		t.RespondToMaster("C0 81 00 00 " + crob);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 04 " + crob); t.Pop(); // OPERATE
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 04 " + crob); // OPERATE
 	}
 
 	template <class T>
@@ -83,9 +83,9 @@ using namespace boost;
 		t.master.GetCmdAcceptor()->AcceptCommand(st, 1, 7, &mRspQueue);
 		BOOST_REQUIRE(t.mts.DispatchOne());
 		
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 03 " + setpointhex); t.Pop(); // SELECT
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + setpointhex); // SELECT
 		t.RespondToMaster("C0 81 00 00 " + setpointhex);
-		BOOST_REQUIRE_EQUAL(t.Peek(), "C0 04 " + setpointhex); t.Pop(); // OPERATE
+		BOOST_REQUIRE_EQUAL(t.Read(), "C0 04 " + setpointhex); // OPERATE
 		t.RespondToMaster("C0 81 00 00 " + setpointhex);
 
 		BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //nore more packets
@@ -96,6 +96,7 @@ using namespace boost;
 	}
 
 	BOOST_AUTO_TEST_SUITE(AsyncMasterSuite)
+
 		BOOST_AUTO_TEST_CASE(InitialState)
 		{
 			MasterConfig master_cfg;			
@@ -137,13 +138,13 @@ using namespace boost;
 			std::string rsp = "C0 81 00 00";
 
 			// disable unsol on grp 60 var2, var3, var4
-			BOOST_REQUIRE_EQUAL("C0 15 3C 02 06 3C 03 06 3C 04 06", t.Peek()); t.Pop();
+			BOOST_REQUIRE_EQUAL("C0 15 3C 02 06 3C 03 06 3C 04 06", t.Read());
 			t.RespondToMaster(rsp);
 
 			TestForIntegrityPoll(t);
 			
 			// enable unsol
-			BOOST_REQUIRE_EQUAL("C0 14 3C 02 06 3C 03 06 3C 04 06", t.Peek()); t.Pop();
+			BOOST_REQUIRE_EQUAL("C0 14 3C 02 06 3C 03 06 3C 04 06", t.Read());
 			t.RespondToMaster(rsp);
 
 			// check that the master sends no more packets
@@ -158,20 +159,20 @@ using namespace boost;
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
 
-			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Peek()); t.Pop(); //integrity
+			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read()); ; //integrity
 			t.RespondToMaster("C0 81 90 00"); // need time and device restart
 
 			// Device restart should happen before time task
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 			t.RespondToMaster("C0 81 10 00"); // need time
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); ; //Delay measure
 			t.fake_time.Advance(100); //advance time by 100ms so that the master sees 100ms for a response
 			t.RespondToMaster("C0 81 10 00 34 02 07 01 0A 00"); // still need time, 52 Var 2, delay == 10ms
 			
 			// Write group 50 var 1
 			// 200-100-10/2 = 45 => 45 + 200 - 0xF5
-			BOOST_REQUIRE_EQUAL("C0 02 32 01 07 01 F5 00 00 00 00 00", t.Peek()); t.Pop();
+			BOOST_REQUIRE_EQUAL("C0 02 32 01 07 01 F5 00 00 00 00 00", t.Read());
 			t.RespondToMaster("C0 81 00 00"); // time bit is now clear
 			
 			BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // no more packets
@@ -185,13 +186,13 @@ using namespace boost;
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
 
-			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Peek()); t.Pop(); //integrity
+			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read()); //integrity
 			t.RespondToMaster("C0 81 90 00"); // need time and device restart
 
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 
 			t.master.OnSolFailure();
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 		}
 
 		BOOST_AUTO_TEST_CASE(RestartLayerDown)
@@ -202,15 +203,15 @@ using namespace boost;
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
 
-			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Peek()); t.Pop(); //integrity
+			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read()); //integrity
 			t.RespondToMaster("C0 81 90 00"); // need time and device restart
 
 			// Device restart should happen before time task
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 
 			t.master.OnLowerLayerDown();
 			t.master.OnLowerLayerUp();
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 		}
 
 		BOOST_AUTO_TEST_CASE(DelayMeasLayerDown)
@@ -221,17 +222,17 @@ using namespace boost;
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
 
-			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Peek()); t.Pop(); //integrity
+			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read()); //integrity
 			t.RespondToMaster("C0 81 90 00"); // need time and device restart
 
 			// Device restart should happen before time task
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 			t.RespondToMaster("C0 81 10 00"); // need time
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); //Delay measure
 			t.master.OnLowerLayerDown();
 			t.master.OnLowerLayerUp();
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); //Delay measure
 		}
 
 		BOOST_AUTO_TEST_CASE(DelayMeasFailure)
@@ -242,16 +243,16 @@ using namespace boost;
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
 
-			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Peek()); t.Pop(); //integrity
+			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read()); //integrity
 			t.RespondToMaster("C0 81 90 00"); // need time and device restart
 
 			// Device restart should happen before time task
-			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Peek()); t.Pop(); //write IIN
+			BOOST_REQUIRE_EQUAL("C0 02 50 01 00 07 07 00", t.Read()); //write IIN
 			t.RespondToMaster("C0 81 10 00"); // need time
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); //Delay measure
 			t.master.OnSolFailure();
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); //Delay measure
 		}
 
 		BOOST_AUTO_TEST_CASE(RestartBadResponses)
@@ -262,25 +263,25 @@ using namespace boost;
 
 			t.fake_time.SetTime(TimeStamp_t(100)); //100 ms since epoch
 
-			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Peek()); t.Pop(); //integrity
+			BOOST_REQUIRE_EQUAL("C0 01 3C 01 06", t.Read()); //integrity
 			t.RespondToMaster("C0 81 10 00"); // need time
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); // Delay measure
 			t.RespondToMaster("C0 81 10 00"); // no header
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); // retry
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); // retry
 			t.RespondToMaster("C0 81 10 00 3C 01 06"); // wrong header
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); // retry
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); // retry
 			t.RespondToMaster("C0 81 10 00 34 02 07 02 0A 00 03 00"); // too many objects
 
-			BOOST_REQUIRE_EQUAL("C0 17", t.Peek()); t.Pop(); //Delay measure
+			BOOST_REQUIRE_EQUAL("C0 17", t.Read()); ; //Delay measure
 			t.fake_time.Advance(100); //advance time by 100ms so that the master sees 100ms for a response
 			t.RespondToMaster("C0 81 10 00 34 02 07 01 90 01"); // still need time, 52 Var 2, delay == 400ms
 
 			// Write group 50 var 1
 			// 400 > 200, so delay is 0 + 200
-			BOOST_REQUIRE_EQUAL("C0 02 32 01 07 01 C8 00 00 00 00 00", t.Peek()); t.Pop();
+			BOOST_REQUIRE_EQUAL("C0 02 32 01 07 01 C8 00 00 00 00 00", t.Read());
 			t.RespondToMaster("C0 81 00 00"); // time bit is now clear
 			
 			BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); // no more packets
@@ -319,9 +320,9 @@ using namespace boost;
 			// Group 12 Var1, 1 byte count/index, index = 1, time on/off = 1000, CS_SUCCESS
 			std::string crob = "0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00";
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 03 " + crob); t.Pop(); // SELECT
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + crob); // SELECT
 			t.RespondToMaster("C0 81 00 00 " + crob);
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 04 " + crob); t.Pop(); // OPERATE
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 04 " + crob); // OPERATE
 			t.RespondToMaster("C0 81 00 00 " + crob);
 
 			BOOST_REQUIRE_EQUAL(t.app.NumAPDU(), 0); //nore more packets
@@ -435,7 +436,7 @@ using namespace boost;
 			t.master.OnLowerLayerUp();
 
 			// check that a read request was made on startup
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 			
 			//issue a command while the master is waiting for a response from the slave
 			BinaryOutput bo(CC_PULSE); bo.mStatus = CS_SUCCESS;
@@ -449,7 +450,7 @@ using namespace boost;
 			
 
 			std::string crob = "0C 01 17 01 01 01 01 64 00 00 00 64 00 00 00 00";
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 03 " + crob); //select
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 03 " + crob); //select
 		}
 
 		BOOST_AUTO_TEST_CASE(SingleSetpointExecution)// Group 41 Var4
@@ -485,7 +486,7 @@ using namespace boost;
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 			t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81"); //group 2 var 1, index = 2, 0x81 = Online, true
 
 			BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));		
@@ -498,11 +499,11 @@ using namespace boost;
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 			t.master.OnSolFailure();
 			t.fake_time.Advance(master_cfg.TaskRetryRate);
 			BOOST_REQUIRE(t.mts.DispatchOne());
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();	
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;	
 		}
 
 		BOOST_AUTO_TEST_CASE(SolicitedResponseLayerDown)
@@ -512,10 +513,10 @@ using namespace boost;
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
 			t.master.OnLowerLayerDown();
 			t.master.OnLowerLayerUp();
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();	
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;	
 		}
 
 		BOOST_AUTO_TEST_CASE(SolicitedMultiFragResponse)
@@ -525,7 +526,7 @@ using namespace boost;
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
 
 			t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81", false); //trigger partial response
 			BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
@@ -547,13 +548,13 @@ using namespace boost;
 			t.fake_time.SetTime(TimeStamp_t(0));
 			t.master.OnLowerLayerUp();
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 01 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
 			t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81"); //group 2 var 1, index = 2, 0x81 = Online, true
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 02 06 3C 03 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 02 06 3C 03 06");
 			t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81"); //group 2 var 1, index = 2, 0x81 = Online, true
 
-			BOOST_REQUIRE_EQUAL(t.Peek(), "C0 01 3C 04 06"); t.Pop();
+			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 04 06");
 			t.RespondToMaster("C0 81 00 00 01 02 00 02 02 81"); //group 2 var 1, index = 2, 0x81 = Online, true
 
 			BOOST_REQUIRE(t.fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));		
