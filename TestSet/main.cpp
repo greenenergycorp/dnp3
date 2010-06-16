@@ -96,7 +96,7 @@ bool GenerateConfig(bool aIsMaster, const std::string& arPath)
 		else {
 			APLXML_STS::SlaveTestSet_t cfg;
 			XML_TestSet::Configure(cfg);
-			XML_DNP3::Configure(cfg.DeviceTemplate,10,10,10,2,2);
+			XML_DNP3::Configure(cfg.DeviceTemplate,10,10,10,2,2,2,2);
 			WriteXmlToFile(&cfg, arPath);					
 		}
 		std::cout << "generated " << arPath << std::endl;

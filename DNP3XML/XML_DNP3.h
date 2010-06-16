@@ -36,13 +36,15 @@ namespace apl{ namespace dnp{
 			static void Configure(APLXML_DNP::Master_t& arMaster, bool aUnsol = false);
 			static void Configure(APLXML_DNP::Slave_t& arSlave);
 			static void Configure(APLXML_DNP::Stack_t& arStack, bool aSlave = true);
-			static void Configure(APLXML_DNP::DeviceTemplate_t& arTemplate, size_t aBinaries, size_t aAnalogs, size_t aCounters, size_t aControls, size_t aSetpoints);
+			static void Configure(APLXML_DNP::DeviceTemplate_t& arTemplate, size_t aBinaries, size_t aAnalogs, size_t aCounters, size_t aControls, size_t aSetpoints, size_t aControlStatuses, size_t aSetpointStatuses);
 
 			static void AddDeviceTemplateBinary(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);
 			static void AddDeviceTemplateAnalog(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);
 			static void AddDeviceTemplateCounter(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);
 			static void AddDeviceTemplateControl(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);
-			static void AddDeviceTemplateSetpoint(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);			
+			static void AddDeviceTemplateSetpoint(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);
+			static void AddDeviceTemplateControlStatus(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);	
+			static void AddDeviceTemplateSetpointStatus(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName);				
 	};
 
 }}

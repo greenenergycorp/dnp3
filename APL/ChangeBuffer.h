@@ -40,13 +40,20 @@ namespace apl {
 		typedef std::deque< Change<ControlStatus> > ControlStatusQueue;
 		typedef std::deque< Change<SetpointStatus> > SetpointStatusQueue;
 
-		public:
+	public:
 
-		ChangeBuffer() {}
+			ChangeBuffer() : mMidFlush(false) {}
 
 		void _Start() { mLock.Lock(); }
 		void _End()
 		{
+
+			if ( mMidFlush )
+			{
+				_Clear();
+				mMidFlush = false;
+			}
+
 			bool notify = this->HasChanges();
 			mLock.Unlock();
 			if(notify) this->NotifyAll();
@@ -65,18 +72,23 @@ namespace apl {
 
 
 		size_t FlushUpdates(apl::IDataObserver* apObserver, bool aClear = true);
-		
+	
 		void Clear()
 		{
 			assert(this->InProgress());
+			_Clear();
+		}
+			
+	private:	
+
+		void _Clear() 
+		{
 			mBinaryQueue.clear();
 			mAnalogQueue.clear();
 			mCounterQueue.clear();
 			mControlStatusQueue.clear();
 			mSetpointStatusQueue.clear();
 		}
-			
-		private:		
 
 		bool HasChanges() 
 		{
@@ -90,6 +102,7 @@ namespace apl {
 		template<class T>
 		size_t FlushUpdates(const T& arContainer, IDataObserver* apObserver);
 
+		bool mMidFlush;
 		BinaryQueue mBinaryQueue;
 		AnalogQueue mAnalogQueue;
 		CounterQueue mCounterQueue;
@@ -106,13 +119,15 @@ namespace apl {
 		size_t count = 0;
 		if(!this->HasChanges()) return count;
 		
-		{
+		 {
 			Transaction t(apObserver);
+			mMidFlush = true;	// Will clear on transaction end if an observer call blows up
 			count += this->FlushUpdates(mBinaryQueue, apObserver);
 			count += this->FlushUpdates(mAnalogQueue, apObserver);
 			count += this->FlushUpdates(mCounterQueue, apObserver);
 			count += this->FlushUpdates(mControlStatusQueue, apObserver);
 			count += this->FlushUpdates(mSetpointStatusQueue, apObserver);
+			mMidFlush = false;
 		}
 
 		if(aClear) this->Clear();
