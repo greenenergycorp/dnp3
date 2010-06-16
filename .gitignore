@@ -9,3 +9,9 @@
 /tools/install_scripts/boost/*/temp
 /CSToCppXMLBinder/bin
 /CSToCppXMLBinder/obj
+/ConfigurationBuilder/*.cs
+/ConfigurationBuilder/*.xsx
+/TestSet/*.xml
+/DNP3Java/JavaDNP3.*
+/DNP3Java/jar
+*.log
