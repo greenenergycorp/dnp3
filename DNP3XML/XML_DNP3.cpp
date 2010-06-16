@@ -156,8 +156,22 @@ namespace apl{ namespace dnp{
 		b->SelectTimeoutMS = 5000;
 		arCfg.SetpointData.SetpointVector.push_back(b);
 	}
+	void XML_DNP3::AddDeviceTemplateControlStatus(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName)
+	{
+		APLXML_DNP::ControlStatus_t* cs = new APLXML_DNP::ControlStatus_t();
+		cs->Index = boost::numeric::converter<int,size_t>::convert(aIndex);
+		cs->Name = aName;
+		arCfg.ControlStatusData.ControlStatusVector.push_back(cs);
+	}
+	void XML_DNP3::AddDeviceTemplateSetpointStatus(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aIndex, std::string aName)
+	{
+		APLXML_DNP::SetpointStatus_t* ss = new APLXML_DNP::SetpointStatus_t();
+		ss->Index = boost::numeric::converter<int,size_t>::convert(aIndex);
+		ss->Name = aName;
+		arCfg.SetpointStatusData.SetpointStatusVector.push_back(ss);
+	}
 
-	void XML_DNP3::Configure(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aBinaries, size_t aAnalogs, size_t aCounters, size_t aControls, size_t aSetpoints)
+	void XML_DNP3::Configure(APLXML_DNP::DeviceTemplate_t& arCfg, size_t aBinaries, size_t aAnalogs, size_t aCounters, size_t aControls, size_t aSetpoints, size_t aControlStatuses, size_t aSetpointStatuses)
 	{
 		arCfg.TemplateName = "default";
 
@@ -175,6 +189,12 @@ namespace apl{ namespace dnp{
 		}
 		for(size_t i = 0; i < aSetpoints; i++){
 			AddDeviceTemplateSetpoint(arCfg, i, DefaultName("setpoint",i));
+		}
+		for(size_t i = 0; i < aControlStatuses; i++ ) {
+			AddDeviceTemplateControlStatus(arCfg, i, DefaultName("controlstatus",i));
+		}
+		for(size_t i = 0; i < aSetpointStatuses; i++ ) {
+			AddDeviceTemplateSetpointStatus(arCfg, i, DefaultName("setpointstatus",i));
 		}
 	}
 }}

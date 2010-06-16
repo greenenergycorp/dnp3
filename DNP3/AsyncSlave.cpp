@@ -184,9 +184,20 @@ void AsyncSlave::FlushDeferredEvents()
 
 size_t AsyncSlave::FlushUpdates()
 {
-	size_t num = mChangeBuffer.FlushUpdates(mpDatabase);
-	LOG_BLOCK(LEV_INFO, "Processed " << num << " updates");
+	size_t num = 0;
+	try 
+	{
+		num = mChangeBuffer.FlushUpdates(mpDatabase);
+	}
+	catch ( Exception& ex ) 
+	{
+		LOG_BLOCK(LEV_ERROR, "Error in flush updates: " << ex.Message());
+		Transaction tr(mChangeBuffer);
+		mChangeBuffer.Clear();
+		return 0;
+	}
 
+	LOG_BLOCK(LEV_INFO, "Processed " << num << " updates");
 	return num;
 }
 

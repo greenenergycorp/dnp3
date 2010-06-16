@@ -93,7 +93,7 @@ namespace apl {
 	{
 		public:
 			NotImplementedException(const std::string& aSource) throw() : 
-			Exception(aSource, "")
+			Exception(aSource, "Function not implemented.")
 			{}
 	};
 
@@ -101,7 +101,7 @@ namespace apl {
 	{
 		public:
 			IndexOutOfBoundsException(const std::string& aSource) throw() : 
-			Exception(aSource, "")
+			Exception(aSource, "Index out of bounds.")
 			{}
 	};
 

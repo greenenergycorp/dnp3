@@ -75,7 +75,37 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 		}
 
 		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
-		BOOST_REQUIRE(t.mts.DispatchOne());			
+		BOOST_REQUIRE(t.mts.DispatchOne());		
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);	
+	}
+
+	BOOST_AUTO_TEST_CASE(DataPostToNonExistent)
+	{
+		SlaveConfig cfg;
+		AsyncSlaveTestObject t(cfg);
+		t.db.Configure(DT_BINARY, 1);
+
+		t.db.SetClass(DT_BINARY, PC_CLASS_1);
+
+		IDataObserver* pObs = t.slave.GetDataObserver();
+		{
+			Transaction t(pObs);
+			Binary b(true, BQ_ONLINE);
+			pObs->Update(b, 5);
+		}
+
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
+		BOOST_REQUIRE(t.mts.DispatchOne());	
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);	
+
+		{
+			Transaction t(pObs);
+			Binary b(true, BQ_ONLINE);
+			pObs->Update(b, 0);
+		}
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 1);
+		BOOST_REQUIRE(t.mts.DispatchOne());	
+		BOOST_REQUIRE_EQUAL(t.mts.NumActive(), 0);	
 	}
 
 	BOOST_AUTO_TEST_CASE(UnsupportedFunction)

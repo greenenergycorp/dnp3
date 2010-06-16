@@ -65,7 +65,7 @@ void StackBase::Run() {
 
 SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel) : 
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile, pCfg->Remote, pCfg->RemotePort),
-	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts_stack", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate))),	
+	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts_stack", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate, pCfg->StartOnline))),	
 	crte(log.GetLogger(LEV_INTERPRET, "Incoming Controls"), pCfg->LinkCommandStatus, pObs),
 	dote(pObs)
 {
