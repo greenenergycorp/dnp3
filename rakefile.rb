@@ -23,6 +23,7 @@ $projects = {
 :xmlbindings => {:dir => 'XMLBindings'},
 :dnp3test => {:dir => 'DNP3Test'},
 :testset => {:dir => 'TestSet'},
+:slavedemo => {:dir => 'SlaveDemo'},
 :tinyxml => {:dir => 'tinyxml'},
 :aplxml => {:dir => 'APLXML'},
 :terminal => {:dir => 'Terminal'},

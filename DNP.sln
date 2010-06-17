@@ -30,6 +30,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DNP3Java", "DNP3Java\DNP3Ja
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "TestSetInstaller", "TestSetInstaller\TestSetInstaller.vdproj", "{9FAD9888-9441-4ACF-8750-90AFEA9F938A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlaveDemo", "SlaveDemo\SlaveDemo.vcproj", "{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -187,6 +189,16 @@ Global
 		{9FAD9888-9441-4ACF-8750-90AFEA9F938A}.Release|Mixed Platforms.ActiveCfg = Release
 		{9FAD9888-9441-4ACF-8750-90AFEA9F938A}.Release|Mixed Platforms.Build.0 = Release
 		{9FAD9888-9441-4ACF-8750-90AFEA9F938A}.Release|Win32.ActiveCfg = Release
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Debug|Win32.Build.0 = Debug|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Win32.ActiveCfg = Release|Win32
+		{9C4EC600-DE0F-4042-BE12-F4BAF605A49C}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
