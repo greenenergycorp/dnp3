@@ -73,7 +73,7 @@ class ITimerSource
 	public:
 	virtual ~ITimerSource() {}
 
-	ITimer* StartInfininte(const ExpirationHandler& arHandler)
+	ITimer* StartInfinite(const ExpirationHandler& arHandler)
 	{
 		boost::posix_time::ptime t(boost::date_time::max_date_time);
 		return this->Start(t, arHandler);
