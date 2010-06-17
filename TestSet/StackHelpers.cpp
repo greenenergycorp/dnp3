@@ -59,6 +59,7 @@ void StackBase::Run() {
 	trm.Init();
 	mTermThread.Run(); //blocking
 
+
 	mTermThread.Stop();
 }
 
@@ -66,7 +67,7 @@ void StackBase::Run() {
 SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel) : 
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile, pCfg->Remote, pCfg->RemotePort),
 	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate, pCfg->StartOnline))),	
-	crte(log.GetLogger(LEV_INTERPRET, "Incoming Controls"), pCfg->LinkCommandStatus, pObs),
+	crte(log.GetLogger(LEV_INTERPRET, "commandsquit"), pCfg->LinkCommandStatus, pObs),
 	dote(pObs)
 {
 	trm.AddExtension(&dote);

@@ -83,13 +83,7 @@ namespace apl { namespace dnp {
 		cmd.mUsage = "show stats";
 		cmd.mDesc = "Displays number and types of measurement in data observer";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShowStats, this, _1);
-		apTerminal->BindCommand(cmd, "show stats");
-		
-		cmd.mName = "show";
-		cmd.mUsage = "run show";
-		cmd.mDesc = "Displays data everytime it changes";
-		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleRunShow, this, _1);
-		apTerminal->BindCommand(cmd, "run show");
+		apTerminal->BindCommand(cmd, "show stats");				
 	}
 
 	template <class T>
@@ -131,32 +125,6 @@ namespace apl { namespace dnp {
 		bool mNewEvent;
 
 	};
-
-	retcode FlexibleObserverTerminalExtension::HandleRunShow(std::vector<std::string>& arTokens)
-	{
-		/*
-		string line;
-
-		NotifyCounter counter;
-
-		this->HandleShow(arTokens, true, true);
-
-		mpObserver->AddObserver(&counter);
-
-		while(!this->ExitASAP())
-		{	
-			if(counter.HasNewEvent()) this->HandleShow(arTokens, false, true);
-			if(this->GetLine(line, 50)) break;
-		}
-		this->HandleShow(arTokens, true, true);
-
-		mpObserver->RemoveObserver(&counter);
-		*/
-		
-
-		return SUCCESS;
-	}
-
 
 	retcode FlexibleObserverTerminalExtension::HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter)
 	{

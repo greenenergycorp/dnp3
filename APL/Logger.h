@@ -50,6 +50,7 @@ namespace apl
 			inline bool IsEnabled(FilterLevel aFilter) { return (mLevel & aFilter) != 0; }
 			inline void SetFilters(int aLevel) { mLevel = aLevel; }
 			void SetFilterLevel(FilterLevel aFilter);
+			int GetFilters() { return mLevel; }
 
 			Logger* GetSubLogger(std::string aName);
 			Logger* GetSubLogger(std::string aSubName, int aFilterBits);

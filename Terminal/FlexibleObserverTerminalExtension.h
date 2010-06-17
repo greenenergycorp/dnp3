@@ -56,8 +56,7 @@ namespace dnp {
 			NameMap mSetpointStatusNames;
 
 			size_t mLongestName;
-
-			retcode HandleRunShow(std::vector<std::string>& arArgs);
+			
 			retcode HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter);
 			retcode HandleSetShow(std::vector<std::string>& arArgs);
 			retcode HandleShowStats(std::vector<std::string>& arArgs);

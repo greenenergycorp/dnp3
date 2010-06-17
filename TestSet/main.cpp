@@ -17,16 +17,17 @@
 // under the License.
 // 
 
-#include "StackHelpers.h"
-
-#include <DNP3XML/XML_DNP3.h>
+#include <memory>
+#include <csignal>
+#include <sys/stat.h>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/parsers.hpp>
 
-#include <memory>
-#include <sys/stat.h>
+#include "StackHelpers.h"
+
+#include <DNP3XML/XML_DNP3.h>
 
 using namespace std;
 using namespace apl;
@@ -40,29 +41,7 @@ void WaitOnEnterKey()
 {
 	cout << "Press <enter> to quit " << endl;
 	string s;
-	cin >> s;	
-}
-
-bool GetFilter(char c, FilterLevel& aLevel)
-{
-	bool success = true;
-	switch(c) {
-			case('d'): aLevel = LEV_DEBUG; break;
-			case('c'): aLevel = LEV_COMM; break;
-			case('p'): aLevel = LEV_INTERPRET; break;
-			case('i'): aLevel = LEV_INFO; break;
-			case('w'): aLevel = LEV_WARNING; break;
-			case('e'): aLevel = LEV_ERROR; break;
-			default:
-				success = false;
-				break;
-	}
-	return success;
-}
-
-bool GetFilter(const std::string& arg, FilterLevel& aLevel)
-{
-	return (arg.size() == 1) ? GetFilter(arg[0], aLevel) : false;	
+	cin >> s;
 }
 
 bool FileExists(const std::string& arFileName)
@@ -70,19 +49,6 @@ bool FileExists(const std::string& arFileName)
 	struct stat stFileInfo;
 	int statval = stat(arFileName.c_str(), &stFileInfo);
 	return statval == 0;
-}
-
-bool LoadXmlFile(const std::string& arFileName, IXMLDataBound* apCfg)
-{
-	try {
-		loadXmlInto(arFileName, apCfg);
-		return true;
-	}
-	catch(Exception ex) {
-		cout << "Error loading config file: " << arFileName << endl;
-		cout << ex.GetErrorString() << endl;
-		return false;
-	}
 }
 
 bool GenerateConfig(bool aIsMaster, const std::string& arPath)
@@ -108,19 +74,27 @@ bool GenerateConfig(bool aIsMaster, const std::string& arPath)
 	}	
 }
 
+template <class T, class U>
+void RunStack(const std::string& arConfigFile)
+{
+	U cfg;
+	loadXmlInto(arConfigFile, &cfg);	
+	FilterLevel lev = Convert(cfg.Log.Filter);				
+	T stack(&cfg, lev);
+	stack.Run();	
+}
+
 int main(int argc, char* argv[])
 {
 	// uses the simple argument helper to set the config flags approriately
-	std::string xmlFilename;
-	std::string logLevel;
+	std::string xmlFilename;	
 				
 	po::options_description desc("Allowed options");
 	desc.add_options()
 		("configfile,F", po::value<std::string>(&xmlFilename), "The xml configuration file to use")
 		("help,H", "display program options")		
 		("generate,G", "Generate a new default config file and exit")
-		("gen_on_no_exist,E", "Generate the specified config file automatically if it doesn't exist")
-		("log_level,L", po::value<std::string>(&logLevel), "Override the configuration's log level")
+		("gen_on_no_exist,E", "Generate the specified config file automatically if it doesn't exist")		
 		("slave,S", "Use slave test set");
 
 	po::variables_map vm;
@@ -153,27 +127,17 @@ int main(int argc, char* argv[])
 
 	try {
 		if ( vm.count("slave") ) {
-			auto_ptr<APLXML_STS::SlaveTestSet_t> pCfg(new APLXML_STS::SlaveTestSet_t());
-			if(!LoadXmlFile(xmlFilename, pCfg.get())) return -1;
-			FilterLevel lev = Convert(pCfg.get()->Log.Filter);
-			GetFilter(logLevel, lev);
-			SlaveXMLStack slave(pCfg.get(), lev);
-			slave.Run();
+			RunStack<SlaveXMLStack, APLXML_STS::SlaveTestSet_t>(xmlFilename);
 		}
 		else {
-			auto_ptr<APLXML_MTS::MasterTestSet_t> pCfg(new APLXML_MTS::MasterTestSet_t());
-			if(!LoadXmlFile(xmlFilename, pCfg.get())) return -1;
-			FilterLevel lev = Convert(pCfg.get()->Log.Filter);			
-			GetFilter(logLevel, lev);
-			MasterXMLStack master(pCfg.get(), lev);
-			master.Run();
+			RunStack<MasterXMLStack, APLXML_MTS::MasterTestSet_t>(xmlFilename);			
 		}
-
 	}
 	catch(const Exception& ex) {
-		cout << ex.Message() << endl;
+		cout << ex.GetErrorString() << endl;
 		WaitOnEnterKey();
 		return -1;
 	}
+	return 0;
 }
 

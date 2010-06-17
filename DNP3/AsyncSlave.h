@@ -248,7 +248,7 @@ CommandStatus AsyncSlave::Operate(T& arCmd, size_t aIndex, bool aDirect, const H
 	{
 		CommandResponse cr(CS_HARDWARE_ERROR);
 		mRspQueue.WaitForResponse(cr, mSequence); //wait forever on a response from user space
-		LOG_BLOCK(LEV_INFO, "Operating " << arCmd.ToString() << " Index: " << aIndex << " Result: " << ToString(cr.mResult));
+		LOG_BLOCK(LEV_INFO, arCmd.ToString() << " Index: " << aIndex << " Result: " << ToString(cr.mResult));
 		return cr.mResult;
 	}
 }

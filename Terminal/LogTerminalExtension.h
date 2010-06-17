@@ -51,10 +51,7 @@ class ITimer;
 			LogEntryCircularBuffer mBuffer;
 			MetricBuffer mMetrics;
 			LogToFile* mpFileLogger;
-
-			//clear
-			retcode HandleClearScreen(std::vector<std::string>&);
-
+			
 			//print
 			retcode HandlePrintLog(std::vector<std::string>&);
 			retcode HandlePrintLoggers(std::vector<std::string>&);

@@ -68,9 +68,9 @@ namespace apl
 		// PRINT LOGGERS
 		cmd.mName = "loggers";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandlePrintLoggers, this, _1);
-		cmd.mUsage = "print loggers";
-		cmd.mDesc = "Prints out all registered logger names";
-		apTerminal->BindCommand(cmd, "print loggers");
+		cmd.mUsage = "loggers";
+		cmd.mDesc = "Lists all of the loggers and the current filter settings";
+		apTerminal->BindCommand(cmd, "loggers");
 
 		////////////////////////////////////
 		// run
@@ -86,37 +86,34 @@ namespace apl
 		// set
 		////////////////////////////////////
 
+		std::string levels("a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT, n=NONE");
+		std::string usage("[a|d|i|c|p|w|e|v|n] <loggername1> <loggername2> ...");
+
 		cmd.mName = "filter";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetFilterOrLevel, this, _1, false);
-		cmd.mUsage = "set filter [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
-		cmd.mUsage += "a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT";
+		cmd.mUsage = "filter " + usage + "\r\n";
+		cmd.mUsage += levels;
 		cmd.mDesc = "Set the log filters indivdually, more than one filter can be set at a time (Ex: wev). If no devices are specified, all devices are affected.";
-		apTerminal->BindCommand(cmd, "set filter");
+		apTerminal->BindCommand(cmd, "filter");
 
 		cmd.mName = "level";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetFilterOrLevel, this, _1, true);
-		cmd.mUsage = "set level [a|d|i|c|p|w|e|v|n] <devicename1> <devicename2> ...\r\n";
-		cmd.mUsage += "a=ALL, d=DEBUG, i=INFO, c=COMM, p=Interpret, w=WARNING, e=ERROR, v=EVENT";
+		cmd.mUsage = "level " + usage + "\r\n";
+		cmd.mUsage += levels;
 		cmd.mDesc = "Set log level, all \"higher\" filters are also set (Ex: \"set level w\" is equivilant to \"set filter wev\"). If no devices are specified, all devices are affected.";
-		apTerminal->BindCommand(cmd, "set level");
+		apTerminal->BindCommand(cmd, "level");
 
 		cmd.mName = "logcol";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleSetLogCol, this, _1);
-		cmd.mUsage = "set logcol [t|f|d|l|m] \r\n";
+		cmd.mUsage = "logcol [t|f|d|l|m] \r\n";
 		cmd.mUsage += "t=Time, f=Filter, d=Device, l=Location, m=Message";
 		cmd.mDesc = "Sets the column order for displaying log entries";
-		apTerminal->BindCommand(cmd, "set logcol");
+		apTerminal->BindCommand(cmd, "logcol");
 
 		////////////////////////////////////
 		// clear
 		////////////////////////////////////
-
-		cmd.mName = "screen";
-		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleClearScreen, this, _1);
-		cmd.mUsage = "clear screen";
-		cmd.mDesc = "Clears the screen.";
-		apTerminal->BindCommand(cmd, "clear screen");
-
+		
 		cmd.mName = "start";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleStartToFileLogging, this, _1);
 		cmd.mUsage = "dump start [filename]";
@@ -156,7 +153,7 @@ namespace apl
 		ostringstream oss;
 		for(size_t i=0; i<loggers.size(); i++)
 		{
-			oss << loggers[i]->GetName() << "\r\n";
+			oss << loggers[i]->GetName() << " - " << LogTypes::GetFilterString(loggers[i]->GetFilters()) << "\r\n";
 		}
 
 		this->Send(oss.str());
@@ -280,7 +277,7 @@ namespace apl
 					oss << arEntry.GetDeviceName();
 					break;
 				case(COL_FILTER):
-					oss << GetFilterString(arEntry.GetFilterLevel());
+					oss << LogTypes::GetLevelString(arEntry.GetFilterLevel());
 					break;
 				case(COL_LOCATION):
 					oss << arEntry.GetLocation();
@@ -301,17 +298,14 @@ namespace apl
 		if(arTokens.size() == 0) return BAD_ARGUMENTS;
 
 		//first token is the level flags
-		int level = 0;
-		bool success = ParseLevelCode(arTokens[0], level);
-
-		if(!success)
-		{
+		int level = LogTypes::GetFilterMask(arTokens[0]);
+		
+		if(level < 0) {
 			this->Send("Couldn't parse level argument: " + arTokens[0] + "\r\n");
 			return BAD_ARGUMENTS;
 		}
 
-		if(aSetLevel && level > 0)
-		{
+		if(aSetLevel && level > 0) {
 			if (arTokens[0].size() != 1){
 				this->Send("The \'set level\' command needs a single filter level, use the lowest filter only or use \'set filter\' to specify more than one level.\r\n");
 				return BAD_ARGUMENTS;
@@ -355,14 +349,7 @@ namespace apl
 		
 		return SUCCESS;
 	}
-
-	retcode LogTerminalExtension::HandleClearScreen(std::vector<std::string>& /*arTokens*/)
-	{
-		this->Send(ITerminal::CLEAR_SRC);
-		return SUCCESS;
-	}
-
-
+	
 	void LogTerminalExtension::StopLoggingToFile()
 	{		
 		delete mpFileLogger;

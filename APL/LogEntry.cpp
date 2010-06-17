@@ -43,7 +43,7 @@ namespace apl
 	{
 		ostringstream oss;
 		oss << GetTimeString() << " - "
-			<< GetFilterString( mFilterLevel ) << " - " 
+			<< LogTypes::GetLevelString( mFilterLevel ) << " - " 
 			<< mDeviceName << " - "
 			<< mMessage;
 
@@ -51,101 +51,6 @@ namespace apl
 				
 		return oss.str();
 	}
-
-	std::string GetLevelCode(int aLevel)
-	{
-		ostringstream oss;
-
-		if( (aLevel&LEV_DEBUG) != 0) oss << "D";
-		if( (aLevel&LEV_COMM) != 0)	 oss << "C";
-		if( (aLevel&LEV_INTERPRET) != 0) oss << "P";
-		if( (aLevel&LEV_INFO) != 0) oss << "I";
-		if( (aLevel&LEV_WARNING) != 0) oss << "W";
-		if( (aLevel&LEV_ERROR) != 0) oss << "E";
-		if( (aLevel&LEV_EVENT) != 0) oss << "V";
-
-		return oss.str();
-	}
-
-	bool ParseLevelCode(std::string aFilters, int& aLevel)
-	{
-		toUpperCase(aFilters);
-
-		int level = 0;
-
-		if(aFilters.size() == 1)
-		{
-			if(aFilters[0] == 'A')
-			{
-				aLevel = LogEntry::MASK_ALL_LEVELS;
-				return true;
-			}
-			if(aFilters[0] == 'N')
-			{
-				aLevel = 0;
-				return true;
-			}
-		}
-
-		for(size_t i=0; i<aFilters.size(); i++)
-		{
-			switch(aFilters[i])
-			{
-				case('D'):
-					level |= LEV_DEBUG;
-					break;
-				case('C'):
-					level |= LEV_COMM;
-					break;
-				case('P'):
-					level |= LEV_INTERPRET;
-					break;
-				case('I'):
-					level |= LEV_INFO;
-					break;
-				case('W'):
-					level |= LEV_WARNING;
-					break;
-				case('E'):
-					level |= LEV_ERROR;
-					break;
-				case('V'):
-					level |= LEV_EVENT;
-					break;
-				default:
-					return false;
-			}
-		}
-
-		aLevel = level;
-
-		return true;
-	}
-	
-	string GetFilterString( FilterLevel aLevel )
-	{
-		switch(aLevel)
-		{
-		case(LEV_DEBUG):
-			return "DEBUG";
-		case(LEV_COMM):
-			return "COMM";
-		case(LEV_INTERPRET):
-			return "INTERPRET";
-		case(LEV_INFO):
-			return "INFO";
-		case(LEV_WARNING):
-			return "WARNING";
-		case(LEV_ERROR):
-			return "ERROR";
-		case(LEV_EVENT):
-			return "EVENT";
-		default:
-			return "UNKNOWN";
-		}		
-	}
-	
-
 
 }
 

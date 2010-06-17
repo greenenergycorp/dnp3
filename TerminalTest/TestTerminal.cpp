@@ -64,7 +64,7 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//make sure we get a usefull error message for a missing subtopic
 	BOOST_REQUIRE(SendAndTest(apLayer, "help print faketopic", "No topic found"));
 	//see that we appear to get the list of registered devices
-	BOOST_REQUIRE(SendAndTest(apLayer, "help print loggers", "registered logger"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help loggers", "all of the loggers"));
 
 	//check that we get a list of sub commands (log should be one)
 	BOOST_REQUIRE(SendAndTest(apLayer, "help run", "log"));
@@ -72,20 +72,17 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//shows that atleast filter is a subcommand of set
 	BOOST_REQUIRE(SendAndTest(apLayer, "help set", "filter"));
 	//check that the help string is approriate for set filter
-	BOOST_REQUIRE(SendAndTest(apLayer, "help set filter", "filters"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help filter", "filters"));
 	//check that the help string is approriate for set col
-	BOOST_REQUIRE(SendAndTest(apLayer, "help set logcol", "column order"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help logcol", "column order"));
 
 	//check that a bad subcommand generates the usage message.
-	BOOST_REQUIRE(SendAndTest(apLayer, "print loggers NotARealDevice", "usage: "));
-
-	//test that a "clear screen" command ilicits a "form feed" that clears the screen.
-	BOOST_REQUIRE(SendAndTest(apLayer, "clear screen", "\f"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "loggers NotARealDevice", "usage: "));	
 }
 
 void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
 	//check that our new device is in the list
-	BOOST_REQUIRE(SendAndTest(apLayer, "print loggers", "TestDevice"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "loggers", "TestDevice"));
 
 	//Log a string and see that it appears in the print log command
 	apLogger->Log(LEV_ERROR,LOCATION,"TestLogOutput");
@@ -98,37 +95,35 @@ void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
 		
 void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//test that the help string is correct
-	BOOST_REQUIRE(SendAndTest(apLayer, "set logcol", "usage: "));
+	BOOST_REQUIRE(SendAndTest(apLayer, "logcol", "usage: "));
 	//test that we stop the user from having the same column more that once
-	BOOST_REQUIRE(SendAndTest(apLayer, "set logcol tt", "more than once"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "logcol tt", "more than once"));
 	//check that bad column names are thrown out.
-	BOOST_REQUIRE(SendAndTest(apLayer, "set logcol x", "Unrecognized log column"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "logcol x", "Unrecognized log column"));
 	//make sure a valid string is allowed
-	BOOST_REQUIRE(SendAndTest(apLayer, "set logcol fldm", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "logcol fldm", ">"));
 
 	//test the help string
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter", "usage: "));
-
-	//test that we cant have both all and none
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter an", "Couldn't parse"));
-	//test that we cant have both all and anything else
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter ad", "Couldn't parse"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter", "usage: "));
+	
 	//check that a bad filter is ignored
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter x", "Couldn't parse"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter x", "Couldn't parse"));
+	//check that a bad filter is ignored, even if valid filters are present
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter dxp", "Couldn't parse"));
 	//test that all works
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter a", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter a", ">"));
 	//test that none works
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter n", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter n", ">"));
 	//test that setting all of the filters manually works
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter dciwev", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter dciwev", ">"));
 
 	//leave it set to all to error only
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter e", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter e", ">"));
 
 	//make sure it ignores attempts to set filters on bad devieces
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter dciwev BadDevice", "Unrecognized device"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter dciwev BadDevice", "Unrecognized device"));
 	//check that it works for a good device
-	BOOST_REQUIRE(SendAndTest(apLayer, "set filter dciwev TestDevice", ">"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "filter dciwev TestDevice", ">"));
 }
 
 void TestRunCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){

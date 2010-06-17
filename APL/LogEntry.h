@@ -22,21 +22,12 @@
 #include "TimingTools.h"
 #include "LogBase.h"
 
-namespace apl
-{
-
-	std::string GetFilterString( FilterLevel aLevel );
-
-	std::string GetLevelCode(int aLevel);
-
-	bool ParseLevelCode(std::string aFilters, int& aLevel);
-
+namespace apl {	
+	
 	class LogEntry
 	{
 		public:
-
-			const static int MASK_ALL_LEVELS = LEV_DEBUG | LEV_INFO | LEV_COMM | LEV_INTERPRET | LEV_WARNING | LEV_ERROR | LEV_EVENT;
-
+			
 			LogEntry():mTime(TimeStamp::GetUTCTimeStamp()){};
 
 			LogEntry( FilterLevel aLevel, const std::string& aDeviceName, const std::string& aLocation, const std::string& aMessage, int aErrorCode);
@@ -45,8 +36,7 @@ namespace apl
 			const std::string&	GetLocation() { return mLocation; }
 			const std::string&	GetMessage() { return mMessage; }
 			FilterLevel			GetFilterLevel() { return mFilterLevel; }
-			std::string			GetTimeString(){ return TimeStamp::UTCTimeStampToString(mTime);}
-			//const apl::Time&	GetTime() { return mTime; }
+			std::string			GetTimeString(){ return TimeStamp::UTCTimeStampToString(mTime);}			
 			int					GetErrorCode(){return mErrorCode; }
 
 			std::string			LogString();

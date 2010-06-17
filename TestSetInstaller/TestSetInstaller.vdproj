@@ -51,6 +51,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_81D00EDA021FC53443A8A4E552FBC39E"
+        "OwnerKey" = "8:_6A312EAB7E9140DC81E3439C767051CA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_96C0F18DB7814CE0834AADB9EA6D5317"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -242,6 +248,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_81D00EDA021FC53443A8A4E552FBC39E"
+            {
+            "SourcePath" = "8:MSWSOCK.dll"
+            "TargetName" = "8:MSWSOCK.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_9C472356ABDA4F198CFB74D8416F04A0"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_96C0F18DB7814CE0834AADB9EA6D5317"
             {
             "SourcePath" = "8:icons\\dnp_banner.bmp"
@@ -329,7 +355,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:DNP3 Test Set"
         "ProductCode" = "8:{73C3B9AD-3CC6-498E-873B-F1CF59C08F52}"
-        "PackageCode" = "8:{5BABDAB5-78C5-4CCD-A866-05F0E720ED64}"
+        "PackageCode" = "8:{7AAD7375-DD8D-4B55-B84C-3B585D1BD977}"
         "UpgradeCode" = "8:{F07912E9-9BAF-4F92-ADE2-8C169AAFB16E}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"

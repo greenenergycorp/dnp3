@@ -37,7 +37,7 @@ namespace apl
 
 	void Logger::SetFilterLevel(FilterLevel aFilter)
 	{		
-		mLevel = FilterLevelToMask(aFilter);
+		mLevel = LogTypes::FilterLevelToMask(aFilter);
 	}
 
 	Logger* Logger::GetSubLogger(std::string aSubName, int aFilterBits)
@@ -52,7 +52,7 @@ namespace apl
 
 	Logger* Logger::GetSubLogger(std::string aSubName, FilterLevel aFilter)
 	{
-		return this->GetSubLogger(aSubName, FilterLevelToMask(aFilter));		
+		return this->GetSubLogger(aSubName, LogTypes::FilterLevelToMask(aFilter));		
 	}
 
 	Logger* Logger::GetSubLogger(std::string aSubName)

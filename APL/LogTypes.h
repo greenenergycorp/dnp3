@@ -19,6 +19,8 @@
 #ifndef __LOG_TYPES_H_
 #define __LOG_TYPES_H_
 
+#include <string>
+
 namespace apl {
 
 enum FilterLevel
@@ -32,8 +34,28 @@ enum FilterLevel
 	LEV_DEBUG =		0x40
 };
 
+/// Contains helper functions for manipulating, levels, filters, and strings
+class LogTypes {
+
+public:
+
+/// Mask for all of the values
+static const int MASK_ALL_LEVELS = LEV_DEBUG | LEV_INFO | LEV_COMM | LEV_INTERPRET | LEV_WARNING | LEV_ERROR | LEV_EVENT;
+
 /// Converts a filter level enumeration to a mask with all higher levels set
-int FilterLevelToMask(FilterLevel);
+static int FilterLevelToMask(FilterLevel);
+
+/// converts a single character to a filter level, returns -1 if an invalid character
+static int GetFilterMask(char c);
+
+/// converts a string of filter characters, ORing the values, returns -1 if an invalid character is present
+static int GetFilterMask(const std::string& arg);
+
+static std::string GetLevelString(FilterLevel aLevel);
+
+static std::string GetFilterString(int aLevel);
+
+};
 
 }
 
