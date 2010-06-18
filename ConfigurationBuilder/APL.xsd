@@ -27,6 +27,7 @@
     <xs:complexType>
     <xs:complexContent>
         <xs:extension base="PhysicalLayerDescriptor">
+        <xs:attribute name="Endpoint" type="xs:string" use="required"/>
         <xs:attribute name="Port" type="xs:int" use="required"/>
         </xs:extension>
       </xs:complexContent>

@@ -20,21 +20,22 @@
 
 namespace apl { namespace xml {
 	
-	APLXML_Base::TCPServer_t* XML_APL::AddTCPServer(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, int aPort)
+	APLXML_Base::TCPServer_t* XML_APL::AddTCPServer(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arEndpoint, int aPort)
 	{
 		APLXML_Base::TCPServer_t* pLayer = new APLXML_Base::TCPServer_t();
 		pLayer->Name = arDevice;
+		pLayer->Endpoint = arEndpoint;
 		pLayer->Port = aPort;
 		pLayer->OpenRetryMS = 5000;
 		arList.TCPServerVector.push_back(pLayer);
 		return pLayer;
 	}
 
-	APLXML_Base::TCPClient_t* XML_APL::AddTCPClient(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arServer, int aPort)
+	APLXML_Base::TCPClient_t* XML_APL::AddTCPClient(APLXML_Base::PhysicalLayerList_t& arList, const std::string& arDevice, const std::string& arAddress, int aPort)
 	{
 		APLXML_Base::TCPClient_t* pLayer = new APLXML_Base::TCPClient_t();
 		pLayer->Name = arDevice;
-		pLayer->Address = arServer;
+		pLayer->Address = arAddress;
 		pLayer->Port = aPort;		
 		pLayer->OpenRetryMS = 5000;		
 		arList.TCPClientVector.push_back(pLayer);

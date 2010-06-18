@@ -70,7 +70,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, uint_16_t aPort);
 
 		/// Adds a TCPServer port, excepts if the port already exists
-		void AddTCPServer(const std::string& arName, PhysLayerSettings, uint_16_t aPort);
+		void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, uint_16_t aPort);
 
 		/// Adds a Serial port, excepts if the port already exists
 		void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);

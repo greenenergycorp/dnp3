@@ -63,9 +63,9 @@ void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSetting
 	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
 }
 
-void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, uint_16_t aPort)
+void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, uint_16_t aPort)
 {	
-	mMgr.AddTCPServer(arName, aSettings, aPort);
+	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
 }
 
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)

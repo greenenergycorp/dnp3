@@ -34,7 +34,7 @@ namespace apl { namespace dnp {
 
 IPhysicalLayerAsync* FGetTerminalPhys(Logger* apLogger, boost::asio::io_service* apSrv, bool aRemote, apl::uint_16_t aRemotePort)
 {
-	if (aRemote) return PhysicalLayerFactory::FGetTCPServerAsync(aRemotePort, apSrv, apLogger);
+	if (aRemote) return PhysicalLayerFactory::FGetTCPServerAsync("0.0.0.0", aRemotePort, apSrv, apLogger);
 	else return new PhysicalLayerIOStreamAsync(apLogger, apSrv);
 }
 

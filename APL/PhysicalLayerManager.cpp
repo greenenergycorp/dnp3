@@ -62,9 +62,9 @@ namespace apl
 		this->AddLayer(arName, s, pli);
 	}
 
-	void PhysicalLayerManager ::AddTCPServer(const std::string& arName, PhysLayerSettings s, uint_16_t aPort)
+	void PhysicalLayerManager ::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, uint_16_t aPort)
 	{		
-		IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPServerAsync(aPort);
+		IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPServerAsync(arEndpoint, aPort);
 		PhysLayerInstance pli(fac);
 		this->AddLayer(arName, s, pli);
 	}

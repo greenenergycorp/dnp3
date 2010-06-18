@@ -197,6 +197,7 @@ void TCPServer_t :: fromXml(TiXmlNode* pNode){
 	TiXmlElement* pEm = pNode->ToElement();
 	XML_CHECK("TCPServer",pEm != 0);
 	this->APLXML_Base::PhysicalLayerDescriptor_t::fromXml(pNode);
+	Endpoint = FromString_string(pEm, pEm->Attribute("Endpoint"));
 	Port = FromString_int(pEm, pEm->Attribute("Port"));
 	valid=true;
 };
@@ -210,6 +211,7 @@ void TCPServer_t :: toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreVali
 		pEm = pParent->ToElement();
 	}
 	this->APLXML_Base::PhysicalLayerDescriptor_t::toXml(pEm, false, aIgnoreValid);
+	pEm->SetAttribute("Endpoint", ToString_string(Endpoint));
 	pEm->SetAttribute("Port", ToString_int(Port));
 };
 

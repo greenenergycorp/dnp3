@@ -32,7 +32,7 @@ TransportStackPair::TransportStackPair(
 	uint_16_t aPort) :
 
 mClient(apLogger->GetSubLogger("TCPClient"), apService, "127.0.0.1", aPort),
-mServer(apLogger->GetSubLogger("TCPServer"), apService, aPort),
+mServer(apLogger->GetSubLogger("TCPServer"), apService, "127.0.0.1", aPort),
 mClientStack(apLogger->GetSubLogger("ClientStack"), apTimerSrc, &mClient, aClientCfg),
 mServerStack(apLogger->GetSubLogger("ServerStack"), apTimerSrc, &mServer, aServerCfg)
 {

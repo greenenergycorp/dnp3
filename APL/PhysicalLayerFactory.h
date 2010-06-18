@@ -34,12 +34,12 @@ namespace apl{
 
 		static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
 		static IPhysicalLayerAsyncFactory GetTCPClientAsync(std::string aAddress, uint_16_t aPort);
-		static IPhysicalLayerAsyncFactory GetTCPServerAsync(uint_16_t aPort);
+		static IPhysicalLayerAsyncFactory GetTCPServerAsync(std::string aEndpoint, uint_16_t aPort);
 
 		//normal factory functions
 		static IPhysicalLayerAsync* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
 		static IPhysicalLayerAsync* FGetTCPClientAsync(std::string aAddress, uint_16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
-		static IPhysicalLayerAsync* FGetTCPServerAsync(uint_16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
+		static IPhysicalLayerAsync* FGetTCPServerAsync(std::string aEndpoint, uint_16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger);
 	};
 }
 

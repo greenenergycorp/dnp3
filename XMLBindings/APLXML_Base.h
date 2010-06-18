@@ -83,6 +83,7 @@ class TCPServer_t : public APLXML_Base::PhysicalLayerDescriptor_t{
 public:
 	void toXml(TiXmlNode* pParent, bool aCreateNode, bool aIgnoreValid);
 	void fromXml(TiXmlNode* pNode);
+	string Endpoint;
 	int Port;
 };
 class Log_t : public IXMLDataBound {

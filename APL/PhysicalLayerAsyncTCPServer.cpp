@@ -33,12 +33,16 @@ using namespace std;
 
 namespace apl {
 
-PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, io_service* apIOService, uint_16_t aPort) :
+PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, io_service* apIOService, const std::string& arEndpoint, uint_16_t aPort) :
 PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
 mEndpoint(ip::tcp::v4(), aPort),
 mAcceptor(*apIOService)
 {
-	
+	//set the endpoint's address
+	boost::system::error_code ec;
+	ip::address_v4 addr = ip::address_v4::from_string(arEndpoint, ec);	
+	if(ec) throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid ");	
+	mEndpoint.address(addr);
 }
 
 /* Implement the actions */

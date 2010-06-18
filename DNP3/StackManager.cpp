@@ -41,8 +41,8 @@ StackManager::~StackManager() { delete mpImpl; delete mpLog; }
 void StackManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, uint_16_t aPort)
 { mpImpl->AddTCPClient(arName, s, arAddr, aPort); }
 
-void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, uint_16_t aPort)
-{ mpImpl->AddTCPServer(arName, s, aPort); }
+void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, uint_16_t aPort)
+{ mpImpl->AddTCPServer(arName, s, arEndpoint, aPort); }
 
 void StackManager::AddSerial(const std::string& arName, PhysLayerSettings s, SerialSettings aSerial)
 { mpImpl->AddSerial(arName, s, aSerial); }

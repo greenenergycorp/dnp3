@@ -108,7 +108,7 @@ void AsyncIntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 
 	PhysLayerSettings s(aLevel, 1000);
 	this->AddTCPClient(client, s, "127.0.0.1", port);
-	this->AddTCPServer(server, s, port);
+	this->AddTCPServer(server, s, "127.0.0.1", port);
 
 	{
 	MasterStackConfig cfg;

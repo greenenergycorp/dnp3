@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_SUITE(PhysicalLayerAsyncTCPSuite)
 		EventLog logserver;
 		boost::asio::io_service loopservice;
 		TimerSourceASIO timer_src(&loopservice);
-		PhysicalLayerAsyncTCPServer server(logserver.GetLogger(LEV_INFO, "server"), &loopservice, 30000);
+		PhysicalLayerAsyncTCPServer server(logserver.GetLogger(LEV_INFO, "server"), &loopservice, "127.0.0.1", 30000);
 		AsyncLoopback t(logserver.GetLogger(LEV_INFO, "loopback"), &server, &timer_src, LEV_WARNING, false);
 		IOServiceThread iost(&loopservice);				
 		t.Start();

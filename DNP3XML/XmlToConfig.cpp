@@ -53,7 +53,7 @@ namespace apl { namespace dnp {
 		{
 			TCPServer_t* pCfg = arList.TCPServerVector[i];
 			PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-			arMgr.AddTCPServer(pCfg->Name, s, pCfg->Port);
+			arMgr.AddTCPServer(pCfg->Name, s, pCfg->Endpoint, pCfg->Port);
 		}
 		for (size_t i = 0; i < arList.SerialVector.size(); i++ )
 		{

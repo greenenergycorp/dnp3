@@ -54,7 +54,7 @@ namespace apl{ namespace xml{
 	IPhysicalLayerAsyncFactory PhysicalLayerXMLFactory :: GetAsync(const APLXML_Base::TCPServer_t* apCfg)
 	{
 		uint_16_t port = boost::numeric::converter<uint_16_t, int>::convert(apCfg->Port);
-		return PhysicalLayerFactory::GetTCPServerAsync(port);
+		return PhysicalLayerFactory::GetTCPServerAsync(apCfg->Endpoint, port);
 	}
 	
 	SerialSettings GetSerialSettings(const APLXML_Base::Serial_t* apCfg)

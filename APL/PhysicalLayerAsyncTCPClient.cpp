@@ -53,7 +53,7 @@ void PhysicalLayerAsyncTCPClient::DoOpen()
 	boost::system::error_code ec;
 	string ipstring(mAddr);
 	address = address.from_string(ipstring, ec);
-	if(ec) throw ArgumentException(LOCATION, "string Address: " + ipstring + " cannot be resolved");
+	if(ec) throw ArgumentException(LOCATION, "string Address: " + ipstring + " is invalid");
 	
 	ip::tcp::endpoint serverEndpoint(address, mPort);
 

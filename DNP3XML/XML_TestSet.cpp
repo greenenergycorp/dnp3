@@ -51,7 +51,7 @@ namespace apl {
 		XML_DNP3::Configure(arSlaveTest.Slave);
 		
 		xml::XML_APL::AddSerial(arSlaveTest.PhysicalLayerList, "serial", "COM1");
-		xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", 20000);
+		xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", "0.0.0.0", 20000);
 				
 		arSlaveTest.Remote = false;
 		arSlaveTest.RemotePort = 4999;
