@@ -24,7 +24,7 @@
 
 namespace apl {
 
-const LogTypes::FilterAssoc LogTypes::filters[LogTypes::NUM_FILTER] = { 
+const FilterAssoc LogTypes::filters[LogTypes::NUM_FILTER] = { 
 	{LEV_DEBUG,'d'},
 	{LEV_COMM, 'c'},
 	{LEV_INTERPRET, 'p'},

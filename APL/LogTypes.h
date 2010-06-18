@@ -34,15 +34,15 @@ enum FilterLevel
 	LEV_DEBUG =		0x40
 };
 
-/// Contains helper functions for manipulating, levels, filters, and strings
-class LogTypes {
-
-public:
-
 struct FilterAssoc {
 	FilterLevel lev;
 	char id;
 };
+
+/// Contains helper functions for manipulating, levels, filters, and strings
+class LogTypes {
+
+public:
 
 static const size_t NUM_FILTER = 7;
 static const FilterAssoc filters[NUM_FILTER];
