@@ -40,7 +40,7 @@ namespace apl {
 		XML_DNP3::Configure(arMasterTest.Master, aUseUnsol);
 		 			
 		xml::XML_APL::AddSerial(arMasterTest.PhysicalLayerList, "serial", "COM1");				
-		xml::XML_APL::AddTCPClient(arMasterTest.PhysicalLayerList, "tcpclient", "127.0.0.1", 4999);		
+		xml::XML_APL::AddTCPClient(arMasterTest.PhysicalLayerList, "tcpclient", "127.0.0.1", 20000);		
 	}
 
 	void XML_TestSet::Configure(APLXML_STS::SlaveTestSet_t& arSlaveTest)
@@ -51,11 +51,10 @@ namespace apl {
 		XML_DNP3::Configure(arSlaveTest.Slave);
 		
 		xml::XML_APL::AddSerial(arSlaveTest.PhysicalLayerList, "serial", "COM1");
-		xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", 4999);
-		
-		arSlaveTest.LogFile = "-";
+		xml::XML_APL::AddTCPServer(arSlaveTest.PhysicalLayerList, "tcpserver", 20000);
+				
 		arSlaveTest.Remote = false;
-		arSlaveTest.RemotePort = 4998;
+		arSlaveTest.RemotePort = 4999;
 		arSlaveTest.LinkCommandStatus = false;
 		arSlaveTest.StartOnline = false;
 	}
