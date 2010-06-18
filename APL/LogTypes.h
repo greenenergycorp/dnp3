@@ -39,6 +39,14 @@ class LogTypes {
 
 public:
 
+struct FilterAssoc {
+	FilterLevel lev;
+	char id;
+};
+
+static const size_t NUM_FILTER = 7;
+static const FilterAssoc filters[NUM_FILTER];
+
 /// Mask for all of the values
 static const int MASK_ALL_LEVELS = LEV_DEBUG | LEV_INFO | LEV_COMM | LEV_INTERPRET | LEV_WARNING | LEV_ERROR | LEV_EVENT;
 

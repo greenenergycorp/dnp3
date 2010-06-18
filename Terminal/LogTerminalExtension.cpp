@@ -153,7 +153,7 @@ namespace apl
 		ostringstream oss;
 		for(size_t i=0; i<loggers.size(); i++)
 		{
-			oss << loggers[i]->GetName() << " - " << LogTypes::GetFilterString(loggers[i]->GetFilters()) << "\r\n";
+			oss << LogTypes::GetFilterString(loggers[i]->GetFilters()) << " - " << loggers[i]->GetName() << "\r\n";
 		}
 
 		this->Send(oss.str());

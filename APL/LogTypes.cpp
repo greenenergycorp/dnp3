@@ -24,6 +24,16 @@
 
 namespace apl {
 
+const LogTypes::FilterAssoc LogTypes::filters[LogTypes::NUM_FILTER] = { 
+	{LEV_DEBUG,'d'},
+	{LEV_COMM, 'c'},
+	{LEV_INTERPRET, 'p'},
+	{LEV_INFO, 'i'},
+	{LEV_WARNING, 'w'},
+	{LEV_ERROR, 'e'},
+	{LEV_EVENT, 'v'}	
+};
+
 int LogTypes::FilterLevelToMask(FilterLevel aFilter)
 {
 	//since FilterLevel is a power of 2 (single bit), subtracting 1 will
@@ -78,14 +88,10 @@ std::string LogTypes::GetFilterString(int aLevel)
 
 	oss << "[";
 
-	if( (aLevel & LEV_DEBUG) ) oss << "d";
-	if( (aLevel & LEV_COMM) )	 oss << "c";
-	if( (aLevel & LEV_INTERPRET) ) oss << "p";
-	if( (aLevel & LEV_INFO) ) oss << "i";
-	if( (aLevel & LEV_WARNING) ) oss << "w";
-	if( (aLevel & LEV_ERROR) ) oss << "e";
-	if( (aLevel & LEV_EVENT) ) oss << "v";
-
+	for(size_t i=0; i<LogTypes::NUM_FILTER; ++i) {
+		oss << static_cast<byte_t>((aLevel & filters[i].lev) ? filters[i].id : ' ');
+	}
+	
 	oss << "]";
 
 	return oss.str();
