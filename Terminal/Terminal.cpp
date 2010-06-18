@@ -34,7 +34,7 @@ mIOMode(aIOMode)
 {
 	this->InitCmdHandlers();
 	if(aHoldTimer) {
-		mpInfiniteTimer = mpTimerSrc->StartInfininte(boost::bind(&Terminal::Null, this));
+		mpInfiniteTimer = mpTimerSrc->StartInfinite(boost::bind(&Terminal::Null, this));
 	}
 }
 
