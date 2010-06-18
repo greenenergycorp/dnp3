@@ -34,7 +34,6 @@ int LogTypes::FilterLevelToMask(FilterLevel aFilter)
 
 int LogTypes::GetFilterMask(char c)
 {
-	bool success = true;
 	switch(c) {
 			case('a'): return MASK_ALL_LEVELS;
 			case('d'): return LEV_DEBUG;
