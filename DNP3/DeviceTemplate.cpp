@@ -18,8 +18,6 @@
 // 
 #include "DeviceTemplate.h"
 
-#include <APL/DataInterfaces.h>
-
 namespace apl { namespace dnp {
 
 

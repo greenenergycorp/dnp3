@@ -22,9 +22,8 @@
 #include <vector>
 #include <sstream>
 
+#include <APL/DataInterfaces.h>
 #include "DeviceTemplateTypes.h"
-
-namespace apl { class IDataObserver; }
 
 namespace apl { namespace dnp {
 
