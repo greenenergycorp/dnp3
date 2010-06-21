@@ -42,35 +42,35 @@ void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "badCommand", "Unrecognized"));
 
 	//check that a valid command with a space before or after the string is ignored
-	BOOST_REQUIRE(SendAndTest(apLayer, "help print ", "log"));
-	BOOST_REQUIRE(SendAndTest(apLayer, " help print", "log"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help log ", "print"));
+	BOOST_REQUIRE(SendAndTest(apLayer, " help log", "print"));
 
 	//test that 2 lines recieved at once are both processed
-	BOOST_REQUIRE(SendAndTest(apLayer, "help\r\nhelp print", "log"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help\r\nhelp log", "print"));
 
 	//generate a big long string that should flood the Readline() buffer.
 	byte_t tooBigBuff[1100];
 	for(int i=0; i < 1100; ++i) tooBigBuff[i] = '0' + (i%10);
 	string tooBigString((char*)tooBigBuff, 1100);
 	//add onto the end of the string a valid command we can check the output of
-	tooBigString.append("\r\nprint log");						
+	tooBigString.append("\r\nlog print");						
 }
 
 void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//test that help generates a big usage text screen.
 	BOOST_REQUIRE(SendAndTest(apLayer, "help", "usage"));
 	//test that we have atleast some subtopics for print
-	BOOST_REQUIRE(SendAndTest(apLayer, "help print", "log"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help log", "print"));
 	//make sure we get a usefull error message for a missing subtopic
-	BOOST_REQUIRE(SendAndTest(apLayer, "help print faketopic", "No topic found"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help log faketopic", "No topic found"));
 	//see that we appear to get the list of registered devices
 	BOOST_REQUIRE(SendAndTest(apLayer, "help loggers", "all of the loggers"));
 
 	//check that we get a list of sub commands (log should be one)
-	BOOST_REQUIRE(SendAndTest(apLayer, "help run", "log"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help log", "run"));
 	
 	//shows that atleast filter is a subcommand of set
-	BOOST_REQUIRE(SendAndTest(apLayer, "help set", "filter"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help filter", "set"));
 	//check that the help string is approriate for set filter
 	BOOST_REQUIRE(SendAndTest(apLayer, "help filter", "filters"));
 	//check that the help string is approriate for set col
@@ -86,11 +86,11 @@ void TestPrintCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
 
 	//Log a string and see that it appears in the print log command
 	apLogger->Log(LEV_ERROR,LOCATION,"TestLogOutput");
-	BOOST_REQUIRE(SendAndTest(apLayer, "print log", "TestLogOutput"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "log print", "TestLogOutput"));
 
 	//log another string and make sure that it is displayed if we ask for jsut the TestDevice
 	apLogger->Log(LEV_ERROR,LOCATION,"TestOutputOnly");
-	BOOST_REQUIRE(SendAndTest(apLayer, "print log TestDevice", "TestOutputOnly"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "log print TestDevice", "TestOutputOnly"));
 }
 		
 void TestSetCommands(MockPhysicalLayerAsyncTS* apLayer){
@@ -133,7 +133,7 @@ void TestRunCommands(MockPhysicalLayerAsyncTS* apLayer, Logger* apLogger){
 	//do the run command, notice I adedd a \r\n which forces a second line of input to be ready 
 	//immediateley to break the "run" cycle after a single iteration (this is necessary since the
 	//parser is expecting ">" which we don't get during a "run" command.
-	BOOST_REQUIRE(SendAndTest(apLayer, "run log\r\n", "TestOutputOnRun"));			
+	BOOST_REQUIRE(SendAndTest(apLayer, "log run\r\n", "TestOutputOnRun"));			
 }
 		
 BOOST_AUTO_TEST_CASE(TerminalInteractions)

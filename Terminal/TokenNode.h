@@ -6,6 +6,7 @@
 #include <string>
 #include <deque>
 #include <assert.h>
+#include <sstream>
 
 namespace apl
 {
