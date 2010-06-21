@@ -5,6 +5,7 @@
 
 #include <APL/DataInterfaces.h>
 #include <DNP3/DeviceTemplate.h>
+#include <APL/INotifier.h>
 
 #include <queue>
 #include <vector>
@@ -13,7 +14,8 @@
 
 namespace apl {
 
-	class FlexibleDataObserver;
+	//class FlexibleDataObserver;
+	class QueueingFDO;
 
 namespace dnp {
 
@@ -30,22 +32,24 @@ namespace dnp {
 
 	/** Terminal extension for interacting with a submaster via a flexible data observer
 	*/
-	class FlexibleObserverTerminalExtension : public ITerminalExtension
+	class FlexibleObserverTerminalExtension : public ITerminalExtension, public INotifier
 	{
 		public:
 
-			FlexibleObserverTerminalExtension(FlexibleDataObserver* apObserver);
+			FlexibleObserverTerminalExtension(QueueingFDO* apObserver);
 
-			FlexibleObserverTerminalExtension(FlexibleDataObserver* apObserver, const DeviceTemplate& arTmp);
+			FlexibleObserverTerminalExtension(QueueingFDO* apObserver, const DeviceTemplate& arTmp);
 
 			virtual ~FlexibleObserverTerminalExtension() {}
 
 			std::string Name() { return "FlexibleObserverTerminalExtension"; }
 
 			typedef std::map<size_t, std::string> NameMap;
+
+			void Notify();
 		private:
 
-			FlexibleDataObserver* mpObserver;
+			QueueingFDO* mpObserver;
 
 			ShowRange mRange;
 
@@ -58,8 +62,14 @@ namespace dnp {
 			size_t mLongestName;
 			
 			retcode HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter);
+			retcode HandleRunUpdates(std::vector<std::string>& arArgs);
+			retcode HandleShowUpdates(std::vector<std::string>& arArgs);
 			retcode HandleSetShow(std::vector<std::string>& arArgs);
 			retcode HandleShowStats(std::vector<std::string>& arArgs);
+
+			void PrintUpdates(bool aWithCount);
+
+			void OnRedirectedLine(const std::string&);
 
 			//implement from ITerminalExtension
 			void _BindToTerminal(ITerminal* apTerminal);

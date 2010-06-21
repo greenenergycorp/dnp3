@@ -22,9 +22,31 @@
 #include "Types.h"
 #include <string>
 
+#define QUAL_INFO_DECL(name, convert, num) \
+	class name \
+	{ \
+	public: \
+		static byte_t masks[]; \
+		static std::string names[]; \
+		static char symbols[]; \
+	}; \
+	typedef QualityConverter<name, num> convert; 
+
 namespace apl
 {
 
+	template <class T, int N>
+	class QualityConverter
+	{
+	public:
+		static char GetSymbol(byte_t aMask);
+		static std::string GetName(byte_t aMask);
+		static byte_t GetMask(char aSymbol);
+		static std::string GetSymbolString(byte_t aQual);
+		static std::string GetNameString(byte_t aQual);
+	};
+
+	
 	/**
 		Bitmasks that make make up the quality field for binaries. The first 5 field are common across all of the data types.
 	 */
@@ -40,7 +62,11 @@ namespace apl
 		BQ_STATE = 0x80,				//!< the actual value of the binary
 	};
 
+	QUAL_INFO_DECL(BinaryQualInfo, BinaryQualConverter, 6);
+
 	std::string BinaryQualToString(byte_t aQuality);
+
+	
 
 	/**
 		Bitmasks that make make up the quality field for analogs. See BinaryQuality for common (unlabeled) bitmasks.
@@ -56,6 +82,8 @@ namespace apl
 		AQ_REFERENCE_CHECK = 0x40,		//!< meaning we may have lost calibration or refrence voltage so readings are questionable
 		AQ_RESERVED = 0x80
 	};
+
+	QUAL_INFO_DECL(AnalogQualInfo, AnalogQualConverter, 7);
 
 	std::string AnalogQualToString(byte_t aQuality);
 
@@ -74,6 +102,8 @@ namespace apl
 		CQ_RESERVED = 0x80
 	};
 
+	QUAL_INFO_DECL(CounterQualInfo, CounterQualConverter, 7);
+
 	std::string CounterQualToString(byte_t aQuality);
 
 	/**
@@ -90,6 +120,9 @@ namespace apl
 		TQ_RESERVED_2 = 0x40,
 		TQ_STATE = 0x80
 	};
+	
+	QUAL_INFO_DECL(ControlQualInfo, ControlQualConverter, 5);
+
 	std::string ControlStatusQualToString(byte_t aQual);
 
 	/**
@@ -106,6 +139,9 @@ namespace apl
 		PQ_RESERVED_3 = 0x40,
 		PQ_RESERVED_4 = 0x80,
 	};
+
+	QUAL_INFO_DECL(SetpointQualInfo, SetpointQualConverter, 4);
+
 	std::string SetpointStatusQualToString(byte_t aQual);
 
 	/**
@@ -122,6 +158,56 @@ namespace apl
 		VQ_RESERVED_3 = 0x40,
 		VQ_RESERVED_4 = 0x80,
 	};
+
+
+	template<class T, int N>
+	char QualityConverter<T,N>::GetSymbol(byte_t aMask)
+	{
+		for ( int i = 0; i < N; i++ )
+			if ( T::masks[i] == aMask )
+				return T::symbols[i];
+		return '.';
+	}
+	template<class T, int N>
+	std::string QualityConverter<T,N>::GetName(byte_t aMask)
+	{
+		for ( int i = 0; i < N; i++ )
+			if ( T::masks[i] == aMask )
+				return T::names[i];
+		return "Reserved";
+	}
+	template<class T, int N>
+	byte_t QualityConverter<T,N>::GetMask(char aSymbol)
+	{
+		for ( int i = 0; i < N; i++ )
+			if ( T::symbols[i] == aSymbol )
+				return T::masks[i];
+		return 0;
+	}
+	template<class T, int N>
+	std::string QualityConverter<T,N>::GetSymbolString(byte_t aQual)
+	{
+		ostringstream oss;
+		for ( int i = 0; i < N; i++ )
+		{
+			if ( aQual & T::masks[i] )
+				oss << T::symbols[i];
+			else
+				oss << '.';
+		}
+		for ( int i = 0; i < (8-N); i++ )
+			oss << '.';
+		return oss.str();
+	}
+	template<class T, int N>
+	std::string QualityConverter<T,N>::GetNameString(byte_t aQual)
+	{
+		ostringstream oss;
+		for ( int i = 0; i < N; i++ )
+			if ( aQual & T::masks[i] )
+				oss << " " << T::names[i];
+		return oss.str();
+	}
 
 }
 

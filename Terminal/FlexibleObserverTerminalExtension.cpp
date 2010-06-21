@@ -2,6 +2,7 @@
 #include "FlexibleObserverTerminalExtension.h"
 
 #include <APL/FlexibleDataObserver.h>
+#include <APL/QueueingFDO.h>
 #include <APL/CommandInterfaces.h>
 #include <APL/CommandTypes.h>
 #include <APL/CommandResponseQueue.h>
@@ -18,11 +19,18 @@ namespace apl { namespace dnp {
 
 	typedef boost::function<std::string(byte_t)> QualityFunctor;
 
-	FlexibleObserverTerminalExtension::FlexibleObserverTerminalExtension(FlexibleDataObserver* apObserver)
+	FlexibleObserverTerminalExtension::FlexibleObserverTerminalExtension(QueueingFDO* apObserver)
 		:mpObserver(apObserver),mLongestName(0)
 	{
 	
 	}
+
+	
+	void FlexibleObserverTerminalExtension::Notify()
+	{
+		this->Post(boost::bind(&FlexibleObserverTerminalExtension::PrintUpdates, this, false));
+	}
+
 
 	template <class T>
 	void FillOutNames( const vector<T>& arSrcVec, FlexibleObserverTerminalExtension::NameMap& arNameMap, size_t& arLongestName )
@@ -34,7 +42,7 @@ namespace apl { namespace dnp {
 		}
 	}
 
-	FlexibleObserverTerminalExtension::FlexibleObserverTerminalExtension(FlexibleDataObserver* apObserver, const DeviceTemplate& arTmp)
+	FlexibleObserverTerminalExtension::FlexibleObserverTerminalExtension(QueueingFDO* apObserver, const DeviceTemplate& arTmp)
 		:mpObserver(apObserver),mLongestName(0)
 	{
 		size_t aLongestName = 0;
@@ -73,11 +81,23 @@ namespace apl { namespace dnp {
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShow, this, _1, true, false);
 		apTerminal->BindCommand(cmd, "show");
 
+		cmd.mName = "updates";
+		cmd.mUsage = "updates";
+		cmd.mDesc = "Tracks data updates";
+		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleRunUpdates, this, _1);
+		apTerminal->BindCommand(cmd, "updates run");
+
+		cmd.mName = "updates";
+		cmd.mUsage = "updates";
+		cmd.mDesc = "Displays data updates since last show";
+		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShowUpdates, this, _1);
+		apTerminal->BindCommand(cmd, "updates");
+
 		cmd.mName = "show";
-		cmd.mUsage = "set show <all|bi|ai|c|cs|ss> <index|start> <stop>";
+		cmd.mUsage = "show set <all|bi|ai|c|cs|ss> <index|start> <stop>";
 		cmd.mDesc = "Sets a range on ";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleSetShow, this, _1);
-		apTerminal->BindCommand(cmd, "set show");
+		apTerminal->BindCommand(cmd, "show set");
 
 		cmd.mName = "show stats";
 		cmd.mUsage = "show stats";
@@ -87,7 +107,7 @@ namespace apl { namespace dnp {
 	}
 
 	template <class T>
-	void DisplayPoints(ostringstream& arOss, typename FlexibleDataObserver::PointMap<T>::Type& arMap, FlexibleObserverTerminalExtension::NameMap aNameMap, const char * arTitle, const QualityFunctor& arFunctor, const ShowRange& aRange, size_t aLongestName){
+	void DisplayPoints(ostringstream& arOss, typename FlexibleDataObserver::PointMap<T>::Type& arMap, FlexibleObserverTerminalExtension::NameMap aNameMap, const char * arTitle, const ShowRange& aRange, size_t aLongestName){
 
 		typename FlexibleDataObserver::PointMap<T>::Type::iterator  i = arMap.begin();
 
@@ -106,25 +126,9 @@ namespace apl { namespace dnp {
 				arOss << "Index: " << i->first << "\t";
 			}
 
-			arOss << "Value: " << i->second.GetValue() << "\t" << " Quality: " << arFunctor(i->second.GetQuality()) << ITerminal::EOL;
+			arOss << "Value: " << i->second.GetValue() << "\t" << " Quality: " << T::QualConverter::GetSymbolString(i->second.GetQuality()) << ITerminal::EOL;
 		}
 	}
-
-	class NotifyCounter : public INotifier
-	{
-	public:
-		NotifyCounter(bool aStartingState = false):mNewEvent(aStartingState){}
-		void Notify(){mNewEvent = true;}
-
-		bool HasNewEvent(){
-			bool ret = mNewEvent;
-			mNewEvent = false;
-			return ret;
-		}
-
-		bool mNewEvent;
-
-	};
 
 	retcode FlexibleObserverTerminalExtension::HandleShow(std::vector<std::string>& arArgs, bool aLogToFile, bool aClearScreenAfter)
 	{
@@ -163,19 +167,59 @@ namespace apl { namespace dnp {
 		}
 		
 		if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_BI )
-			DisplayPoints<Binary>(oss, mpObserver->mBinaryMap, mBinaryNames, "--- Binary Input ---", boost::bind(&BinaryQualToString, _1), mRange, mLongestName);
+			DisplayPoints<Binary>(oss, mpObserver->mBinaryMap, mBinaryNames, "--- Binary Input ---", mRange, mLongestName);
 		if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_AI )
-			DisplayPoints<Analog>(oss, mpObserver->mAnalogMap, mAnalogNames, "--- Analog Input ---", boost::bind(&AnalogQualToString, _1), mRange, mLongestName);
+			DisplayPoints<Analog>(oss, mpObserver->mAnalogMap, mAnalogNames, "--- Analog Input ---", mRange, mLongestName);
 		if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_C )
-			DisplayPoints<Counter>(oss, mpObserver->mCounterMap, mCounterNames, "--- Counter Input ---", boost::bind(&ControlStatusQualToString, _1), mRange, mLongestName);
+			DisplayPoints<Counter>(oss, mpObserver->mCounterMap, mCounterNames, "--- Counter Input ---", mRange, mLongestName);
 		if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_BOS )
-			DisplayPoints<ControlStatus>(oss, mpObserver->mControlStatusMap, mControlStatusNames, "--- Control Status ---", boost::bind(&ControlStatusQualToString, _1), mRange, mLongestName);
+			DisplayPoints<ControlStatus>(oss, mpObserver->mControlStatusMap, mControlStatusNames, "--- Control Status ---", mRange, mLongestName);
 		if ( mRange.type == ShowRange::ST_ALL || mRange.type == ShowRange::ST_SS )
-			DisplayPoints<SetpointStatus>(oss, mpObserver->mSetpointStatusMap, mSetpointStatusNames, "--- Setpoint Status ---", boost::bind(&SetpointStatusQualToString, _1), mRange, mLongestName);
+			DisplayPoints<SetpointStatus>(oss, mpObserver->mSetpointStatusMap, mSetpointStatusNames, "--- Setpoint Status ---", mRange, mLongestName);
 
 		this->Send(oss.str(), aClearScreenAfter);
+		
+		while (!mpObserver->updates.empty()) mpObserver->updates.pop();
 
 		return SUCCESS;
+	}
+
+	
+	retcode FlexibleObserverTerminalExtension::HandleShowUpdates(std::vector<std::string>& arArgs)
+	{
+		PrintUpdates(true);
+		return SUCCESS;
+	}
+
+	retcode FlexibleObserverTerminalExtension::HandleRunUpdates(std::vector<std::string>& arArgs)
+	{
+		mpObserver->AddObserver(this);
+		SetRedirect(boost::bind(&FlexibleObserverTerminalExtension::OnRedirectedLine, this, _1));
+		PrintUpdates(false);
+
+		return SUCCESS;
+	}
+
+	
+	void FlexibleObserverTerminalExtension::OnRedirectedLine(const std::string&)
+	{
+		mpObserver->RemoveObserver(this);
+		ClearRedirect();
+	}
+
+	
+	void FlexibleObserverTerminalExtension::PrintUpdates(bool aWithCount)
+	{
+		Transaction tr(mpObserver);
+
+		if ( aWithCount && !mpObserver->updates.empty() )
+			std::cout << "Displaying " << mpObserver->updates.size() << " updates." << ITerminal::EOL;
+		
+		while (!mpObserver->updates.empty())
+		{
+			std::cout << mpObserver->updates.front() << ITerminal::EOL;
+			mpObserver->updates.pop();
+		}
 	}
 
 	retcode FlexibleObserverTerminalExtension::HandleShowStats(std::vector<std::string>& /*arArgs*/)

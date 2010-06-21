@@ -118,6 +118,11 @@ namespace apl
 			/// The RHS is a strict subset of the LHS... i.e. everything in the RHS can be found in the LHS
 			static bool IsSubsetOf(const FlexibleDataObserver& arLHS, const FlexibleDataObserver& arRHS);
 
+		protected:
+		
+			template <class T>
+			void Load(const T& arPoint, typename PointMap<T>::Type& arMap, size_t aIndex);
+
 		private:
 
 			size_t mCommsLostCount;
@@ -134,11 +139,11 @@ namespace apl
 				if(notify) this->NotifyAll();
 			}
 
-			void _Update(const Binary& arPoint, size_t aIndex) { Load(arPoint, mBinaryMap, aIndex); }
-			void _Update(const Analog& arPoint, size_t aIndex) { Load(arPoint, mAnalogMap, aIndex); }
-			void _Update(const Counter& arPoint, size_t aIndex) { Load(arPoint, mCounterMap, aIndex); }
-			void _Update(const ControlStatus& arPoint, size_t aIndex) { Load(arPoint, mControlStatusMap, aIndex); }
-			void _Update(const SetpointStatus& arPoint, size_t aIndex) { Load(arPoint, mSetpointStatusMap, aIndex); }
+			virtual void _Update(const Binary& arPoint, size_t aIndex) { Load(arPoint, mBinaryMap, aIndex); }
+			virtual void _Update(const Analog& arPoint, size_t aIndex) { Load(arPoint, mAnalogMap, aIndex); }
+			virtual void _Update(const Counter& arPoint, size_t aIndex) { Load(arPoint, mCounterMap, aIndex); }
+			virtual void _Update(const ControlStatus& arPoint, size_t aIndex) { Load(arPoint, mControlStatusMap, aIndex); }
+			virtual void _Update(const SetpointStatus& arPoint, size_t aIndex) { Load(arPoint, mSetpointStatusMap, aIndex); }
 
 
 			template <class T, class U>
@@ -152,9 +157,6 @@ namespace apl
 
 			template <class T>
 			void SetQuality(byte_t aQuality, typename PointMap<T>::Type& arMap);
-
-			template <class T>
-			void Load(const T& arPoint, typename PointMap<T>::Type& arMap, size_t aIndex);
 
 			template <class T>
 			void Print(typename PointMap<T>::Type& arMap);

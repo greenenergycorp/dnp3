@@ -858,6 +858,10 @@
 					RelativePath=".\QualityMasks.h"
 					>
 				</File>
+				<File
+					RelativePath=".\QueueingFDO.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>
