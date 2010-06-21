@@ -19,12 +19,40 @@
 #include "QualityMasks.h"
 
 #include <sstream>
+#include <vector>
 
 
 using namespace std;
 
+
+#define CASE_RET(a, ret) case a: return ret
+#define RET_CASE(ret, a) case a: return ret
+
+
+
 namespace apl
 {
+
+	byte_t BinaryQualInfo::masks[] = {BQ_ONLINE, BQ_RESTART, BQ_COMM_LOST, BQ_REMOTE_FORCED_DATA, BQ_LOCAL_FORCED_DATA, BQ_CHATTER_FILTER};
+	string BinaryQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced", "LocalForced", "ChatterFilter"};
+	char BinaryQualInfo::symbols[] = {'O', 'R', 'C', 'F', 'L', 'T'};
+
+	byte_t AnalogQualInfo::masks[] = {AQ_ONLINE, AQ_RESTART, AQ_COMM_LOST, AQ_REMOTE_FORCED_DATA, AQ_LOCAL_FORCED_DATA, AQ_OVERRANGE, AQ_REFERENCE_CHECK};
+	string AnalogQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced", "LocalForced", "Overrange", "ReferenceCheck"};
+	char AnalogQualInfo::symbols[] = {'O', 'R', 'C', 'F', 'L', 'V', 'K'};
+
+	byte_t CounterQualInfo::masks[] = {CQ_ONLINE, CQ_RESTART, CQ_COMM_LOST, CQ_REMOTE_FORCED_DATA, CQ_LOCAL_FORCED_DATA, CQ_ROLLOVER, CQ_DISCONTINUITY};
+	string CounterQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced", "LocalForced", "Rollover", "Discontinuity"};
+	char CounterQualInfo::symbols[] = {'O', 'R', 'C', 'F', 'L', 'V', 'D'};
+
+	byte_t ControlQualInfo::masks[] = {TQ_ONLINE, TQ_RESTART, TQ_COMM_LOST, TQ_REMOTE_FORCED_DATA, TQ_LOCAL_FORCED_DATA};
+	string ControlQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced", "LocalForced"};
+	char ControlQualInfo::symbols[] = {'O', 'R', 'C', 'F', 'L'};
+
+	byte_t SetpointQualInfo::masks[] = {PQ_ONLINE, PQ_RESTART, PQ_COMM_LOST, PQ_REMOTE_FORCED_DATA};
+	string SetpointQualInfo::names[] = {"Online", "Restart", "CommsLost", "RemoteForced"};
+	char SetpointQualInfo::symbols[] = {'O', 'R', 'C', 'F'};
+
 	string BinaryQualToString(byte_t aQual)
 	{
 		ostringstream oss;
@@ -89,4 +117,5 @@ namespace apl
 		if(aQual & PQ_RESERVED_4) oss << " Reserved4";
 		return oss.str();
 	}
+
 }

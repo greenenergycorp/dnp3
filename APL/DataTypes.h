@@ -282,6 +282,8 @@ namespace apl
 		Binary() : BoolDataPoint(BQ_RESTART, DT_BINARY, BQ_STATE) {}
 
 		typedef bool ValueType;
+		typedef BinaryQuality QualityType;
+		typedef BinaryQualConverter QualConverter;
 
 		/// Describes the static data type of the measurement as an enum
 		static const DataTypes MeasEnum = DT_BINARY;
@@ -310,6 +312,8 @@ namespace apl
 		ControlStatus() : BoolDataPoint(TQ_RESTART, DT_CONTROL_STATUS, TQ_STATE) {}
 
 		typedef bool ValueType;
+		typedef ControlQuality QualityType;
+		typedef ControlQualConverter QualConverter;
 
 		static const DataTypes MeasEnum = DT_CONTROL_STATUS;
 
@@ -337,6 +341,8 @@ namespace apl
 
 
 		typedef double ValueType;
+		typedef AnalogQuality QualityType;
+		typedef AnalogQualConverter QualConverter;
 
 		static const DataTypes MeasEnum = DT_ANALOG;
 
@@ -363,6 +369,8 @@ namespace apl
 		}
 
 		typedef uint_32_t ValueType;
+		typedef CounterQuality QualityType;
+		typedef CounterQualConverter QualConverter;
 
 		static const int ONLINE = CQ_ONLINE;
 
@@ -387,6 +395,8 @@ namespace apl
 		}
 
 		typedef double ValueType;
+		typedef SetpointQuality QualityType;
+		typedef SetpointQualConverter QualConverter;
 
 		static const int ONLINE = PQ_ONLINE;
 

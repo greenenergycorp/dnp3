@@ -24,6 +24,7 @@
 #include <DNP3/AsyncStackManager.h>
 #include <APL/CommandQueue.h>
 #include <APL/FlexibleDataObserver.h>
+#include <APL/QueueingFDO.h>
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/IOService.h>
 #include <APL/TimerSourceASIO.h>
@@ -90,7 +91,7 @@ public:
 	ICommandAcceptor* GetCmdAcceptor() { return accept; }
 
 private:
-	FlexibleDataObserver fdo;
+	QueueingFDO fdo;
 	ICommandAcceptor* accept;
 	ControlTerminalExtension cte;
 	FlexibleObserverTerminalExtension fte;
