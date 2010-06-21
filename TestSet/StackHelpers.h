@@ -63,7 +63,7 @@ protected:
 	TimerSourceASIO mTimerSrc;
 	auto_ptr<IPhysicalLayerAsync> pTermPhys;
 	
-	FlexibleDataObserver fdo;
+	QueueingFDO fdo;
 	FlexibleObserverTerminalExtension fte;
 	LogTerminalExtension lte;
 
@@ -95,7 +95,6 @@ public:
 	ICommandAcceptor* GetCmdAcceptor() { return accept; }
 
 private:
-	QueueingFDO fdo;
 	ICommandAcceptor* accept;
 	ControlTerminalExtension cte;	
 };

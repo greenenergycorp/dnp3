@@ -44,6 +44,25 @@ namespace apl
 			ChangeBuffer<NullLock> mBuffer;
 	};
 
+	template<class T>
+	bool InterpretAsQualityString(const std::string& aStr, size_t& aQuality)
+	{
+		aQuality = 0;
+		for ( std::string::const_iterator itr = aStr.begin(); itr != aStr.end(); itr++ )
+		{
+			byte_t m = T::QualConverter::GetMask(*itr);
+			if (m == 0)
+			{
+				aQuality = T::ONLINE;
+				return false;
+			}
+			aQuality |= m;
+		}
+		if (aQuality == 0)
+			aQuality = T::ONLINE;
+		return true;
+	}
+
 	template <class T>
 	retcode DOTerminalExtension::HandleQueue(std::vector<std::string>& arArgs)
 	{
@@ -53,7 +72,11 @@ namespace apl
 
 		switch(arArgs.size()) {
 			case(3):
-				if(!Parsing::Get(arArgs[2], quality)) return BAD_ARGUMENTS;
+				if(!Parsing::Get(arArgs[2], quality)) 
+				{
+					if (!InterpretAsQualityString<T>(arArgs[2], quality))
+						return BAD_ARGUMENTS;
+				}
 			case(2):
 				if(!Parsing::Get(arArgs[0], index)) return BAD_ARGUMENTS;
 				if(!Parsing::Get(arArgs[1], value)) return BAD_ARGUMENTS;

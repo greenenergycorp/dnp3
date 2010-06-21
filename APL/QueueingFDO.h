@@ -34,7 +34,7 @@
 namespace apl
 {
 
-	/** 
+	/** Extension to the FlexibleDataObserver that keeps track of new data updates.
 	*/
 	class QueueingFDO : public FlexibleDataObserver
 	{

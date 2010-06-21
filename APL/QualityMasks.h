@@ -21,6 +21,7 @@
 
 #include "Types.h"
 #include <string>
+#include <sstream>
 
 #define QUAL_INFO_DECL(name, convert, num) \
 	class name \
@@ -44,6 +45,8 @@ namespace apl
 		static byte_t GetMask(char aSymbol);
 		static std::string GetSymbolString(byte_t aQual);
 		static std::string GetNameString(byte_t aQual);
+
+		static std::string GetAllSymbols();
 	};
 
 	
@@ -64,9 +67,6 @@ namespace apl
 
 	QUAL_INFO_DECL(BinaryQualInfo, BinaryQualConverter, 6);
 
-	std::string BinaryQualToString(byte_t aQuality);
-
-	
 
 	/**
 		Bitmasks that make make up the quality field for analogs. See BinaryQuality for common (unlabeled) bitmasks.
@@ -85,8 +85,6 @@ namespace apl
 
 	QUAL_INFO_DECL(AnalogQualInfo, AnalogQualConverter, 7);
 
-	std::string AnalogQualToString(byte_t aQuality);
-
 	/**
 		Bitmasks that make make up the quality field for counters. See BinaryQuality for common (unlabeled) bitmasks.
 	 */
@@ -104,8 +102,6 @@ namespace apl
 
 	QUAL_INFO_DECL(CounterQualInfo, CounterQualConverter, 7);
 
-	std::string CounterQualToString(byte_t aQuality);
-
 	/**
 		Bitmasks that make make up the quality field for control statuses. See BinaryQuality for common (unlabeled) bitmasks.
 	 */
@@ -122,8 +118,6 @@ namespace apl
 	};
 	
 	QUAL_INFO_DECL(ControlQualInfo, ControlQualConverter, 5);
-
-	std::string ControlStatusQualToString(byte_t aQual);
 
 	/**
 		Bitmasks that make make up the quality field for setpoint statuses. See BinaryQuality for common (unlabeled) bitmasks.
@@ -187,7 +181,7 @@ namespace apl
 	template<class T, int N>
 	std::string QualityConverter<T,N>::GetSymbolString(byte_t aQual)
 	{
-		ostringstream oss;
+		std::ostringstream oss;
 		for ( int i = 0; i < N; i++ )
 		{
 			if ( aQual & T::masks[i] )
@@ -202,10 +196,19 @@ namespace apl
 	template<class T, int N>
 	std::string QualityConverter<T,N>::GetNameString(byte_t aQual)
 	{
-		ostringstream oss;
+		std::ostringstream oss;
 		for ( int i = 0; i < N; i++ )
 			if ( aQual & T::masks[i] )
 				oss << " " << T::names[i];
+		return oss.str();
+	}
+
+	template<class T, int N>
+	std::string QualityConverter<T,N>::GetAllSymbols()
+	{
+		std::ostringstream oss;
+		for ( int i = 0; i < N; i++ )
+			oss << T::symbols[i];
 		return oss.str();
 	}
 

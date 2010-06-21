@@ -16,20 +16,28 @@ namespace apl
 	{
 		CommandNode cmd;
 
+		ostringstream oss;
+		
+
 		cmd.mName = "bi";
-		cmd.mUsage = "queue bi <index> <0|1> <quality>";
+		oss << "queue bi <index> <0|1> <quality: #|" << Binary::QualConverter::GetAllSymbols() << ">"; 
+		cmd.mUsage = oss.str();
 		cmd.mDesc = "Queues a binary input value into the transaction buffer";
 		cmd.mHandler = boost::bind(&DOTerminalExtension::HandleQueueBinary, this, _1);
 		apTerminal->BindCommand(cmd, "queue bi");
 
 		cmd.mName = "ai";
-		cmd.mUsage = "queue ai <index> <value> <quality>";
+		oss.str("");
+		oss << "queue ai <index> <0|1> <quality: #|" << Analog::QualConverter::GetAllSymbols() << ">"; 
+		cmd.mUsage = oss.str();
 		cmd.mDesc = "Queues an analog input value into the transaction buffer";
 		cmd.mHandler = boost::bind(&DOTerminalExtension::HandleQueueAnalog, this, _1);
 		apTerminal->BindCommand(cmd, "queue ai");
 
 		cmd.mName = "c";
-		cmd.mUsage = "queue c <index> <value> <quality>";
+		oss.str("");
+		oss << "queue c <index> <0|1> <quality: #|" << Counter::QualConverter::GetAllSymbols() << ">"; 
+		cmd.mUsage = oss.str();
 		cmd.mDesc = "Queues an counter value into the transaction buffer";
 		cmd.mHandler = boost::bind(&DOTerminalExtension::HandleQueueCounter, this, _1);
 		apTerminal->BindCommand(cmd, "queue c");

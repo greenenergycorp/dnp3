@@ -75,11 +75,11 @@ namespace apl { namespace dnp {
 	{
 		CommandNode cmd;
 		
-		cmd.mName = "show";
-		cmd.mUsage = "show";
+		cmd.mName = "data";
+		cmd.mUsage = "data";
 		cmd.mDesc = "Displays data";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShow, this, _1, true, false);
-		apTerminal->BindCommand(cmd, "show");
+		apTerminal->BindCommand(cmd, "data");
 
 		cmd.mName = "updates";
 		cmd.mUsage = "updates";
@@ -93,17 +93,17 @@ namespace apl { namespace dnp {
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShowUpdates, this, _1);
 		apTerminal->BindCommand(cmd, "updates");
 
-		cmd.mName = "show";
-		cmd.mUsage = "show set <all|bi|ai|c|cs|ss> <index|start> <stop>";
+		cmd.mName = "data";
+		cmd.mUsage = "data set <all|bi|ai|c|cs|ss> <index|start> <stop>";
 		cmd.mDesc = "Sets a range on ";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleSetShow, this, _1);
-		apTerminal->BindCommand(cmd, "show set");
+		apTerminal->BindCommand(cmd, "data set");
 
-		cmd.mName = "show stats";
-		cmd.mUsage = "show stats";
+		cmd.mName = "data stats";
+		cmd.mUsage = "data stats";
 		cmd.mDesc = "Displays number and types of measurement in data observer";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShowStats, this, _1);
-		apTerminal->BindCommand(cmd, "show stats");				
+		apTerminal->BindCommand(cmd, "data stats");				
 	}
 
 	template <class T>

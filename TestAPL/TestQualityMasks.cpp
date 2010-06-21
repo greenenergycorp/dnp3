@@ -19,19 +19,20 @@
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
+#include <APL/DataTypes.h>
 #include <APL/QualityMasks.h>
 
 BOOST_AUTO_TEST_SUITE(QualityMasks)
 
 BOOST_AUTO_TEST_CASE(ToString)
 	{
-		BOOST_REQUIRE_EQUAL(apl::BinaryQualToString(0), "");
+		BOOST_REQUIRE_EQUAL(apl::Binary::QualConverter::GetNameString(0), "");
 
-		BOOST_REQUIRE_NOT_EQUAL(apl::BinaryQualToString(~0).find("LocalForced"), std::string::npos);
-		BOOST_REQUIRE_NOT_EQUAL(apl::CounterQualToString(~0).find("CommLost"), std::string::npos);
-		BOOST_REQUIRE_NOT_EQUAL(apl::AnalogQualToString(~0).find("OverRange"), std::string::npos);
-		BOOST_REQUIRE_NOT_EQUAL(apl::ControlStatusQualToString(~0).find("Online"), std::string::npos);
-		BOOST_REQUIRE_NOT_EQUAL(apl::SetpointStatusQualToString(~0).find("Restart"), std::string::npos);
+		BOOST_REQUIRE_NOT_EQUAL(apl::Binary::QualConverter::GetNameString(~0).find("LocalForced"), std::string::npos);
+		BOOST_REQUIRE_NOT_EQUAL(apl::Counter::QualConverter::GetNameString(~0).find("CommsLost"), std::string::npos);
+		BOOST_REQUIRE_NOT_EQUAL(apl::Analog::QualConverter::GetNameString(~0).find("Overrange"), std::string::npos);
+		BOOST_REQUIRE_NOT_EQUAL(apl::ControlStatus::QualConverter::GetNameString(~0).find("Online"), std::string::npos);
+		BOOST_REQUIRE_NOT_EQUAL(apl::SetpointStatus::QualConverter::GetNameString(~0).find("Restart"), std::string::npos);
 	}
 
 BOOST_AUTO_TEST_SUITE_END()
