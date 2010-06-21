@@ -61,9 +61,9 @@ namespace apl
 		// PRINT LOG
 		cmd.mName = "log";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandlePrintLog, this, _1);
-		cmd.mUsage = "print log [device name]";
+		cmd.mUsage = "log print [device name]";
 		cmd.mDesc = "Prints the current contents of the log";
-		apTerminal->BindCommand(cmd, "print log");
+		apTerminal->BindCommand(cmd, "log print");
 
 		// PRINT LOGGERS
 		cmd.mName = "loggers";
@@ -78,9 +78,9 @@ namespace apl
 
 		cmd.mName = "log";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandleRunLog, this, _1);
-		cmd.mUsage = "run log";
+		cmd.mUsage = "log run";
 		cmd.mDesc = "Continuously outputs log entries as they occur.";
-		apTerminal->BindCommand(cmd, "run log");
+		apTerminal->BindCommand(cmd, "log run");
 
 		////////////////////////////////////
 		// set
@@ -130,7 +130,7 @@ namespace apl
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandlePrintVars, this, _1);
 		cmd.mUsage = "print vars";
 		cmd.mDesc = "Prints non-operational information to the console";
-		apTerminal->BindCommand(cmd, "print vars");
+		apTerminal->BindCommand(cmd, "vars");
 	}
 
 	void LogTerminalExtension::ResetActiveColumns()

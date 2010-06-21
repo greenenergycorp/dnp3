@@ -138,7 +138,8 @@ retcode Terminal::HandleHelp(std::vector<std::string>& arTokens)
 	else //dump out all the commands at the root
 	{
 		vector<string> names;
-		mCmdRoot.GetSubNodeNames(names);
+		deque<string> path;
+		mCmdRoot.GetSubNodesWithOptions(names);
 		this->QueueSend("usage: help [topic] [subtopic 1] ... [subtopic N]\r\n\r\n");
 		for(size_t i=0; i<names.size(); i++) this->QueueSend(names[i] + "\r\n");
 	}

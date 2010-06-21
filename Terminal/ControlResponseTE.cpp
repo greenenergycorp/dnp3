@@ -119,8 +119,8 @@ namespace apl{
 	{
 		CommandNode cmd;
 		
-		cmd.mName = "set response";
-		cmd.mUsage = "set response [bo|st|all] [all|#] [code]";
+		cmd.mName = "response";
+		cmd.mUsage = "response [bo|st|all] [all|#] [code]";
 		cmd.mDesc = "Sets the response code we will use to respond to the incoming commands.\nYou can use return code name or index: SUCCESS, TIMEOUT, NO_SELECT, FORMAT_ERROR, NOT_SUPPORTED, ALREADY_ACTIVE, HARDWARE_ERROR, LOCAL, TOO_MANY_OPS, NOT_AUTHORIZED.";
 		cmd.mHandler = boost::bind(&ControlResponseTE::HandleSetResponse, this, _1);
 		apTerminal->BindCommand(cmd, cmd.mName);

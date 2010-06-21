@@ -4,6 +4,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <deque>
 #include <assert.h>
 
 namespace apl
@@ -77,6 +78,32 @@ namespace apl
 			{
 				typename TokenMap::iterator i = mMap.begin();
 				for(; i != mMap.end(); i++) arNames.push_back(i->first);
+			}
+
+			void GetSubNodesWithOptions(std::vector<std::string>& arNames)
+			{
+				typename TokenMap::iterator i = mMap.begin();
+				for(; i != mMap.end(); i++) 
+				{ 
+					std::vector<std::string> subs;
+					i->second->GetSubNodeNames(subs);
+
+					std::ostringstream oss;
+					oss << i->first;
+					if ( subs.size() > 0 ) 
+					{
+						oss << " [";
+						bool first = true;
+						for ( std::vector<std::string>::const_iterator itr = subs.begin(); itr != subs.end(); itr++ )
+						{
+							if ( !first ) oss << "|";
+							first = false;
+							oss << *itr;
+						}
+						oss << "]";
+					}
+					arNames.push_back(oss.str());
+				}
 			}
 
 
