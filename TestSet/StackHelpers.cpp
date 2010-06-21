@@ -46,11 +46,14 @@ StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel
 	mTermThread(mService.Get()),
 	mTimerSrc(mService.Get()),
 	pTermPhys(FGetTerminalPhys(pTermLogger, mTermThread.GetService(), aRemote, aRemotePort)),
+	fdo(),
+	fte(&fdo),
 	lte(&log),	    
 	trm(pTermLogger, pTermPhys.get(), &mTimerSrc, "Test Set Terminal (DNP)", true),
 	mgr(log.GetLogger(aLevel, "dnp"))
 {
-	trm.AddExtension(&lte);			
+	trm.AddExtension(&lte);
+	trm.AddExtension(&fte);
 	XmlToConfig::Configure(arList, aLevel, mgr);
 }
 
@@ -68,21 +71,24 @@ SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLeve
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile, pCfg->Remote, pCfg->RemotePort),
 	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate, pCfg->StartOnline))),	
 	crte(log.GetLogger(LEV_INTERPRET, "commands"), pCfg->LinkCommandStatus, pObs),
-	dote(pObs)
+	mdo(pObs, &fdo),
+	dote(&mdo)
 {
 	trm.AddExtension(&dote);
 	trm.AddExtension(&crte);
+
+	// this will set the initial state of the data observer
+	// future updates via the console get sent to the slave and the fdo via the multiplexing
+	// data observer
+	XmlToConfig::Convert(pCfg->DeviceTemplate, pCfg->StartOnline).Publish(&fdo);
 }
 
 
 MasterXMLStack::MasterXMLStack(APLXML_MTS::MasterTestSet_t* pCfg, FilterLevel aLevel) :
 StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile),
-fdo(),
 accept(mgr.AddMaster(pCfg->PhysicalLayer, "mts", aLevel, &fdo, XmlToConfig::GetMasterConfig(pCfg->Master))),
-cte(accept),
-fte(&fdo)
-{
-	trm.AddExtension(&fte);
+cte(accept)
+{	
 	trm.AddExtension(&cte);
 }
 	

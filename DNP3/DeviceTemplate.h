@@ -24,6 +24,8 @@
 
 #include "DeviceTemplateTypes.h"
 
+namespace apl { class IDataObserver; }
+
 namespace apl { namespace dnp {
 
 /** Configuration structure that defines:
@@ -56,7 +58,20 @@ struct DeviceTemplate
 
 	bool mStartOnline;
 
+
+	/// Write the initial state of a database to an observer
+	void Publish(IDataObserver*);
+
 	private:
+
+	template <class T>
+	static void InitObserver(IDataObserver* apObs, size_t aNum)
+	{
+		for(size_t i=0; i<aNum; ++i) {
+			T val;
+			apObs->Update(val, i);
+		}
+	}
 
 	/// Helper function for setting up default names
 	template <class T>

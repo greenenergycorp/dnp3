@@ -18,6 +18,7 @@
 // 
 #include "DeviceTemplate.h"
 
+#include <APL/DataInterfaces.h>
 
 namespace apl { namespace dnp {
 
@@ -38,6 +39,16 @@ namespace apl { namespace dnp {
 		this->mSetpointStatus.resize(aNumSetpointStatus); this->InitNames("SetpointStatus", mSetpointStatus);
 		this->mControls.resize(aNumControls); this->InitNames("Control", mControls);
 		this->mSetpoints.resize(aNumSetpoints); this->InitNames("Setpoint", mSetpoints);;
+	}
+
+	void DeviceTemplate::Publish(IDataObserver* apObs)
+	{
+		Transaction tr(apObs);
+		InitObserver<Binary>(apObs, mBinary.size());
+		InitObserver<Analog>(apObs, mAnalog.size());
+		InitObserver<Counter>(apObs, mCounter.size());
+		InitObserver<ControlStatus>(apObs, mControlStatus.size());
+		InitObserver<SetpointStatus>(apObs, mSetpointStatus.size());		
 	}
 	
 }}

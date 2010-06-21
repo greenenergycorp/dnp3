@@ -15,3 +15,4 @@
 /DNP3Java/JavaDNP3.*
 /DNP3Java/jar
 *.log
+/*/Linux_i686

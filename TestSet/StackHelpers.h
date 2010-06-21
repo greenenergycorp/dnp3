@@ -27,6 +27,7 @@
 #include <APL/IPhysicalLayerAsync.h>
 #include <APL/IOService.h>
 #include <APL/TimerSourceASIO.h>
+#include <APL/MultiplexingDataObserver.h>
 
 #include <Terminal/Terminal.h>
 #include <Terminal/LogTerminalExtension.h>
@@ -60,7 +61,9 @@ protected:
 	IOServiceThread mTermThread;
 	TimerSourceASIO mTimerSrc;
 	auto_ptr<IPhysicalLayerAsync> pTermPhys;
-
+	
+	FlexibleDataObserver fdo;
+	FlexibleObserverTerminalExtension fte;
 	LogTerminalExtension lte;
 
 	Terminal trm;
@@ -79,6 +82,7 @@ private:
 
 	IDataObserver* pObs;
 	ControlResponseTE crte;
+	MultiplexingDataObserver mdo;
 	DOTerminalExtension dote;
 };
 
@@ -90,10 +94,9 @@ public:
 	ICommandAcceptor* GetCmdAcceptor() { return accept; }
 
 private:
-	FlexibleDataObserver fdo;
+	
 	ICommandAcceptor* accept;
-	ControlTerminalExtension cte;
-	FlexibleObserverTerminalExtension fte;
+	ControlTerminalExtension cte;	
 };
 
 
