@@ -851,7 +851,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\QualityMasks.cpp"
+					RelativePath=".\QualityConverter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\QualityConverter.h"
 					>
 				</File>
 				<File

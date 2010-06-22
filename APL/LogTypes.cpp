@@ -86,13 +86,13 @@ std::string LogTypes::GetFilterString(int aLevel)
 {
 	std::ostringstream oss;
 
-	oss << "[";
+	oss << "{";
 
 	for(size_t i=0; i<LogTypes::NUM_FILTER; ++i) {
 		oss << static_cast<byte_t>((aLevel & filters[i].lev) ? filters[i].id : ' ');
 	}
 	
-	oss << "]";
+	oss << "}";
 
 	return oss.str();
 }

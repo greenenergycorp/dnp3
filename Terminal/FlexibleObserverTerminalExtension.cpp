@@ -178,9 +178,7 @@ namespace apl { namespace dnp {
 			DisplayPoints<SetpointStatus>(oss, mpObserver->mSetpointStatusMap, mSetpointStatusNames, "--- Setpoint Status ---", mRange, mLongestName);
 
 		this->Send(oss.str(), aClearScreenAfter);
-		
-		while (!mpObserver->updates.empty()) mpObserver->updates.pop();
-
+			
 		return SUCCESS;
 	}
 
@@ -218,7 +216,7 @@ namespace apl { namespace dnp {
 		while (!mpObserver->updates.empty())
 		{
 			std::cout << mpObserver->updates.front() << ITerminal::EOL;
-			mpObserver->updates.pop();
+			mpObserver->updates.pop_front();
 		}
 	}
 

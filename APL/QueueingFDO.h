@@ -40,7 +40,10 @@ namespace apl
 	{
 	public:
 
-		std::queue<std::string> updates;
+		QueueingFDO(size_t aMaxVal = 100) : M_MAX_VAL(aMaxVal)
+		{}
+
+		std::deque<std::string> updates;
 	private:
 
 		virtual void _Update(const Binary& arPoint, size_t aIndex) { OnUpdate(arPoint, mBinaryMap, aIndex); }
@@ -49,22 +52,50 @@ namespace apl
 		virtual void _Update(const ControlStatus& arPoint, size_t aIndex) { OnUpdate(arPoint, mControlStatusMap, aIndex); }
 		virtual void _Update(const SetpointStatus& arPoint, size_t aIndex) { OnUpdate(arPoint, mSetpointStatusMap, aIndex); }
 
+		const size_t M_MAX_VAL;
+
+		void Push(const std::string& arVal) {
+			if(updates.size() == M_MAX_VAL) updates.pop_front();
+			updates.push_back(arVal);
+		}
+
 		
 		template <class T>
 		void OnUpdate(const T& arPoint, typename PointMap<T>::Type& arMap, size_t aIndex)
 		{
-			T& current = arMap[aIndex];
-			if ( current.GetValue() != arPoint.GetValue() || current.GetQuality() != arPoint.GetQuality() )
-			{
-				std::ostringstream oss;
-				oss << "Update: " << GetDataTypeName(T::MeasEnum) << " (" << aIndex << ")\t\t";
-				oss << current.GetValue() << " [" << T::QualConverter::GetSymbolString(current.GetQuality()) << "]";
-				oss << " --> " ;
-				oss << arPoint.GetValue() << " [" << T::QualConverter::GetSymbolString(arPoint.GetQuality()) << "]";
-				updates.push(oss.str());
+			typename PointMap<T>::Type::iterator i = arMap.find(aIndex);
+			if(i == arMap.end()) {
+				ostringstream oss;				
+				oss << GetString(T::MeasEnum, aIndex) << " --> " << GetString(arPoint);
+				this->Push(oss.str());
 			}
-
+			else if(!Equal(arPoint, i->second)) {
+				std::ostringstream oss;
+				oss << GetString(T::MeasEnum, aIndex);
+				oss << GetString(i->second) << " --> " << GetString(arPoint);
+				this->Push(oss.str());
+			}
 			Load(arPoint, arMap, aIndex);
+		}
+
+		static std::string GetString(DataTypes dt, size_t index) {
+			std::ostringstream oss;
+			oss << GetDataTypeName(dt) << "[" << index << "]";
+			std::string ret = oss.str();			
+			ret.resize(20, ' ');			
+			return ret;
+		}
+
+		template <class T>
+		static std::string GetString(const T& val) {
+			std::ostringstream oss;
+			oss << val.GetValue() << " " << T::QualConverter::GetSymbolString(val.GetQuality());
+			return oss.str();
+		}
+
+		template <class T>
+		static bool Equal(const T& lhs, const T& rhs) {
+			return lhs.GetValue() == rhs.GetValue() && lhs.GetQuality() == rhs.GetQuality();
 		}
 
 	};

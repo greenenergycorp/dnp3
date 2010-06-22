@@ -20,8 +20,9 @@
 #define __DATA_TYPES_H_
 
 
-#include "QualityMasks.h"
 #include "Types.h"
+#include "QualityMasks.h"
+#include "QualityConverter.h"
 
 #include <sstream>
 #include <ostream>
@@ -283,7 +284,7 @@ namespace apl
 
 		typedef bool ValueType;
 		typedef BinaryQuality QualityType;
-		typedef BinaryQualConverter QualConverter;
+		typedef QualityConverter<BinaryQualInfo> QualConverter;
 
 		/// Describes the static data type of the measurement as an enum
 		static const DataTypes MeasEnum = DT_BINARY;
@@ -313,7 +314,7 @@ namespace apl
 
 		typedef bool ValueType;
 		typedef ControlQuality QualityType;
-		typedef ControlQualConverter QualConverter;
+		typedef QualityConverter<ControlQualInfo> QualConverter;
 
 		static const DataTypes MeasEnum = DT_CONTROL_STATUS;
 
@@ -342,7 +343,7 @@ namespace apl
 
 		typedef double ValueType;
 		typedef AnalogQuality QualityType;
-		typedef AnalogQualConverter QualConverter;
+		typedef QualityConverter<AnalogQualInfo> QualConverter;
 
 		static const DataTypes MeasEnum = DT_ANALOG;
 
@@ -370,7 +371,7 @@ namespace apl
 
 		typedef uint_32_t ValueType;
 		typedef CounterQuality QualityType;
-		typedef CounterQualConverter QualConverter;
+		typedef QualityConverter<CounterQualInfo> QualConverter;
 
 		static const int ONLINE = CQ_ONLINE;
 
@@ -396,7 +397,7 @@ namespace apl
 
 		typedef double ValueType;
 		typedef SetpointQuality QualityType;
-		typedef SetpointQualConverter QualConverter;
+		typedef QualityConverter<SetpointQualInfo> QualConverter;
 
 		static const int ONLINE = PQ_ONLINE;
 
