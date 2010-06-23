@@ -42,11 +42,11 @@ void TestCommandParsing(MockPhysicalLayerAsyncTS* apLayer){
 	BOOST_REQUIRE(SendAndTest(apLayer, "badCommand", "Unrecognized"));
 
 	//check that a valid command with a space before or after the string is ignored
-	BOOST_REQUIRE(SendAndTest(apLayer, "help log ", "print"));
-	BOOST_REQUIRE(SendAndTest(apLayer, " help log", "print"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help log ", "Flushes"));
+	BOOST_REQUIRE(SendAndTest(apLayer, " help log", "Flushes"));
 
 	//test that 2 lines recieved at once are both processed
-	BOOST_REQUIRE(SendAndTest(apLayer, "help\r\nhelp log", "print"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help\r\nhelp log", "Flushes"));
 
 	//generate a big long string that should flood the Readline() buffer.
 	byte_t tooBigBuff[1100];
@@ -60,7 +60,7 @@ void TestHelpCommands(MockPhysicalLayerAsyncTS* apLayer){
 	//test that help generates a big usage text screen.
 	BOOST_REQUIRE(SendAndTest(apLayer, "help", "usage"));
 	//test that we have atleast some subtopics for print
-	BOOST_REQUIRE(SendAndTest(apLayer, "help log", "print"));
+	BOOST_REQUIRE(SendAndTest(apLayer, "help log", "Flushes"));
 	//make sure we get a usefull error message for a missing subtopic
 	BOOST_REQUIRE(SendAndTest(apLayer, "help log faketopic", "No topic found"));
 	//see that we appear to get the list of registered devices
