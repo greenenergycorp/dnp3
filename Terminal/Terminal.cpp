@@ -333,6 +333,7 @@ retcode Terminal::HandleQuit(std::vector<std::string>&)
 
 retcode Terminal::HandleEcho(std::vector<std::string>& arTokens)
 {	
+	if(arTokens.size() == 0) return BAD_ARGUMENTS;
 	std::ostringstream oss;
 	for (size_t i =0; i < arTokens.size(); i++){
 		oss << arTokens[i] << " ";

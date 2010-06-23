@@ -129,8 +129,8 @@ namespace apl
 	CommandRequest(CT_BINARY_OUTPUT),
 	mRawCode(CC_NULL),
 	mCount(1),
-	mOnTimeMS(0),
-	mOffTimeMS(0)
+	mOnTimeMS(100),
+	mOffTimeMS(100)
 	{
 	
 	}
@@ -150,7 +150,8 @@ namespace apl
 	std::string BinaryOutput::ToString() const
 	{
 		std::ostringstream oss;
-		oss << "BinaryOutput - " << apl::ToString((ControlCode)this->GetCode());
+		oss << "BinaryOutput - function: " << apl::ToString(static_cast<ControlCode>(mRawCode));
+		oss << " count: " << static_cast<size_t>(mCount) << " on: " << mOnTimeMS << " off: " << mOffTimeMS;
 		return oss.str();
 	}
 
@@ -177,7 +178,7 @@ namespace apl
 	std::string Setpoint::ToString() const
 	{
 		std::ostringstream oss;
-		oss << "Setpoint - Value: " << mValue;
+		oss << "Setpoint - value: " << mValue;
 		return oss.str();
 	}
 

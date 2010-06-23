@@ -74,98 +74,58 @@ namespace apl
 		}
 
 		mpCmdAcceptor->AcceptCommand(st, static_cast<size_t>(index), ++mSequence, &mRspQueue);
-
 		WaitForResponse();
-
 		return SUCCESS;
 	}
 
-	uint_32_t ParseControlCode( const std::string& arString )
+	ControlCode ControlTerminalExtension::ParseControlCode( const std::string& arString )
 	{
 		std::string lower(arString);
 		toLowerCase(lower);
-
-		if ( lower.compare("pon") == 0 )
-		{
-			return CC_PULSE;
-		}
-		else if ( lower.compare("lon") == 0 )
-		{
-			return CC_LATCH_ON;
-		}
-		else if ( lower.compare("loff") == 0 )
-		{
-			return CC_LATCH_OFF;
-		}
-		else if ( lower.compare("pclose") == 0 )
-		{
-			return CC_PULSE_CLOSE;
-		}
-		else if ( lower.compare("ptrip") == 0 )
-		{
-			return CC_PULSE_TRIP;
-		}
-		else
-		{
-			stringstream ss;
-			ss << arString;
-			int val = 0;
-			ss >> val;
-			return val;
-		}
+		if ( lower.compare("pon") == 0 )			return CC_PULSE;		
+		else if ( lower.compare("lon") == 0 )		return CC_LATCH_ON;
+		else if ( lower.compare("loff") == 0 )		return CC_LATCH_OFF;		
+		else if ( lower.compare("pclose") == 0 )	return CC_PULSE_CLOSE;		
+		else if ( lower.compare("ptrip") == 0 )		return CC_PULSE_TRIP;
+		else return CC_UNDEFINED;		
 	}
 
 	retcode ControlTerminalExtension::HandleIssueBO(std::vector<std::string>& arArgs)
 	{
 		if(arArgs.size() < 2) return BAD_ARGUMENTS;
-
-		BinaryOutput b;
-		b.mCount = 1;
-		b.mOffTimeMS = 100;
-		b.mOnTimeMS = 1000;
-		b.mStatus = CS_SUCCESS;
-
-		uint_32_t index = 0;
-		uint_32_t code = 0;
-		uint_32_t ontime = 0;
-		uint_32_t offtime = 0;
-		uint_32_t count = 0;
 		
-		stringstream ss;
-		ss << arArgs[0];
-		ss >> index;
-		ss.clear();
-		code = ParseControlCode(arArgs[1]);
+		BinaryOutput b; b.mOnTimeMS = 100; b.mOffTimeMS = 100; b.mCount = 1;
+		uint_32_t index;
+		if(!Parsing::Get(arArgs[0], index)) return BAD_ARGUMENTS;
 
-		if ( code == CC_LATCH_ON || code == CC_LATCH_OFF )
-		{
-			ontime = 0;
-			offtime = 0;
-			count = 1;
+		b.mRawCode = static_cast<byte_t>(ParseControlCode(arArgs[1]));
+		switch(b.mRawCode) {
+			case(CC_PULSE):
+			case(CC_PULSE_CLOSE):
+			case(CC_PULSE_TRIP):
+				switch(arArgs.size()) {
+					case(5):
+						if(!Parsing::Get(arArgs[4], b.mCount)) return BAD_ARGUMENTS;
+					case(4):
+						if(!Parsing::Get(arArgs[3], b.mOffTimeMS)) return BAD_ARGUMENTS;
+					case(3):
+						if(!Parsing::Get(arArgs[2], b.mOnTimeMS)) return BAD_ARGUMENTS;						
+					case(2):
+						break;
+					default:
+						return BAD_ARGUMENTS;
+				}
+				break;
+			case(CC_LATCH_ON):
+			case(CC_LATCH_OFF):
+				if(arArgs.size() > 2) return BAD_ARGUMENTS;
+				break;
+			default:
+				return BAD_ARGUMENTS;		
 		}
-		else
-		{
-			if(arArgs.size() < 5) return BAD_ARGUMENTS;
-
-			ss << arArgs[2]; 
-			ss >> ontime;
-			ss.clear();
-			ss << arArgs[3];
-			ss >> offtime;
-			ss.clear();
-			ss << arArgs[4];
-			ss >> count;
-		}
-
-		b.mOffTimeMS = offtime;
-		b.mOnTimeMS = ontime;
-		b.mCount = static_cast<ControlCode>(count);
-		b.mRawCode = static_cast<ControlCode>(code);
-
+		
 		mpCmdAcceptor->AcceptCommand(b, index, ++mSequence, &mRspQueue);
-
 		WaitForResponse();
-
 		return SUCCESS;
 	}
 

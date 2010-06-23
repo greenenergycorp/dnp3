@@ -29,6 +29,8 @@ namespace apl
 
 			virtual ~ControlTerminalExtension() {}
 
+			static ControlCode ParseControlCode( const std::string& arString );
+
 		private:
 
 			int mSequence;

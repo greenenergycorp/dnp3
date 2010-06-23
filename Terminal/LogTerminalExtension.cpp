@@ -61,9 +61,9 @@ namespace apl
 		// PRINT LOG
 		cmd.mName = "log";
 		cmd.mHandler = boost::bind(&LogTerminalExtension::HandlePrintLog, this, _1);
-		cmd.mUsage = "log print [device name]";
-		cmd.mDesc = "Prints the current contents of the log";
-		apTerminal->BindCommand(cmd, "log print");
+		cmd.mUsage = "log";
+		cmd.mDesc = "Flushes the log buffer to the screen";
+		apTerminal->BindCommand(cmd, "log");
 
 		// PRINT LOGGERS
 		cmd.mName = "loggers";

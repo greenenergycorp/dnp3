@@ -28,7 +28,7 @@ namespace apl
 
 		cmd.mName = "ai";
 		oss.str("");
-		oss << "queue ai <index> <0|1> <quality: #|" << Analog::QualConverter::GetAllSymbols() << ">"; 
+		oss << "queue ai <index> <#.#> <quality: #|" << Analog::QualConverter::GetAllSymbols() << ">"; 
 		cmd.mUsage = oss.str();
 		cmd.mDesc = "Queues an analog input value into the transaction buffer";
 		cmd.mHandler = boost::bind(&DOTerminalExtension::HandleQueueAnalog, this, _1);

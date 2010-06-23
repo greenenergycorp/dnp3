@@ -75,35 +75,35 @@ namespace apl { namespace dnp {
 	{
 		CommandNode cmd;
 		
-		cmd.mName = "data";
-		cmd.mUsage = "data";
-		cmd.mDesc = "Displays data";
+		cmd.mName = "show";
+		cmd.mUsage = "show";
+		cmd.mDesc = "Displays measurement data";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShow, this, _1, true, false);
-		apTerminal->BindCommand(cmd, "data");
+		apTerminal->BindCommand(cmd, "show");
 
-		cmd.mName = "updates";
-		cmd.mUsage = "updates";
-		cmd.mDesc = "Tracks data updates";
+		cmd.mName = "update";
+		cmd.mUsage = "update run";
+		cmd.mDesc = "Continuously displays data updates until <enter> is pressed";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleRunUpdates, this, _1);
-		apTerminal->BindCommand(cmd, "updates run");
+		apTerminal->BindCommand(cmd, "update run");
 
-		cmd.mName = "updates";
-		cmd.mUsage = "updates";
-		cmd.mDesc = "Displays data updates since last show";
+		cmd.mName = "update";
+		cmd.mUsage = "update";
+		cmd.mDesc = "Displays cached data updates";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShowUpdates, this, _1);
-		apTerminal->BindCommand(cmd, "updates");
+		apTerminal->BindCommand(cmd, "update");
 
-		cmd.mName = "data";
-		cmd.mUsage = "data set <all|bi|ai|c|cs|ss> <index|start> <stop>";
-		cmd.mDesc = "Sets a range on ";
+		cmd.mName = "show stats";
+		cmd.mUsage = "show set <all|bi|ai|c|cs|ss> <index|start> <stop>";
+		cmd.mDesc = "Sets a range to displayed with the show command";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleSetShow, this, _1);
-		apTerminal->BindCommand(cmd, "data set");
+		apTerminal->BindCommand(cmd, "show set");
 
-		cmd.mName = "data stats";
-		cmd.mUsage = "data stats";
+		cmd.mName = "show stats";
+		cmd.mUsage = "show stats";
 		cmd.mDesc = "Displays number and types of measurement in data observer";
 		cmd.mHandler = boost::bind(&FlexibleObserverTerminalExtension::HandleShowStats, this, _1);
-		apTerminal->BindCommand(cmd, "data stats");				
+		apTerminal->BindCommand(cmd, "show stats");				
 	}
 
 	template <class T>

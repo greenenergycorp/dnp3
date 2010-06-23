@@ -54,7 +54,7 @@ namespace apl{
 		{
 			cs = GetResponseCode(true, aIndex);
 		}
-		LOG_BLOCK(LEV_INFO, "Got Control on "<< aIndex << " with " << ToString(aControl.GetCode()) << " returning " << ToString(cs));
+		LOG_BLOCK(LEV_INFO, "["<< aIndex << "] - " <<  aControl.ToString() << " returning " << ToString(cs));
 		return cs;
 	}
 
@@ -80,7 +80,7 @@ namespace apl{
 		{
 			cs = GetResponseCode(false, aIndex);
 		}
-		LOG_BLOCK(LEV_INFO, "Got Setpoint on "<< aIndex << " with " << aControl.GetValue() << " returning " << ToString(cs));
+		LOG_BLOCK(LEV_INFO, "["<< aIndex << "] - " <<  aControl.ToString() << " returning " << ToString(cs));
 		return cs;
 	}
 
