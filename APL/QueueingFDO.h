@@ -30,9 +30,9 @@
 #include <map>
 #include <queue>
 #include <string>
+#include <sstream>
 
-namespace apl
-{
+namespace apl {
 
 	/** Extension to the FlexibleDataObserver that keeps track of new data updates.
 	*/
@@ -65,7 +65,7 @@ namespace apl
 		{
 			typename PointMap<T>::Type::iterator i = arMap.find(aIndex);
 			if(i == arMap.end()) {
-				ostringstream oss;				
+				std::ostringstream oss;				
 				oss << GetString(T::MeasEnum, aIndex) << " --> " << GetString(arPoint);
 				this->Push(oss.str());
 			}
