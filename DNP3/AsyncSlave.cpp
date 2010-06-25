@@ -57,6 +57,7 @@ mRspContext(apLogger, apDatabase, &mRspTypes, arCfg.mMaxBinaryEvents, arCfg.mMax
 mHaveLastRequest(false),
 mLastRequest(arCfg.mMaxFragSize),
 mpTime(apTime),
+mCommsStatus(apLogger, "comms_status"),
 mDeferredUpdate(false),
 mDeferredRequest(false),
 mDeferredUnsol(false),
@@ -77,6 +78,8 @@ mpTimeTimer(NULL)
 
 	// this will cause the slave to go through the null-unsol startup sequence
 	if(!mConfig.mDisableUnsol) mDeferredUnsol = true;
+
+	mCommsStatus.Set(0);
 }
 
 /* Implement IAsyncAppUser - external callbacks from the app layer */
@@ -485,6 +488,7 @@ void AsyncSlave::ResetTimeIIN()
 	mIIN.SetNeedTime(true);
 	mpTimeTimer = mpTimerSrc->Start(mConfig.mTimeSyncPeriod, boost::bind(&AsyncSlave::ResetTimeIIN, this));
 }
+
 
 }} //end ns
 

@@ -45,7 +45,7 @@ namespace apl
 		std::ostringstream oss;
 		oss << mName << "." << aSubName;
 		Logger* pLogger = mpLog->GetLogger(LEV_WARNING, oss.str());
-		pLogger->SetVarName(aSubName);
+		pLogger->SetVarName(mVarName);
 		pLogger->mLevel = aFilterBits;
 		return pLogger;
 	}

@@ -25,6 +25,7 @@
 #include <APL/CommandQueue.h>
 #include <APL/TimeSource.h>
 #include <APL/PostingNotifierSource.h>
+#include <APL/CachedLogVariable.h>
 
 #include "APDU.h"
 #include "AsyncAppInterfaces.h"
@@ -140,6 +141,8 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	CommandData mCmdInfo;
 	CommandFormatter mFormatter;		/// bound function used to format commands
 	CommandValidator mValidator;		/// bound function called to validate responses
+
+	CachedLogVariable mCommsStatus;
 
 	DelayValidator mDelayValidator;
 
