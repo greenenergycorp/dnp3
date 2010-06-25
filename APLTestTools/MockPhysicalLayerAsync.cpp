@@ -18,6 +18,7 @@
 // 
 #include "MockPhysicalLayerAsync.h"
 
+#include <memory.h>
 #include "BufferHelpers.h"
 
 using namespace boost::system;

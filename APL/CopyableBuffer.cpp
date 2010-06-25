@@ -18,7 +18,7 @@
 // 
 #include "CopyableBuffer.h"
 
-#include <memory>
+#include <memory.h>
 
 namespace apl {
 
@@ -45,7 +45,7 @@ mSize(arBuffer.Size())
 
 void CopyableBuffer::Zero()
 { 
-	std::memset(mpBuff, 0, mSize);
+	memset(mpBuff, 0, mSize);
 }
 
 CopyableBuffer& CopyableBuffer::operator=(const CopyableBuffer& arRHS)

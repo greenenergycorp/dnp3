@@ -25,6 +25,7 @@
 
 #include <assert.h>
 #include <sstream>
+#include <memory.h>
 
 using namespace std;
 
