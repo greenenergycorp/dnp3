@@ -62,6 +62,13 @@ class AS_Base;
 */
 class AsyncSlave : public Loggable, public IAsyncAppUser
 {
+	
+	enum CommsStatus
+	{
+		COMMS_DOWN = 0,
+		COMMS_UP = 2
+	};
+
 	friend class AS_Base; //make the state base class a friend
 	friend class AS_OpenBase;
 	friend class AS_Closed;

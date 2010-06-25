@@ -85,7 +85,7 @@ class AsyncStackManager : private Threadable, private Loggable
 			@param arCfg		Configuration data for the master stack
 			@return				Threadsafe interface to use for dispatching commands to the master.
 		*/
-		ICommandAcceptor* AddMaster(const std::string&  ,
+		ICommandAcceptor* AddMaster(const std::string& arPortName,
 									const std::string& arStackName,
 									FilterLevel aLevel,
 									IDataObserver* apPublisher,

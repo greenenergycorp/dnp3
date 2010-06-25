@@ -70,6 +70,12 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 		START_UP_TASKS = 2
 	};
 
+	enum CommsStatus
+	{
+		COMMS_DOWN = 0,
+		COMMS_UP = 2
+	};
+
 	friend class AMS_Base;
 
 	typedef boost::function<apl::CopyableBuffer (bool aSelect)> CommandFormatter;

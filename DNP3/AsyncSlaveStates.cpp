@@ -200,7 +200,6 @@ void AS_Closed::OnDataUpdate(AsyncSlave* c)
 void AS_OpenBase::OnLowerLayerDown(AsyncSlave* c)
 {
 	ChangeState(c, AS_Closed::Inst());
-	c->mCommsStatus.Set(0);
 }
 
 /* AS_Idle */
@@ -266,7 +265,6 @@ void AS_WaitForRspSuccess::OnSolFailure(AsyncSlave* c)
 void AS_WaitForRspSuccess::OnSolSendSuccess(AsyncSlave* c)
 {
 	c->mRspContext.ClearWritten();
-	c->mCommsStatus.Set(1);
 	
 	if(c->mRspContext.IsComplete()) {
 		ChangeState(c, AS_Idle::Inst());
@@ -304,7 +302,6 @@ void AS_WaitForUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
 void AS_WaitForUnsolSuccess::OnUnsolSendSuccess(AsyncSlave* c)
 {
 	ChangeState(c, AS_Idle::Inst());	// transition to the idle state
-	c->mCommsStatus.Set(1);
 	this->DoUnsolSuccess(c);	
 }
 
@@ -341,7 +338,6 @@ void AS_WaitForSolUnsolSuccess::OnSolFailure(AsyncSlave* c)
 void AS_WaitForSolUnsolSuccess::OnSolSendSuccess(AsyncSlave* c)
 {
 	ChangeState(c, AS_WaitForUnsolSuccess::Inst());
-	c->mCommsStatus.Set(1);
 }
 
 void AS_WaitForSolUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
@@ -357,7 +353,6 @@ void AS_WaitForSolUnsolSuccess::OnUnsolFailure(AsyncSlave* c)
 void AS_WaitForSolUnsolSuccess::OnUnsolSendSuccess(AsyncSlave* c)
 {
 	ChangeState(c, AS_WaitForRspSuccess::Inst());
-	c->mCommsStatus.Set(1);
 	this->DoUnsolSuccess(c);
 }
 

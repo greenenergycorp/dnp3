@@ -79,7 +79,7 @@ mpTimeTimer(NULL)
 	// this will cause the slave to go through the null-unsol startup sequence
 	if(!mConfig.mDisableUnsol) mDeferredUnsol = true;
 
-	mCommsStatus.Set(0);
+	mCommsStatus.Set(COMMS_DOWN);
 }
 
 /* Implement IAsyncAppUser - external callbacks from the app layer */
@@ -94,12 +94,14 @@ void AsyncSlave::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
 	this->FlushDeferredEvents();
+	mCommsStatus.Set(COMMS_DOWN);
 }
 
 void AsyncSlave::OnSolSendSuccess()
 {
 	mpState->OnSolSendSuccess(this);
 	this->FlushDeferredEvents();
+	mCommsStatus.Set(COMMS_UP);
 }
 
 void AsyncSlave::OnSolFailure()
@@ -113,6 +115,7 @@ void AsyncSlave::OnUnsolSendSuccess()
 {
 	mpState->OnUnsolSendSuccess(this);
 	this->FlushDeferredEvents();
+	mCommsStatus.Set(COMMS_UP);
 }
 
 void AsyncSlave::OnUnsolFailure()
