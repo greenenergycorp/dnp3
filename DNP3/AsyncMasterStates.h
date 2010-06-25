@@ -108,6 +108,7 @@ class AMS_OpenBase : public AMS_Base
 {
 	public:
 	void OnUnsolResponse(AsyncMaster*, const APDU&);
+	virtual void OnLowerLayerDown(AsyncMaster* c);
 };
 
 /* AMS_Idle */
@@ -123,8 +124,6 @@ class AMS_Idle : public AMS_OpenBase
 	void EventPoll(AsyncMaster*, ITaskCompletion* apTask, int aClassMask);
 	void ChangeUnsol(AsyncMaster*, ITaskCompletion* apTask, bool aEnable, int aClassMask);
 	void SyncTime(AsyncMaster*, ITaskCompletion* apTask);
-
-	void OnLowerLayerDown(AsyncMaster*);
 };
 
 /* AMS_WaitForSimpleRsp */
@@ -136,7 +135,6 @@ class AMS_WaitForSimpleRsp : public AMS_OpenBase
 	void OnFailure(AsyncMaster*);
 	void OnPartialResponse(AsyncMaster*, const APDU&);
 	void OnFinalResponse(AsyncMaster*, const APDU&);
-	void OnLowerLayerDown(AsyncMaster*);
 };
 
 /* AMS_WaitForDelayMeasRsp */
@@ -148,7 +146,6 @@ class AMS_WaitForDelayMeasRsp : public AMS_OpenBase
 	void OnFailure(AsyncMaster*);
 	void OnPartialResponse(AsyncMaster*, const APDU&);
 	void OnFinalResponse(AsyncMaster*, const APDU&);
-	void OnLowerLayerDown(AsyncMaster*);
 };
 
 /* AMS_WaitForRspToPoll */
@@ -160,7 +157,6 @@ class AMS_WaitForRspToPoll : public AMS_OpenBase
 	void OnFailure(AsyncMaster*);
 	void OnPartialResponse(AsyncMaster*, const APDU&);
 	void OnFinalResponse(AsyncMaster*, const APDU&);
-	void OnLowerLayerDown(AsyncMaster*);
 };
 
 /* AMS_WaitForRspToSelect */

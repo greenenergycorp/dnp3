@@ -186,6 +186,7 @@ bool AMS_Base::ValidateDelayMeas(AsyncMaster* c, const APDU& arAPDU, millis_t& a
 	return c->mDelayValidator(arAPDU, arDelay);
 }
 
+
 /* AMS_Closed */
 
 AMS_Closed AMS_Closed::mInstance;
@@ -201,6 +202,12 @@ void AMS_OpenBase::OnUnsolResponse(AsyncMaster* c, const APDU& arAPDU)
 {
 	ProcessDataResponse(c, arAPDU);
 }
+
+void AMS_OpenBase::OnLowerLayerDown(AsyncMaster* c)
+{
+	ChangeState(c, AMS_Closed::Inst());
+}
+
 
 
 /* AMS_Idle */
@@ -261,11 +268,6 @@ void AMS_Idle::Execute(AsyncMaster* c, const Setpoint& arCmd, size_t aIndex)
 	SendRequest(c);
 }
 
-void AMS_Idle::OnLowerLayerDown(AsyncMaster* c)
-{
-	ChangeState(c, AMS_Closed::Inst());
-}
-
 /* AMS_WaitForSimpleRsp */
 
 AMS_WaitForSimpleRsp AMS_WaitForSimpleRsp::mInstance;
@@ -285,11 +287,6 @@ void AMS_WaitForSimpleRsp::OnFinalResponse(AsyncMaster* c, const APDU& arAPDU)
 {
 	ChangeState(c, AMS_Idle::Inst());
 	CompleteTask(c, true);
-}
-
-void AMS_WaitForSimpleRsp::OnLowerLayerDown(AsyncMaster* c)
-{
-	ChangeState(c, AMS_Closed::Inst());
 }
 
 /* AMS_WaitForDelayMeasRsp */
@@ -321,11 +318,6 @@ void AMS_WaitForDelayMeasRsp::OnFinalResponse(AsyncMaster* c, const APDU& arAPDU
 	}
 }
 
-void AMS_WaitForDelayMeasRsp::OnLowerLayerDown(AsyncMaster* c)
-{
-	ChangeState(c, AMS_Closed::Inst());
-}
-
 
 /* AMS_WaitForRspToPoll */
 
@@ -347,11 +339,6 @@ void AMS_WaitForRspToPoll::OnFinalResponse(AsyncMaster* c, const APDU& arAPDU)
 	ChangeState(c, AMS_Idle::Inst());
 	ProcessDataResponse(c, arAPDU);
 	CompleteTask(c, true);
-}
-
-void AMS_WaitForRspToPoll::OnLowerLayerDown(AsyncMaster* c)
-{
-	ChangeState(c, AMS_Closed::Inst());
 }
 
 /* AMS_WaitForRspToSelect */

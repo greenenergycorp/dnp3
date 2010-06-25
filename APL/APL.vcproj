@@ -311,6 +311,10 @@
 				Name="Log"
 				>
 				<File
+					RelativePath=".\CachedLogVariable.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Log.cpp"
 					>
 				</File>

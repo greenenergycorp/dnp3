@@ -39,6 +39,7 @@ namespace apl
 	Logger* PhysicalLayerMap ::MakeLogger(const std::string& arName, FilterLevel aLevel)
 	{
 		Logger* ret = mpBaseLogger->GetSubLogger(arName);
+		//ret->SetVarName(arName);
 		ret->SetFilterLevel(aLevel);
 		return ret;
 	}

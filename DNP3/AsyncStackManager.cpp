@@ -78,6 +78,7 @@ ICommandAcceptor* AsyncStackManager::AddMaster( const std::string& arPortName, c
 {
 	AsyncPort* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
+	pLogger->SetVarName(arStackName);
 	AsyncMasterStack* pMaster = new AsyncMasterStack(pLogger, &mTimerSrc, apPublisher, pPort->GetGroup(), arCfg);	
 	this->OnAddStack(arStackName, pMaster, pPort, arCfg.link.LocalAddr);
 	return pMaster->mMaster.GetCmdAcceptor();
@@ -88,6 +89,7 @@ IDataObserver* AsyncStackManager::AddSlave( const std::string& arPortName, const
 {
 	AsyncPort* pPort = this->AllocatePort(arPortName);
 	Logger* pLogger = mpLogger->GetSubLogger(arStackName, aLevel);
+	pLogger->SetVarName(arStackName);
 	AsyncSlaveStack* pSlave = new AsyncSlaveStack(pLogger, &mTimerSrc, apCmdAcceptor, arCfg);	
 	this->OnAddStack(arStackName, pSlave, pPort, arCfg.link.LocalAddr);
 	return pSlave->mSlave.GetDataObserver();
@@ -172,7 +174,9 @@ AsyncPort* AsyncStackManager::AllocatePort(const std::string& arName)
 	if(pPort == NULL) {
 		PhysLayerSettings s = mMgr.GetSettings(arName);
 		IPhysicalLayerAsync* pPhys = mMgr.GetLayer(arName, mService.Get());
-		pPort = this->CreatePort(arName, pPhys, mpLogger->GetSubLogger(arName, s.LogLevel), s.RetryTimeout);		
+		Logger* pPortLogger = mpLogger->GetSubLogger(arName, s.LogLevel);
+		pPortLogger->SetVarName(arName);
+		pPort = this->CreatePort(arName, pPhys, pPortLogger, s.RetryTimeout);		
 	}
 	return pPort;
 }

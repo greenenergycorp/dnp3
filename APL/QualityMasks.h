@@ -136,7 +136,7 @@ namespace apl
 
 	QUAL_INFO_DECL(SetpointQualInfo, SetpointQualConverter, 4);
 
-	std::string SetpointStatusQualToString(byte_t aQual);
+	//std::string SetpointStatusQualToString(byte_t aQual);
 
 	/**
 		Bitmasks that make make up the quality field for vto data. See BinaryQuality for common (unlabeled) bitmasks.
