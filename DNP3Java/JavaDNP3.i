@@ -11,13 +11,19 @@ using namespace apl::dnp;
 
 %pragma(java) jniclasscode=%{
   static {
-    	    	
     try{
-      System.out.println("trying to load library");
-      System.out.println("java.library.path="+System.getProperty("java.library.path"));
-      System.loadLibrary("dnp3java");
+      String libName;
+      if(System.getProperty("os.name").toLowerCase().indexOf("win") != -1){
+        libName = "dnp3java.dll";
+      }else{
+        libName = "libdnp3java.so";
+      }
+      System.out.println("trying to load library: " + libName);
+      String path = (new ExtractFromJAR()).extractToLocal(libName);
+      System.out.println("trying to load library: " + path);
+      System.load(path);
       System.out.println("Done loading library");
-    }catch(UnsatisfiedLinkError e){
+    }catch(Exception e){
       System.out.println(e);
       System.out.println("java.library.path="+System.getProperty("java.library.path"));
       System.exit(-1);

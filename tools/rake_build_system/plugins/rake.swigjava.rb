@@ -3,21 +3,18 @@
 jdk_home = if ENV['JDK_HOME']
   ENV['JDK_HOME']
 elsif ENV['JAVA_HOME']
-  ENV['JAVA_HOME']  
+  ENV['JAVA_HOME']
 else
-  puts 'To use the swig-java plugin, the JDK_HOME or JAVA_HOME environment variables must be set to your JDK directory'
   nil
 end
 
-if jdk_home
-  if File.directory? jdk_home
-    jdk_home = File.expand_path jdk_home #this will normailze to linux slashes in case we're using an ENV var from windows
-  else
-    puts "Invalid jdk path #{jdk_home}"
-    exit -1
-  end
+unless jdk_home and File.directory? jdk_home
+  puts 'To use the swig-java plugin, the JDK_HOME or JAVA_HOME environment variables must be set to your JDK directory, comment out the "require \'plugins/swigjava.rb\'" line in rakefile.rb to supress this message.'
+else
+  jdk_home = File.expand_path jdk_home #this will normailze to linux slashes in case we're using an ENV var from windows
+  $jdk_home = jdk_home
   
-  puts "Using jdk directory #{jdk_home}"
+  puts "Using jdk directory #{$jdk_home}"
   
   platform = case $hw_os #need this to get the correct directory for some of the jni includes
     when 'pc_cygwin'
@@ -47,7 +44,8 @@ if jdk_home
                 nil
               end
     
-    get_generated_swig_java_cpp(options[:dir]).each do |cppfile|
+    generated_sources = get_generated_swig_java_cpp(options[:dir])
+    generated_sources.each do |cppfile|
       ifile = cppfile.ext('.i')
       file cppfile => outdir if outdir
       outdirective = ''
@@ -61,7 +59,7 @@ if jdk_home
         sh "swig -c++ -java #{package} #{include_string(includes)} #{outdirective} #{declares} -o #{cppfile} #{ifile}"
       end
     end
-    
+    generated_sources
   end
   
   def get_generated_swig_java_cpp(dir)

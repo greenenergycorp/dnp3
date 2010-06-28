@@ -98,7 +98,7 @@ source for both your platform and for ARM.
 When the boost version we are using is updated we will update the references in 
 rakefile.rb and config/boost_*.vsprops to use the new version name and include
 updated installers to compile the new version, if after and update the build suddenly 
-fails with mssing boost include errors errors check that the boost version hasn't 
+fails with missing boost include errors errors check that the boost version hasn't 
 been upgraded recently.
 
 
@@ -113,17 +113,25 @@ Rake is a ruby gem. To install rake:
 
 > gem install rake
 
-## Install JDK ##
+## Creating Native -> Java (JNI) Bindings ##
+
+We have created native bindings for java using SWIG. The native libraries are embedded into the jar file 
+and extracted before use on the target, this allow us to keep the versions perfectly in-sync and keep 
+installation time and complexity to a minimum. We make use of the "buildr" tool to automate uploading the
+jar to the repository.
+
+### Install JDK ###
 
 The Java Developers Kit is used to build Java bindings. Install the Java 6 JDK
 
-Set the JAVA_HOME directory to the install path of your JDK version. If you 
-don't want to build java bindings and install the JDK, comment out the 
-following line from rakefile.rb:
+Set the JAVA_HOME directory to the install path of your JDK version.
 
-	require 'plugins/swigjava.rb'
+### Deploying the jar ###
 
-Comment out the dnp3java project from the $projects hash.
+There are 2 tasks for deploying the jar:
+
+- dnp3java:install : copies the file to your local maven repository (doesn't overwrite an existing build so delete that library first)
+- dnp3java:upload  : uploads the file to the remote maven repository (this should generally only be done by the build server)
 
 ## Building the libraries and tests ##
 
