@@ -16,34 +16,39 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef __PARSING_H_
-#define __PARSING_H_
+#ifndef __CachedLogVariable_H_
+#define __CachedLogVariable_H_
 
 #include <string>
-#include <sstream>
+#include <vector>
+#include <map>
+#include "Logger.h"
 
-namespace apl {
 
-	class Parsing
+namespace apl
+{
+	class CachedLogVariable
 	{
-		public:
-
-		template <class T>
-		static bool Get(const std::string& aArg, T& arValue)
-		{
-			std::stringstream ss;
-			ss << aArg;
-			ss.peek();
-			return !(ss >> arValue).fail() && ss.eof();
+	public:
+		CachedLogVariable(Logger* apLogger, const std::string& arName) 
+			: mVar(apLogger, arName),
+			mCurrent(0),
+			mSet(false)
+		{ 
 		}
 
-		static bool Get(const std::string& aArg, bool& arValue);
-
-		template <class T>
-		static bool GetPositive(const std::string& aArg, T& arValue)
-		{
-			return Get(aArg,arValue) && arValue >= 0;
+		void Set(int aVal) {
+			if ( aVal != mCurrent || !mSet) {
+				mVar.Set(aVal); 
+				mCurrent = aVal;
+				mSet = true;
+			}
 		}
+
+	private:
+		LogVariable mVar;
+		int mCurrent;
+		bool mSet;
 	};
 }
 

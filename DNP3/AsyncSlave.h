@@ -26,6 +26,7 @@
 #include <APL/PostingNotifierSource.h>
 #include <APL/ChangeBuffer.h>
 #include <APL/CommandResponseQueue.h>
+#include <APL/CachedLogVariable.h>
 
 #include "AsyncAppInterfaces.h"
 #include "APDU.h"
@@ -61,7 +62,15 @@ class AS_Base;
 */
 class AsyncSlave : public Loggable, public IAsyncAppUser
 {
+	
+	enum CommsStatus
+	{
+		COMMS_DOWN = 0,
+		COMMS_UP = 2
+	};
+
 	friend class AS_Base; //make the state base class a friend
+	friend class AS_OpenBase;
 	friend class AS_Closed;
 	friend class AS_Idle;
 	friend class AS_WaitForRspSuccess;
@@ -128,6 +137,7 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	APDU mLastRequest;						/// APDU used to form responses
 
 	ITimeManager* mpTime;
+	CachedLogVariable mCommsStatus;
 
 	// Flags that tell us that some action has been Deferred
 	// until the slave is in a state capable of handling it.

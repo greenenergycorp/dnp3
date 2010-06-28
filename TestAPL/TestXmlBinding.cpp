@@ -65,8 +65,8 @@ BOOST_AUTO_TEST_SUITE(XmlTests)
 		BOOST_CHECK_THROW(IXMLDataBound::FromString_bool(&testNode, "False"), apl::Exception);
 		BOOST_CHECK_THROW(IXMLDataBound::FromString_bool(&testNode, "faLse"), apl::Exception);
 		
-		BOOST_CHECK_THROW(IXMLDataBound::FromString_bool(&testNode, "0"), apl::Exception);
-		BOOST_CHECK_THROW(IXMLDataBound::FromString_bool(&testNode, "1"), apl::Exception);
+		BOOST_CHECK_EQUAL(IXMLDataBound::FromString_bool(&testNode, "0"), false);
+		BOOST_CHECK_EQUAL(IXMLDataBound::FromString_bool(&testNode, "1"), true);
 		BOOST_CHECK_THROW(IXMLDataBound::FromString_bool(&testNode, ""), apl::Exception);
 	}
 	BOOST_AUTO_TEST_CASE(WriteBool){

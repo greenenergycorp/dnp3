@@ -51,7 +51,8 @@ mpTaskGroup(apTaskGroup),
 mpTimerSrc(apTimerSrc),
 mpTimeSrc(apTimeSrc),
 mpCommandTask(NULL),
-mpTimeTask(NULL)
+mpTimeTask(NULL),
+mCommsStatus(apLogger, "comms_status")
 {
 	AsyncTaskBase* pIntegrity = mpTaskGroup->Add(aCfg.IntegrityRate, aCfg.TaskRetryRate, AMP_POLL, bind(&AsyncMaster::IntegrityPoll, this, _1), "Integrity Poll");	
 	pIntegrity->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
@@ -90,6 +91,8 @@ mpTimeTask(NULL)
 	mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
 
 	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mpCommandTask), mpTimerSrc));
+
+	mCommsStatus.Set(COMMS_DOWN);
 }
 
 void AsyncMaster::EnableOnlineTasks()
@@ -256,6 +259,7 @@ void AsyncMaster::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
 	this->DisableOnlineTasks();
+	mCommsStatus.Set(COMMS_DOWN);
 }
 
 void AsyncMaster::OnSolSendSuccess()
@@ -283,6 +287,7 @@ void AsyncMaster::OnPartialResponse(const APDU& arAPDU)
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
 	mpState->OnPartialResponse(this, arAPDU);
+	mCommsStatus.Set(COMMS_UP);
 }
 
 void AsyncMaster::OnFinalResponse(const APDU& arAPDU)
@@ -290,6 +295,7 @@ void AsyncMaster::OnFinalResponse(const APDU& arAPDU)
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(arAPDU.GetIIN());
 	mpState->OnFinalResponse(this, arAPDU);
+	mCommsStatus.Set(COMMS_UP);
 }
 
 void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
@@ -297,6 +303,7 @@ void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
 	mpState->OnUnsolResponse(this, arAPDU);
+	mCommsStatus.Set(COMMS_UP);
 }
 
 /* Private functions */

@@ -25,6 +25,7 @@
 #include <APL/CommandQueue.h>
 #include <APL/TimeSource.h>
 #include <APL/PostingNotifierSource.h>
+#include <APL/CachedLogVariable.h>
 
 #include "APDU.h"
 #include "AsyncAppInterfaces.h"
@@ -67,6 +68,12 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	{
 		ONLINE_ONLY_TASKS = 1,
 		START_UP_TASKS = 2
+	};
+
+	enum CommsStatus
+	{
+		COMMS_DOWN = 0,
+		COMMS_UP = 2
 	};
 
 	friend class AMS_Base;
@@ -140,6 +147,8 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	CommandData mCmdInfo;
 	CommandFormatter mFormatter;		/// bound function used to format commands
 	CommandValidator mValidator;		/// bound function called to validate responses
+
+	CachedLogVariable mCommsStatus;
 
 	DelayValidator mDelayValidator;
 

@@ -24,6 +24,7 @@
 #include <APL/Configure.h>
 #include <APL/Exception.h>
 #include <APL/Uncopyable.h>
+#include <APL/Parsing.h>
 
 #include <string>
 #include <sstream>
@@ -74,23 +75,19 @@ public:
 
 	template <typename T>
 	T IXMLDataBound::FromString_T(TiXmlNode* apParent, const char * aStr, const char * type, T aDefault){
-		if(aStr != NULL){
-			std::istringstream buff(aStr);
-			buff >> boolalpha;
-			T ret;
-			buff >> ret;
-			if(!buff.fail() && buff.eof()) return ret;
-		}
-		std::ostringstream oss;
-		oss << "ERROR: Couldn't convert ";
-		if(aStr == NULL) oss << "NULL";
-		else oss << aStr;
-		oss << " to " << type << " at " << apParent->Row() << ":" << apParent->Column();
-		if(msExceptOnFailure){
-			throw apl::Exception(LOCATION, oss.str());
-		}else{
-			std::cout << oss.str() << std::endl;
-			return aDefault;
+		T ret;
+		if(aStr != NULL && apl::Parsing::Get(std::string(aStr), ret)) return ret;
+		else {
+			std::ostringstream oss;
+			oss << "ERROR: Couldn't convert ";
+			if(aStr == NULL) oss << "NULL";
+			else oss << aStr;
+			oss << " to " << type << " at " << apParent->Row() << ":" << apParent->Column();
+			if(msExceptOnFailure) throw apl::Exception(LOCATION, oss.str());
+			else{
+				std::cout << oss.str() << std::endl;
+				return aDefault;
+			}
 		}
 	}
 
