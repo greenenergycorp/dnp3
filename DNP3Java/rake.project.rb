@@ -13,7 +13,7 @@ $options = {
 }
 
 desc "Create a jar with the embedded shared library"
-task "dnp3java:package" do # => ["dnp3java:build"] do
+task "dnp3java:package" => ["dnp3java:build"] do
   sh "cp ./DNP3Java/ExtractFromJAR.java ./DNP3Java/jar/org/psi/dnp3/ExtractFromJAR.java"
   sh "javac ./DNP3Java/jar/org/psi/dnp3/*.java"
   if ENV['windows']

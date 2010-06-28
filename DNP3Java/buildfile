@@ -1,6 +1,5 @@
 
-repositories.remote << "http://192.168.100.11:8081/nexus/content/repositories/releases" #TODO, investigate secure remote access or just use vpn
-repositories.release_to = "http://192.168.100.11:8081/nexus/content/repositories/releases"
+repositories.release_to = "http://192.168.100.11:8082/archiva/repository/snapshots"
 
 if RUBY_PLATFORM =~ /mingw|win/
   DNP3PLATFORM = "win#{ENV['PROCESSOR_ARCHITECTURE']}"
