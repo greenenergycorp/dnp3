@@ -33,7 +33,8 @@ namespace apl {
 		{
 			std::stringstream ss;
 			ss << aArg;
-			return !(ss >> arValue).fail();
+			ss.peek();
+			return !(ss >> arValue).fail() && ss.eof();
 		}
 
 		static bool Get(const std::string& aArg, bool& arValue);
