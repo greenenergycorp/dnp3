@@ -47,18 +47,6 @@ task :sloccount do
   `sloccount --wide --details #{dirs.join(' ')} > sloccount.sc`
 end
 
-desc "Create a jar with the embedded shared library"
-task "dnp3java:package" => ["dnp3java:build"] do
-  dir = $projects[:dnp3java][:dir]
-  sh "javac ./#{dir}/jar/org/psi/dnp3/*.java"
-  sh "jar cvf ./#{dir}/dnp3java.jar -C ./#{dir}/jar ."
-end
-
-desc "Deploy the shared library to the system lib directory"
-task "dnp3java:install" => ["dnp3java:build"] do
-  sh "rake dnp3java:copytarget['/usr/lib','libdnp3java.so',true]"
-end
-
 namespace :license do
 
   license_dirs = SOURCE_DIRS << 'External\build_system'

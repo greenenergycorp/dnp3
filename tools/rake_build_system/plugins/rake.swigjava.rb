@@ -47,7 +47,8 @@ if jdk_home
                 nil
               end
     
-    get_generated_swig_java_cpp(options[:dir]).each do |cppfile|
+    generated_sources =get_generated_swig_java_cpp(options[:dir])
+    generated_sources.each do |cppfile|
       ifile = cppfile.ext('.i')
       file cppfile => outdir if outdir
       outdirective = ''
@@ -61,7 +62,7 @@ if jdk_home
         sh "swig -c++ -java #{package} #{include_string(includes)} #{outdirective} #{declares} -o #{cppfile} #{ifile}"
       end
     end
-    
+    generated_sources
   end
   
   def get_generated_swig_java_cpp(dir)

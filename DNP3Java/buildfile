@@ -1,0 +1,18 @@
+
+repositories.remote << "http://192.168.100.11:8081/nexus/content/repositories/releases" #TODO, investigate secure remote access or just use vpn
+repositories.release_to = "http://192.168.100.11:8081/nexus/content/repositories/releases"
+
+if RUBY_PLATFORM =~ /mingw|win/
+  DNP3PLATFORM = "win#{ENV['PROCESSOR_ARCHITECTURE']}"
+else
+  DNP3PLATFORM = `uname -sm`.strip.gsub(/\s/,'')
+end
+
+DNP3JAVA_VERSION='0.9.0'
+DNP3JAVA = "org.psi.dnp3:dnp3java-#{DNP3PLATFORM}:jar:#{DNP3JAVA_VERSION}"
+
+bean_jar = file('dnp3java.jar')
+bean = artifact(DNP3JAVA).from(bean_jar)
+
+install bean
+upload bean
