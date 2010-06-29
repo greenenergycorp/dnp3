@@ -52,7 +52,7 @@ end
 
 #By default, the build is set to debug
 $WARN_FLAGS   = ['-Wall']
-$RELEASE_TYPE = ENV['release'] ? 'release' : (ENV['coverage'] ? 'coverage' : 'debug')
+$RELEASE_TYPE = ENV['debug'] ? 'debug' : (ENV['coverage'] ? 'coverage' : 'release')
 $CC_FLAGS     = case $RELEASE_TYPE
   when 'release'
     $hw_os == 'pc_linux_arm' ? ['-O3'] : ['-O3 -fPIC']

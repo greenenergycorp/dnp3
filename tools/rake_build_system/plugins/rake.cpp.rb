@@ -1,6 +1,4 @@
 #Helpers related to C++ development
-
-require File.join(File.dirname(__FILE__), 'rake.crosstest.rb')
 require File.join(File.dirname(__FILE__), 'rake.cpp.enviroment')
 
 # extract all dependencies from a dependency file, returning an array of dependencies for object file
@@ -156,6 +154,8 @@ def add_cpp_based_target(name, options)
     
     desc "Run remote tests"
     task :testremote, :host, :user, :passwd, :xml, :needs => target do |task, args|
+      #require here so that we don't blow up w/o net-ssh/openssl
+      require File.join(File.dirname(__FILE__), 'rake.crosstest.rb')
       CrossTest::do_test_sequence(args[:host], args[:user], args[:passwd], target, args[:xml])
     end
 

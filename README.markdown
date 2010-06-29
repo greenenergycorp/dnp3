@@ -62,10 +62,10 @@ and tests. Please be careful to get the correct version if noted below:
 - Devel -> make       // GNU version of make utility
 - Devel -> ruby       // Scripting language we use it for build scripts
 - Devel -> libtool    // Shared library generation tool
-- Devel -> swig       // C/C++ wrapper generator used for Java bindings
 
 Optional packages:
 
+- Devel -> swig       // C/C++ wrapper generator used for Java bindings
 - Devel -> doxygen    // documentation system for C++
 
 Doxygen needs GraphViz. Download and install GraphViz: http://www.graphviz.org/Download_windows.php
@@ -120,19 +120,6 @@ and extracted before use on the target, this allow us to keep the versions perfe
 installation time and complexity to a minimum. We make use of the "buildr" tool to automate uploading the
 jar to the repository.
 
-### Install JDK ###
-
-The Java Developers Kit is used to build Java bindings. Install the Java 6 JDK
-
-Set the JAVA_HOME directory to the install path of your JDK version.
-
-### Deploying the jar ###
-
-There are 2 tasks for deploying the jar:
-
-- dnp3java:install : copies the file to your local maven repository (doesn't overwrite an existing build so delete that library first)
-- dnp3java:upload  : uploads the file to the remote maven repository (this should generally only be done by the build server)
-
 ## Building the libraries and tests ##
 
 Use rake to build. To see a list of targets and their descriptions, type:
@@ -145,12 +132,16 @@ the dnp3test executable, type:
 
 Flags not documented by Rake -T:
 
-- release=true     // release mode, compiler optimization and no debug
-- arm=true         // crosscompile for arm
+- debug=true       // debug mode, compiler generate debug information to use with gdb, etc
+- arm=true         // crosscompile for arm, requires the arm cross compiler to be installed w/ arm Boost libs
+- coverage=true    // compile with coverage information
 - SH_VERBOSE=true  // print every command that rake issues to the shell
 
-For example, to build all of the arm libraries and executables, type:
-> rake arm=true release=true
+### Examples ###
+> rake 						// build everything
+> rake arm=true					// build everything in release mode for arm
+> rake dnp3test:run debug=true 			// build and run the dnp3test w/ debug info
+> rake dnp3test:run["--show_progress=true"]	// run the test in release mode, w/ arg for Boost.Test
 
 ## Generating Documentation ##
 
@@ -162,3 +153,20 @@ rake document
 Be patient, this generates hundreds of megs worth of images.
 
 The html output will be generated in ./docs
+
+### Building the Java bindings ###
+
+The Java Developers Kit (JDK) and Swig are required to build Java bindings. Install Open JDK 1.6 or greater.
+
+Set the JAVA_HOME directory to the install path of your JDK version.
+
+### Deploying the jar ###
+
+The deployment tasks require Apache Buildr to be installed:
+
+gem install buildr
+
+There are 2 tasks for deploying the jar:
+
+- dnp3java:install : copies the file to your local maven repository (doesn't overwrite an existing build so delete that library first)
+- dnp3java:upload  : uploads the file to the remote maven repository (this should generally only be done by the build server)
