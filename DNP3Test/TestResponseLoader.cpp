@@ -31,91 +31,91 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(Group1Var1)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckBinaries("C0 81 00 00 01 01 00 01 03 02", TimeStamp_t(20));
+			t.CheckBinaries("C0 81 00 00 01 01 00 01 03 02");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group1Var2)
 		{ 
 			ResponseLoaderTestObject t;
-			t.CheckBinaries("C0 81 00 00 01 02 00 01 03 01 81 01", TimeStamp_t(20));
+			t.CheckBinaries("C0 81 00 00 01 02 00 01 03 01 81 01");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group20Var1)
 		{ 
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 01 00 00 01 01 04 00 00 00 01 09 00 00 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 01 00 00 01 01 04 00 00 00 01 09 00 00 00");
 		}
 		
 		BOOST_AUTO_TEST_CASE(Group20Var2)
 		{ 
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 02 00 00 01 01 04 00 01 09 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 02 00 00 01 01 04 00 01 09 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group20Var3)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 03 00 00 01 01 04 00 00 00 01 09 00 00 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 03 00 00 01 01 04 00 00 00 01 09 00 00 00");
 		} 
 
 		BOOST_AUTO_TEST_CASE(Group20Var4)
 		{ 
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 04 00 00 01 01 04 00 01 09 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 04 00 00 01 01 04 00 01 09 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group20Var5)
 		{ 
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 05 00 00 01 04 00 00 00 09 00 00 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 05 00 00 01 04 00 00 00 09 00 00 00");
 		} 
 
 		BOOST_AUTO_TEST_CASE(Group20Var6)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 06 00 00 01 04 00 09 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 06 00 00 01 04 00 09 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group20Var7)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 07 00 00 01 04 00 00 00 09 00 00 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 07 00 00 01 04 00 00 00 09 00 00 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group20Var8)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckCounters("C0 81 00 00 14 08 00 00 01 04 00 09 00", TimeStamp_t(20));
+			t.CheckCounters("C0 81 00 00 14 08 00 00 01 04 00 09 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group30Var1)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckAnalogs("C0 81 00 00 1E 01 00 00 01 01 04 00 00 00 01 09 00 00 00", TimeStamp_t(20));
+			t.CheckAnalogs("C0 81 00 00 1E 01 00 00 01 01 04 00 00 00 01 09 00 00 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group30Var2)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckAnalogs("C0 81 00 00 1E 02 00 00 01 01 04 00 01 09 00", TimeStamp_t(20));
+			t.CheckAnalogs("C0 81 00 00 1E 02 00 00 01 01 04 00 01 09 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group30Var3)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckAnalogs("C0 81 00 00 1E 03 00 00 01 04 00 00 00 09 00 00 00", TimeStamp_t(20));
+			t.CheckAnalogs("C0 81 00 00 1E 03 00 00 01 04 00 00 00 09 00 00 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group30Var4)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckAnalogs("C0 81 00 00 1E 04 00 00 01 04 00 09 00", TimeStamp_t(20));
+			t.CheckAnalogs("C0 81 00 00 1E 04 00 00 01 04 00 09 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group30Var6)
 		{
 			ResponseLoaderTestObject t;
-			t.Load("C0 81 00 00 1E 06 00 00 00 01 20 74 85 2F C7 2B A2 C0", TimeStamp_t(20));
+			t.Load("C0 81 00 00 1E 06 00 00 00 01 20 74 85 2F C7 2B A2 C0");
 		
 			BOOST_REQUIRE_EQUAL(t.fdo.mAnalogMap.size(), 1);
 			BOOST_REQUIRE_EQUAL(t.fdo.GetTotalCount(), 1);			
@@ -124,13 +124,13 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(Group40Var1)
 		{ 
 			ResponseLoaderTestObject t;
-			t.CheckSetpointStatii("C0 81 00 00 28 01 00 00 01 01 04 00 00 00 01 09 00 00 00", TimeStamp_t(20));
+			t.CheckSetpointStatii("C0 81 00 00 28 01 00 00 01 01 04 00 00 00 01 09 00 00 00");
 		}
 
 		BOOST_AUTO_TEST_CASE(Group40Var2)
 		{
 			ResponseLoaderTestObject t;
-			t.CheckSetpointStatii("C0 81 00 00 28 02 00 00 01 01 04 00 01 09 00", TimeStamp_t(20));
+			t.CheckSetpointStatii("C0 81 00 00 28 02 00 00 01 01 04 00 01 09 00");
 		}
 
 	BOOST_AUTO_TEST_SUITE_END() //end suite

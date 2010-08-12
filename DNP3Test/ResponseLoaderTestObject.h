@@ -34,12 +34,12 @@ class ResponseLoaderTestObject
 	public:
 	ResponseLoaderTestObject();
 
-	void CheckBinaries(const std::string& arAPDU, TimeStamp_t aTime = TimeStamp_t(0));
-	void CheckCounters(const std::string& arAPDU, TimeStamp_t aTime = TimeStamp_t(0));
-	void CheckAnalogs(const std::string& arAPDU, TimeStamp_t aTime = TimeStamp_t(0));
-	void CheckSetpointStatii(const std::string& arAPDU, TimeStamp_t aTime = TimeStamp_t(0));
+	void CheckBinaries(const std::string& arAPDU);
+	void CheckCounters(const std::string& arAPDU);
+	void CheckAnalogs(const std::string& arAPDU);
+	void CheckSetpointStatii(const std::string& arAPDU);
 
-	void Load(const std::string& arAPDU, TimeStamp_t aTime);
+	void Load(const std::string& arAPDU);
 
 	private: EventLog log;
 	public: FlexibleDataObserver fdo;

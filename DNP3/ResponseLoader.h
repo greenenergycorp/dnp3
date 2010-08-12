@@ -38,7 +38,7 @@ class IVTODataSink;
 class ResponseLoader : Loggable
 {
 	public:
-		ResponseLoader(Logger*, TimeStamp_t, IDataObserver*);
+		ResponseLoader(Logger*, IDataObserver*);
 
 		void Process(HeaderReadIterator&);
 
@@ -56,8 +56,7 @@ class ResponseLoader : Loggable
 		void ReadBitfield(HeaderReadIterator& arHeader);
 
 		IDataObserver* mpPublisher;
-		Transaction mTransaction;
-		TimeStamp_t mTime;
+		Transaction mTransaction;		
 		CTOHistory mCTO;
 };
 
@@ -87,19 +86,15 @@ void ResponseLoader::Read(HeaderReadIterator& arIter, StreamObject<T>* apObj)
 
 	ObjectReadIterator obj = arIter.BeginRead();
 	LOG_BLOCK(LEV_INTERPRET, "Converting " << obj.Count() << " " << apObj->Name() << " To " << typeid(T).name());
-	for(; !obj.IsEnd(); ++obj)
-	{
+
+	for( ; !obj.IsEnd(); ++obj) {
 		size_t index = obj->Index();
 		T value = apObj->Read(*obj);
 
-		//Make sure the value has time information
+		// Make sure the value has time information
 		if(apObj->UseCTO()) value.SetTime(t+value.GetTime());
-		else if(!apObj->HasTime())
-		{
-			value.SetTime(mTime);
-		}
-
-		//Make sure the value has quality information
+				
+		// Make sure the value has quality information
 		if(!apObj->HasQuality()) value.SetQuality(T::ONLINE);
 
 		mpPublisher->Update(value, index);
@@ -109,7 +104,7 @@ void ResponseLoader::Read(HeaderReadIterator& arIter, StreamObject<T>* apObj)
 template <class T>
 void ResponseLoader::ReadBitfield(HeaderReadIterator& arIter)
 {
-	Binary b; b.SetQuality(Binary::ONLINE); b.SetTime(mTime);
+	Binary b; b.SetQuality(Binary::ONLINE);
 
 	ObjectReadIterator obj = arIter.BeginRead();
 	LOG_BLOCK(LEV_INTERPRET, "Converting " << obj.Count() << " " << T::Inst()->Name() << " To " << typeid(b).name());
