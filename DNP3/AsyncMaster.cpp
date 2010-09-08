@@ -252,11 +252,10 @@ void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
 void AsyncMaster::ProcessDataResponse(const APDU& arResponse)
 {
 	try {
-		ResponseLoader loader(mpLogger, mpTimeSrc->GetTimeStampUTC(), mpPublisher);
+		ResponseLoader loader(mpLogger, mpPublisher);
 
-		for(HeaderReadIterator hdr = arResponse.BeginRead(); !hdr.IsEnd(); ++hdr) {
-			loader.Process(hdr);
-		}
+		for(HeaderReadIterator hdr = arResponse.BeginRead(); !hdr.IsEnd(); ++hdr) 
+			loader.Process(hdr);		
 	}
 	catch(Exception ex)
 	{

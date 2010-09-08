@@ -1076,7 +1076,7 @@ BOOST_AUTO_TEST_SUITE(AsyncSlaveSuite)
 					
 		{
 			Transaction tr(&t.db);
-			t.db.Update(Binary(false, BQ_ONLINE), 0);
+			t.db.Update(Binary(false, BQ_ONLINE), 0); 
 			t.db.Update(Counter(0, CQ_ONLINE), 0);
 			t.db.Update(Analog(0.0, AQ_ONLINE), 0);
 			t.db.Update(ControlStatus(false, TQ_ONLINE), 0);

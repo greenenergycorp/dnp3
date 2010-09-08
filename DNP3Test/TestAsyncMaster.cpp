@@ -482,8 +482,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(SolicitedResponseWithData)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
-			t.fake_time.SetTime(TimeStamp_t(0));
+			AsyncMasterTestObject t(master_cfg);			
 			t.master.OnLowerLayerUp();
 
 			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06"); ;
@@ -522,8 +521,7 @@ using namespace boost;
 		BOOST_AUTO_TEST_CASE(SolicitedMultiFragResponse)
 		{
 			MasterConfig master_cfg;
-			AsyncMasterTestObject t(master_cfg);
-			t.fake_time.SetTime(TimeStamp_t(0));
+			AsyncMasterTestObject t(master_cfg);			
 			t.master.OnLowerLayerUp();
 
 			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");
@@ -544,8 +542,7 @@ using namespace boost;
 			master_cfg.mScans.push_back(scan);
 			scan.ClassMask = PC_CLASS_3;
 			master_cfg.mScans.push_back(scan);
-			AsyncMasterTestObject t(master_cfg);
-			t.fake_time.SetTime(TimeStamp_t(0));
+			AsyncMasterTestObject t(master_cfg);			
 			t.master.OnLowerLayerUp();
 
 			BOOST_REQUIRE_EQUAL(t.Read(), "C0 01 3C 01 06");

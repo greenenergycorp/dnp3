@@ -25,11 +25,10 @@
 
 namespace apl { namespace dnp {
 
-ResponseLoader::ResponseLoader(Logger* apLogger, TimeStamp_t aTime, IDataObserver* apPublisher) :
+ResponseLoader::ResponseLoader(Logger* apLogger, IDataObserver* apPublisher) :
 Loggable(apLogger),
 mpPublisher(apPublisher),
-mTransaction(apPublisher),
-mTime(aTime)
+mTransaction(apPublisher)
 {
 
 }

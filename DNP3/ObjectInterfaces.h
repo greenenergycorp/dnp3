@@ -97,8 +97,7 @@ namespace apl { namespace dnp {
 		public:
 			virtual void Write(apl::byte_t*, const T&) const = 0;
 			virtual T Read(const apl::byte_t*) const = 0;
-
-			virtual bool HasTime() const { return false; }
+			
 			virtual bool HasQuality() const { return false; }
 
 			typedef T DataType;

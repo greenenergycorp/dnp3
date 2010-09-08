@@ -35,7 +35,7 @@ mpLogger(log.GetLogger(LEV_INFO, "rsp"))
 	
 }
 
-void ResponseLoaderTestObject::Load(const std::string& arAPDU, TimeStamp_t aTime)
+void ResponseLoaderTestObject::Load(const std::string& arAPDU)
 {
 	fdo.Clear();
 	HexSequence hs(arAPDU);
@@ -43,56 +43,56 @@ void ResponseLoaderTestObject::Load(const std::string& arAPDU, TimeStamp_t aTime
 	f.Write(hs, hs.Size());
 	f.Interpret();
 
-	ResponseLoader rl(mpLogger, aTime, &fdo);
+	ResponseLoader rl(mpLogger, &fdo);
 	for(HeaderReadIterator hdr = f.BeginRead(); !hdr.IsEnd(); ++hdr)
 	{
 		rl.Process(hdr);
 	}
 }
 
-void ResponseLoaderTestObject::CheckBinaries(const std::string& arAPDU, TimeStamp_t aTime)
+void ResponseLoaderTestObject::CheckBinaries(const std::string& arAPDU)
 {
-	this->Load(arAPDU, aTime);
+	this->Load(arAPDU);
 
 	BOOST_REQUIRE_EQUAL(fdo.mBinaryMap.size(), 3);
 	BOOST_REQUIRE_EQUAL(fdo.GetTotalCount(), 3);
 
-	BOOST_REQUIRE(fdo.Check(false, BQ_ONLINE, 1, TimeStamp_t(20)));
-	BOOST_REQUIRE(fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(20)));
-	BOOST_REQUIRE(fdo.Check(false, BQ_ONLINE, 3, TimeStamp_t(20)));
+	BOOST_REQUIRE(fdo.Check(false, BQ_ONLINE, 1, TimeStamp_t(0)));
+	BOOST_REQUIRE(fdo.Check(true, BQ_ONLINE, 2, TimeStamp_t(0)));
+	BOOST_REQUIRE(fdo.Check(false, BQ_ONLINE, 3, TimeStamp_t(0)));
 }
 
-void ResponseLoaderTestObject::CheckCounters(const std::string& arAPDU, TimeStamp_t aTime)
+void ResponseLoaderTestObject::CheckCounters(const std::string& arAPDU)
 {
-	this->Load(arAPDU, aTime);
+	this->Load(arAPDU);
 
 	BOOST_REQUIRE_EQUAL(fdo.mCounterMap.size(), 2);
 	BOOST_REQUIRE_EQUAL(fdo.GetTotalCount(), 2);
 
-	BOOST_REQUIRE(fdo.Check(4, CQ_ONLINE, 0, TimeStamp_t(20)));
-	BOOST_REQUIRE(fdo.Check(9, CQ_ONLINE, 1, TimeStamp_t(20)));
+	BOOST_REQUIRE(fdo.Check(4, CQ_ONLINE, 0, TimeStamp_t(0)));
+	BOOST_REQUIRE(fdo.Check(9, CQ_ONLINE, 1, TimeStamp_t(0)));
 }
 
-void ResponseLoaderTestObject::CheckAnalogs(const std::string& arAPDU, TimeStamp_t aTime)
+void ResponseLoaderTestObject::CheckAnalogs(const std::string& arAPDU)
 {
-	this->Load(arAPDU, aTime);
+	this->Load(arAPDU);
 
 	BOOST_REQUIRE_EQUAL(fdo.mAnalogMap.size(), 2);
 	BOOST_REQUIRE_EQUAL(fdo.GetTotalCount(), 2);
 
-	BOOST_REQUIRE(fdo.Check(4, AQ_ONLINE, 0, TimeStamp_t(20)));
-	BOOST_REQUIRE(fdo.Check(9, AQ_ONLINE, 1, TimeStamp_t(20)));
+	BOOST_REQUIRE(fdo.Check(4, AQ_ONLINE, 0, TimeStamp_t(0)));
+	BOOST_REQUIRE(fdo.Check(9, AQ_ONLINE, 1, TimeStamp_t(0)));
 }
 
-void ResponseLoaderTestObject::CheckSetpointStatii(const std::string& arAPDU, TimeStamp_t aTime)
+void ResponseLoaderTestObject::CheckSetpointStatii(const std::string& arAPDU)
 {
-	this->Load(arAPDU, aTime);
+	this->Load(arAPDU);
 
 	BOOST_REQUIRE_EQUAL(fdo.mSetpointStatusMap.size(), 2);
 	BOOST_REQUIRE_EQUAL(fdo.GetTotalCount(), 2);
 
-	BOOST_REQUIRE(fdo.Check(4, PQ_ONLINE, 0, TimeStamp_t(20)));
-	BOOST_REQUIRE(fdo.Check(9, PQ_ONLINE, 1, TimeStamp_t(20)));
+	BOOST_REQUIRE(fdo.Check(4, PQ_ONLINE, 0));
+	BOOST_REQUIRE(fdo.Check(9, PQ_ONLINE, 1));
 }
 
 }}
