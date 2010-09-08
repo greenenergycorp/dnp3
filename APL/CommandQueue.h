@@ -58,7 +58,16 @@ namespace apl
 			void Read(apl::BinaryOutput& arType, CommandData& arData);
 			void Read(apl::Setpoint& arType, CommandData& arData);
 
+			/** Synchronously executes a command, expecting an immediate response from a handler
+			*	@return true if there was a command to execute
+			*/	
 			bool ExecuteCommand(ICommandHandler* apHandler);
+
+			/** Asynchronous dispatches a command to another ICommandAcceptor, the other acceptor
+			*	is responsible for responding to the command
+			*	@return true if there was a command to execute
+			*/
+			bool DispatchCommand(ICommandAcceptor* apAcceptor);
 
 		protected:
 			apl::SigLock mLock;

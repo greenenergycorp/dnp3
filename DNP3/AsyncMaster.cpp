@@ -133,34 +133,26 @@ void AsyncMaster::ProcessIIN(const IINField& arIIN)
 
 void AsyncMaster::ExecuteCommand()
 {
-	switch(mCommandQueue.Next())
-	{
-		case(CT_BINARY_OUTPUT):
-		{
-			BinaryOutput b;
-			mCommandQueue.Read(b, mCmdInfo);
-			mpState->Execute(this, b, mCmdInfo.mIndex);			
-			break;
-		}
-		case(CT_SETPOINT):
-		{
-			Setpoint s;
-			mCommandQueue.Read(s, mCmdInfo);
-			mpState->Execute(this, s, mCmdInfo.mIndex);
-			break;
-		}
-		case(CT_NONE):
-		{
-			mpCommandTask->Disable();
-			break;
-		}
-	}
+	if(!mCommandQueue.DispatchCommand(this)) 
+		mpCommandTask->Disable();	
+}
+
+void AsyncMaster::AcceptCommand(const BinaryOutput& arCmd, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor)
+{
+
+}
+
+void AsyncMaster::AcceptCommand(const Setpoint& arCmd, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor)
+{
+
 }
 
 void AsyncMaster::SyncTime(ITaskCompletion* apTask)
 {
+	/*
 	if(!mLastIIN.GetNeedTime()) mpTimeTask->Disable();
 	else mpState->SyncTime(this, apTask);
+	*/
 }
 
 void AsyncMaster::CompleteCommandTask(CommandStatus aStatus)
@@ -170,81 +162,30 @@ void AsyncMaster::CompleteCommandTask(CommandStatus aStatus)
 	mpCommandTask->OnComplete(true);
 }
 
-CopyableBuffer AsyncMaster::FormatSetpoint(const Setpoint& arCmd, CommandObject<Setpoint>* apObj, size_t aIndex, bool aIsSelect)
-{
-	mRequest.Set(aIsSelect ? FC_SELECT : FC_OPERATE, true, true, false, false);
-	IndexedWriteIterator i = mRequest.WriteIndexed(apObj, 1, aIndex);
-	i.SetIndex(aIndex);
-	apObj->Write(*i, arCmd);
-	return apObj->GetValueBytes(*i);
-}
-
-CopyableBuffer AsyncMaster::FormatBinaryOutput(const BinaryOutput& arCmd, size_t aIndex, bool aIsSelect)
-{
-	mRequest.Set(aIsSelect ? FC_SELECT : FC_OPERATE, true, true, false, false);
-	IndexedWriteIterator i = mRequest.WriteIndexed(Group12Var1::Inst(), 1, aIndex);
-	i.SetIndex(aIndex);
-	Group12Var1::Inst()->Write(*i, arCmd);
-	return Group12Var1::Inst()->GetValueBytes(*i);
-}
-
-bool AsyncMaster::ValidateDelayMeas(const APDU& arAPDU, ptime aStart, millis_t& arDelay)
-{
-	ptime now = mpTimeSrc->GetUTC();
-
-	HeaderReadIterator hri = arAPDU.BeginRead();
-	if(hri.Count() != 1) {
-		LOG_BLOCK(LEV_WARNING, "DelayMeas response w/ unexcpected header count");
-		return false;
-	}
-	
-	if(!hri->GetBaseObject()->Equals(Group52Var2::Inst())) {
-		LOG_BLOCK(LEV_WARNING, "DelayMeas response w/ unexpected object ");
-		return false;
-	}
-
-	ObjectReadIterator ori = hri.BeginRead();
-	if(ori.Count() != 1) {
-		LOG_BLOCK(LEV_WARNING, "DelayMeas got more than 1 object in response");
-		return false;
-	}
-
-	millis_t send_rcv_time = (now - aStart).total_milliseconds();
-	millis_t rtu_turn_around = Group52Var2::Inst()->mTime.Get(*ori);
-
-	// The later shouldn't happen, but could cause a negative delay which would
-	// result in a weird time setting
-	arDelay = (send_rcv_time >= rtu_turn_around) ? (send_rcv_time - rtu_turn_around)/2 : 0;
-
-	
-
-	return true;
-}
-
 /* Tasks */
 
 void AsyncMaster::WriteIIN(ITaskCompletion* apTask)
 {
 	if(mLastIIN.GetDeviceRestart())
 	{
-		mpState->WriteIIN(this, apTask);
+		//mpState->WriteIIN(this, apTask);
 	}
 	else mpClearRestartTask->Disable();
 }
 
 void AsyncMaster::IntegrityPoll(ITaskCompletion* apTask)
 {
-	mpState->IntegrityPoll(this, apTask);
+	//mpState->IntegrityPoll(this, apTask);
 }
 
 void AsyncMaster::EventPoll(ITaskCompletion* apTask, int aClassMask)
 {
-	mpState->EventPoll(this, apTask, aClassMask);
+	//mpState->EventPoll(this, apTask, aClassMask);
 }
 
 void AsyncMaster::ChangeUnsol(ITaskCompletion* apTask, bool aEnable, int aClassMask)
 {
-	mpState->ChangeUnsol(this, apTask, aEnable, aClassMask);
+	//mpState->ChangeUnsol(this, apTask, aEnable, aClassMask);
 }
 
 /* Implement IAsyncAppUser */
@@ -302,7 +243,7 @@ void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
 {
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
-	mpState->OnUnsolResponse(this, arAPDU);
+	this->ProcessDataResponse(arAPDU);	
 	mCommsStatus.Set(COMMS_UP);
 }
 

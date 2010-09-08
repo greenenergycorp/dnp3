@@ -53,7 +53,7 @@ class AMS_Base;
 
 	Coordination of tasks is handled by a higher level task scheduler.
 */
-class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcceptor
+class AsyncMaster : public Loggable, public IAsyncAppUser, public ICommandAcceptor
 {
 	enum AsyncMasterPriority
 	{
@@ -77,10 +77,6 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	};
 
 	friend class AMS_Base;
-
-	typedef boost::function<apl::CopyableBuffer (bool aSelect)> CommandFormatter;
-	typedef boost::function<CommandStatus (const APDU&)> CommandValidator;
-	typedef boost::function<bool (const APDU&, millis_t&)> DelayValidator;
 
 	public:
 
@@ -116,6 +112,11 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 
 	bool IsMaster() { return true; }
 
+	/* Implement ICommandAcceptor. Used to dispatch command out of the command queue */
+
+	void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
+	void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
+
 	private:
 
 	IINField mLastIIN;									/// last IIN received from the outstation
@@ -123,7 +124,7 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	void ProcessIIN(const IINField& arIIN);				/// Analyze IIN bits and react accordingly
 
 	void EnableOnlineTasks();							/// enable all tasks flaged ONLINE_ONLY
-	void DisableOnlineTasks();							/// diable ''
+	void DisableOnlineTasks();							/// disable ''
 	void CompleteCommandTask(CommandStatus aStatus);	/// finalize the execution of the command task
 
 	void ProcessDataResponse(const APDU&);	/// Read data output of solicited or unsolicited response and publish
@@ -145,46 +146,11 @@ class AsyncMaster : public Loggable, public IAsyncAppUser//, public ICommandAcce
 	AsyncTaskContinuous* mpClearRestartTask; /// Task to clear the restart IIN bit
 
 	CommandData mCmdInfo;
-	CommandFormatter mFormatter;		/// bound function used to format commands
-	CommandValidator mValidator;		/// bound function called to validate responses
-
 	CachedLogVariable mCommsStatus;
 
-	DelayValidator mDelayValidator;
 
-	bool ValidateDelayMeas(const APDU&, boost::posix_time::ptime aStart, millis_t& arDelay);
-
-	CopyableBuffer FormatSetpoint(const Setpoint& arCmd, CommandObject<Setpoint>*, size_t aIndex, bool aIsSelect);
-	CopyableBuffer FormatBinaryOutput(const BinaryOutput& arCmd, size_t aIndex, bool aIsSelect);
-
-	template <class T>
-	CommandStatus ValidateCommandResponse(const APDU&, CommandObject<T>* apObj, const CopyableBuffer& arData, size_t aIndex);
 };
 
-template <class T>
-CommandStatus AsyncMaster::ValidateCommandResponse(const APDU& arAPDU, CommandObject<T>* apObj, const CopyableBuffer& arData, size_t aIndex)
-{
-	HeaderReadIterator hdr = arAPDU.BeginRead();
-	if(hdr.Count() == 1)
-	{
-		int grp = hdr->GetGroup();
-		int var = hdr->GetVariation();
-
-		if(grp == apObj->GetGroup() && var == apObj->GetVariation())
-		{
-			ObjectReadIterator obj = hdr.BeginRead();
-			if(obj.Count() == 1 && obj->Index() == aIndex)
-			{
-				//compare what was written to what was received
-				T cmd = apObj->Read(*obj);
-				if(arData == apObj->GetValueBytes(*obj)) return cmd.mStatus;
-				else return CS_FORMAT_ERROR;
-			}
-		}
-	}
-
-	return CS_UNDEFINED;
-}
 
 }}
 

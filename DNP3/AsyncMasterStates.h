@@ -37,21 +37,15 @@ namespace apl
 namespace apl { namespace dnp {
 
 class AsyncMaster;
+class MasterTaskBase;
 class APDU;
 
 class AMS_Base
 {
 	public:
 
-	/* Task requests from the scheduler */
-
-	virtual void WriteIIN(AsyncMaster*, ITaskCompletion* apTask);
-	virtual void IntegrityPoll(AsyncMaster*, ITaskCompletion* apTask);
-	virtual void EventPoll(AsyncMaster*, ITaskCompletion* apTask, int aClassMask);
-	virtual void ChangeUnsol(AsyncMaster*, ITaskCompletion* apTask, bool aEnable, int aClassMask);
-	virtual void SyncTime(AsyncMaster*, ITaskCompletion* apTask);
-	virtual void Execute(AsyncMaster*, const BinaryOutput&, size_t);
-	virtual void Execute(AsyncMaster*, const Setpoint&, size_t);
+	// called when a new task should be started
+	virtual void StartTask(AsyncMaster*, MasterTaskBase*);
 
 	/* Events from application layer */
 
@@ -63,34 +57,12 @@ class AMS_Base
 
 	virtual void OnPartialResponse(AsyncMaster*, const APDU&);
 	virtual void OnFinalResponse(AsyncMaster*, const APDU&);
-	virtual void OnUnsolResponse(AsyncMaster*, const APDU&);
 
 	virtual std::string Name() const = 0;
 
 	protected:
 
-	//Work functions
-
-	void SetTask(AsyncMaster*, ITaskCompletion*);
 	void ChangeState(AsyncMaster*, AMS_Base*);
-	void ConfigureClearIIN(AsyncMaster*);
-	void ConfigureIntegrityPoll(AsyncMaster*);
-	void ConfigureChangeUnsol(AsyncMaster*, bool aEnable, int aClassMask);
-	void ConfigureEventPoll(AsyncMaster*, int aClassMask);
-	void ConfigureDelayMeas(AsyncMaster*);
-	void ConfigureWriteDelay(AsyncMaster*, millis_t aDelay);
-	void ConfigureCommand(AsyncMaster*, const BinaryOutput&, size_t aIndex, bool aIsSelect);
-	void ConfigureCommand(AsyncMaster*, const Setpoint&, size_t aIndex, bool aIsSelect);
-	void SetToOperate(AsyncMaster*);
-	CommandStatus Validate(AsyncMaster*, const APDU&);
-	bool ValidateDelayMeas(AsyncMaster*, const APDU&, millis_t&);
-
-	void SendRequest(AsyncMaster*);
-	void CompleteTask(AsyncMaster*, bool aSuccess);
-	Logger* GetLogger(AsyncMaster*);
-	void ProcessDataResponse(AsyncMaster*, const APDU&);
-	void CompleteCommandTask(AsyncMaster*, CommandStatus);
-	CommandObject<Setpoint>* GetOptimalEncoder(SetpointEncodingType aType);
 };
 
 /* AMS_Closed */
@@ -113,76 +85,26 @@ class AMS_OpenBase : public AMS_Base
 
 /* AMS_Idle */
 
+/// The only state from which a task can be started
 class AMS_Idle : public AMS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AMS_Idle);
 
-	void WriteIIN(AsyncMaster*, ITaskCompletion* apTask);
-	void IntegrityPoll(AsyncMaster*, ITaskCompletion* apTask);
-	void Execute(AsyncMaster* c, const BinaryOutput& arCmd, size_t aIndex);
-	void Execute(AsyncMaster* c, const Setpoint& arCmd, size_t aIndex);
-	void EventPoll(AsyncMaster*, ITaskCompletion* apTask, int aClassMask);
-	void ChangeUnsol(AsyncMaster*, ITaskCompletion* apTask, bool aEnable, int aClassMask);
-	void SyncTime(AsyncMaster*, ITaskCompletion* apTask);
+	void StartTask(AsyncMaster*, MasterTaskBase*);	
 };
 
-/* AMS_WaitForSimpleRsp */
+/* AMS_Waiting */
 
-class AMS_WaitForSimpleRsp : public AMS_OpenBase
+/// Wait for responses or failure. Manipulates
+/// the current task instance.
+class AMS_Waiting : public AMS_OpenBase
 {
-	MACRO_STATE_SINGLETON_INSTANCE(AMS_WaitForSimpleRsp);
+	MACRO_STATE_SINGLETON_INSTANCE(AMS_Waiting);
 
 	void OnFailure(AsyncMaster*);
 	void OnPartialResponse(AsyncMaster*, const APDU&);
 	void OnFinalResponse(AsyncMaster*, const APDU&);
 };
-
-/* AMS_WaitForDelayMeasRsp */
-
-class AMS_WaitForDelayMeasRsp : public AMS_OpenBase
-{
-	MACRO_STATE_SINGLETON_INSTANCE(AMS_WaitForDelayMeasRsp);
-
-	void OnFailure(AsyncMaster*);
-	void OnPartialResponse(AsyncMaster*, const APDU&);
-	void OnFinalResponse(AsyncMaster*, const APDU&);
-};
-
-/* AMS_WaitForRspToPoll */
-
-class AMS_WaitForRspToPoll : public AMS_OpenBase
-{
-	MACRO_STATE_SINGLETON_INSTANCE(AMS_WaitForRspToPoll);
-
-	void OnFailure(AsyncMaster*);
-	void OnPartialResponse(AsyncMaster*, const APDU&);
-	void OnFinalResponse(AsyncMaster*, const APDU&);
-};
-
-/* AMS_WaitForRspToSelect */
-
-class AMS_WaitForRspToSelect : public AMS_OpenBase
-{
-	MACRO_STATE_SINGLETON_INSTANCE(AMS_WaitForRspToSelect);
-
-	void OnFailure(AsyncMaster*);
-	void OnPartialResponse(AsyncMaster*, const APDU&);
-	void OnFinalResponse(AsyncMaster*, const APDU&);
-	void OnLowerLayerDown(AsyncMaster*);
-};
-
-/* AMS_WaitForRspToOperate */
-
-class AMS_WaitForRspToOperate : public AMS_OpenBase
-{
-	MACRO_STATE_SINGLETON_INSTANCE(AMS_WaitForRspToOperate);
-
-	void OnFailure(AsyncMaster*);
-	void OnPartialResponse(AsyncMaster*, const APDU&);
-	void OnFinalResponse(AsyncMaster*, const APDU&);
-	void OnLowerLayerDown(AsyncMaster*);
-};
-
 
 }} //ens ns
 
