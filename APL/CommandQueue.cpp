@@ -53,6 +53,32 @@ namespace apl{
 		if(mpNotifier != NULL) mpNotifier->Notify();
 	}
 
+	bool CommandQueue::DispatchCommand(ICommandAcceptor* apAcceptor) 
+	{
+		CommandData info;
+
+		switch(this->Next()) 
+		{
+			case(apl::CT_BINARY_OUTPUT): 
+			{
+				apl::BinaryOutput cmd;
+				Read(cmd, info);
+				apAcceptor->AcceptCommand(cmd, info.mIndex, info.mSequence, info.mpRspAcceptor);
+				return true;
+			}
+			case(apl::CT_SETPOINT):
+			{
+				apl::Setpoint cmd;
+				Read(cmd, info);
+				apAcceptor->AcceptCommand(cmd, info.mIndex, info.mSequence, info.mpRspAcceptor);
+				return true;
+			}
+			default:
+				return false;
+						
+		}		
+	}
+
 	bool CommandQueue::ExecuteCommand(ICommandHandler* apHandler){
 		
 		CommandData info;

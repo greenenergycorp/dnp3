@@ -22,6 +22,13 @@
 
 namespace apl {
 
+CopyableBuffer::CopyableBuffer() :
+mpBuff(NULL),
+mSize(0)
+{
+
+}
+
 CopyableBuffer::CopyableBuffer(size_t aSize) :
 mpBuff(new byte_t[aSize]),
 mSize(aSize)
@@ -55,7 +62,8 @@ CopyableBuffer& CopyableBuffer::operator=(const CopyableBuffer& arRHS)
 
 	if(arRHS.Size() != mSize) {
 		mSize = arRHS.Size();
-		delete mpBuff; mpBuff = new byte_t[mSize];
+		delete mpBuff; 
+		mpBuff = new byte_t[mSize];
 	}
 
 	memcpy(mpBuff, arRHS, mSize);

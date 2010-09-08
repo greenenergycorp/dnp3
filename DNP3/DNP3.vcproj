@@ -451,6 +451,42 @@
 					RelativePath=".\ResponseLoader.h"
 					>
 				</File>
+				<Filter
+					Name="Tasks"
+					>
+					<File
+						RelativePath=".\ControlTasks.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ControlTasks.h"
+						>
+					</File>
+					<File
+						RelativePath=".\DataPoll.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\DataPoll.h"
+						>
+					</File>
+					<File
+						RelativePath=".\MasterTaskBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\MasterTaskBase.h"
+						>
+					</File>
+					<File
+						RelativePath=".\StartupTasks.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\StartupTasks.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Transport"
