@@ -22,7 +22,7 @@
 #include <string>
 #include <APL/Loggable.h>
 
-namespace apl { class ITaskCompletion; }
+namespace apl { class ITask; }
 
 namespace apl { namespace dnp {
 
@@ -31,8 +31,8 @@ class IINField;
 
 enum TaskResult {
 	TR_FAIL,		// The task fails, further responses are ignored
-	TR_SUCCESS,	// The tasks is successful and complete
-	TR_CONTINUE,   // The task is not yet complete. If OnFinalResponse returns CONTINUE, it's a multi request task
+	TR_SUCCESS,		// The tasks is successful and complete
+	TR_CONTINUE,    // The task is not yet complete. If OnFinalResponse returns CONTINUE, it's a multi request task
 };
 
 /** A generic interface for defining master request/response style tasks
@@ -41,10 +41,11 @@ class MasterTaskBase : public Loggable
 {
 	public:
 
-		MasterTaskBase(Logger* apLogger, ITaskCompletion* apCompletion);
+		MasterTaskBase(Logger* apLogger);
 
-		/// Overridable, initializes the task's internal state
-		virtual void Reset() {}  
+		/// Sets the task completion handler and calls
+		/// the overiddable _Init() function
+		virtual void Init() {}
 		
 		/// Configure a request APDU
 		virtual void ConfigureRequest(APDU& arAPDU) = 0;
@@ -52,7 +53,7 @@ class MasterTaskBase : public Loggable
 		/** Handler for non-FIN responses, performs common validation 
 		 *  and delegates to _OnPartialResponse
 		 *
-		 *	@return True if a valid response, false otherwise
+		 *	@return TaskResult enumeration
 		 */
 		TaskResult OnPartialResponse(const APDU&);
 		
@@ -62,6 +63,10 @@ class MasterTaskBase : public Loggable
 		 *	@return True if a valid response, false otherwise
 		 */
 		TaskResult OnFinalResponse(const APDU&);
+
+		/** Overridable handler for timeouts, layer closes, etc
+		 */
+		virtual void OnFailure() {}
 		
 		/// Name of the Task
 		virtual std::string Name() const = 0;
@@ -78,13 +83,10 @@ class MasterTaskBase : public Loggable
 		 *	@return True if a valid response, false otherwise
 		 */
 		virtual TaskResult _OnFinalResponse(const APDU&) = 0;
-
-		/* Signals to the callback that the task is complete */
-		void OnCompleteTask(bool aIsSuccess);
-
+		
 	private:
 
-		ITaskCompletion* mpTaskCallback;
+		TaskResult ProcessResult(TaskResult);
 
 		bool ValidateIIN(const IINField& GetIIN) const;
 };
@@ -95,14 +97,14 @@ All non-read tasks that only return a single fragment can inherit from this task
 class SingleRspBase : public MasterTaskBase
 {
 	public:
-		SingleRspBase(Logger*, ITaskCompletion* apTaskCallback);
+		SingleRspBase(Logger*);
 		TaskResult _OnPartialResponse(const APDU&);
 };
 
 class SimpleRspBase : public SingleRspBase
 {
 	public:
-		SimpleRspBase(Logger*, ITaskCompletion* apTaskCallback);
+		SimpleRspBase(Logger*);
 		TaskResult _OnFinalResponse(const APDU&);
 };
 

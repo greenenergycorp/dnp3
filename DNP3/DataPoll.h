@@ -22,18 +22,17 @@
 #include "MasterTaskBase.h"
 
 namespace apl {
-	class IDataObserver;
-	class ITimeSource;
+	class IDataObserver;	
 }
 
 namespace apl { namespace dnp {
 
-/** Startup task that acquires the full static state of the remote outstation
+/** Base class for all data acquistion polls
 */
 class DataPoll : public MasterTaskBase
 {	
 	public:
-		DataPoll(Logger*, ITaskCompletion*, IDataObserver*, ITimeSource*);
+		DataPoll(Logger*, IDataObserver*);
 
 	private:
 
@@ -44,31 +43,20 @@ class DataPoll : public MasterTaskBase
 		TaskResult _OnFinalResponse(const APDU&);
 
 		IDataObserver* mpObs;
-		ITimeSource* mpTimeSrc;
 };
 
-/** Startup task that acquires the full static state of the remote outstation
+/** Task that acquires class data from the outstation
 */
-class IntegrityPoll : public DataPoll
+class ClassPoll : public DataPoll
 {
 	public:
-		IntegrityPoll(Logger*, ITaskCompletion*, IDataObserver*, ITimeSource*);
-		
-		//Implement MasterTaskBase
-		void _ConfigureRequest(APDU& arAPDU);						
-		virtual std::string Name() const { return "Integrity Poll"; }
-};
+		ClassPoll(Logger*, IDataObserver*);
 
-/** Startup task that acquires the full static state of the remote outstation
-*/
-class ExceptionPoll : public DataPoll
-{
-	public:
-		ExceptionPoll(Logger*, ITaskCompletion*, IDataObserver*, ITimeSource*, int aClassMask);
+		void Set(int aClassMask);
 		
 		//Implement MasterTaskBase
-		void _ConfigureRequest(APDU& arAPDU);						
-		virtual std::string Name() const { return "Exception Poll"; }
+		void ConfigureRequest(APDU& arAPDU);						
+		virtual std::string Name() const { return "Class Poll"; }
 
 	private:
 		int mClassMask;

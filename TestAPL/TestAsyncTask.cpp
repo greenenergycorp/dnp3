@@ -47,7 +47,7 @@ class MockTaskHandler
 
 	size_t Size() { return mTasks.size(); }
 
-	ITaskCompletion* Front()
+	ITask* Front()
 	{ 
 		return (Size() > 0) ? mTasks.front() : NULL;
 	}
@@ -59,16 +59,16 @@ class MockTaskHandler
 
 	void Complete(bool aSuccess)
 	{
-		ITaskCompletion* p = mTasks.front();
+		ITask* p = mTasks.front();
 		Pop();
 		p->OnComplete(aSuccess);
 	}
 
 	private:
 
-	std::deque<ITaskCompletion*> mTasks;
+	std::deque<ITask*> mTasks;
 
-	void OnTask(ITaskCompletion* apTask) { mTasks.push_back(apTask); }
+	void OnTask(ITask* apTask) { mTasks.push_back(apTask); }
 };
 
 BOOST_AUTO_TEST_SUITE(AsyncTaskSuite)

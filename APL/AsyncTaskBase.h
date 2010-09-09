@@ -36,7 +36,7 @@ class AsyncTaskGroup;
 	and task dependencies.
 
 */
-class AsyncTaskBase : public ITaskCompletion, private Uncopyable
+class AsyncTaskBase : public ITask, private Uncopyable
 {
 	friend class AsyncTaskGroup;
 	friend class AsyncTaskScheduler;

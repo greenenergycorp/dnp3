@@ -37,10 +37,13 @@ class ClearRestartIIN : public SimpleRspBase
 		std::string Name() const { return "ClearRestartIIN"; }
 };
 
+/// Enables or disables unsolicited reporting
 class ConfigureUnsol : public SimpleRspBase
 {
 	public:
-		ConfigureUnsol(Logger*, bool aIsEnable, int aClassMask);
+		ConfigureUnsol(Logger*);
+
+		void Set(bool aIsEnable, int aClassMask);
 
 		void ConfigureRequest(APDU& arAPDU);						
 		std::string Name() const { return "ConfigureUnsol"; }
@@ -50,12 +53,14 @@ class ConfigureUnsol : public SimpleRspBase
 		int mClassMask;
 };
 
+/// Synchronizes the time on the outstation
 class TimeSync : public SingleRspBase
 {
 	public:			
 		TimeSync(Logger*, ITimeSource*);
 
-		void Reset();
+		/// override Init
+		void Init();
 		void ConfigureRequest(APDU& arAPDU);				
 		TaskResult _OnFinalResponse(const APDU&);
 		

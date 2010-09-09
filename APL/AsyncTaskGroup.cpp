@@ -128,8 +128,7 @@ void AsyncTaskGroup::CheckState()
 {
 	ptime now = GetUTC();
 	AsyncTaskBase* pTask = GetNext(now);
-	
-	
+		
 	if(pTask == NULL) return;
 	if(pTask->NextRunTime() == max_date_time) return;
 	

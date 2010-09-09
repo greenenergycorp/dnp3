@@ -32,6 +32,7 @@ namespace apl
 	class Logger;
 	class BinaryOutput;
 	class Setpoint;
+	class ITask;
 }
 
 namespace apl { namespace dnp {
@@ -45,7 +46,7 @@ class AMS_Base
 	public:
 
 	// called when a new task should be started
-	virtual void StartTask(AsyncMaster*, MasterTaskBase*);
+	virtual void StartTask(AsyncMaster* c, ITask*, MasterTaskBase*);
 
 	/* Events from application layer */
 
@@ -58,11 +59,14 @@ class AMS_Base
 	virtual void OnPartialResponse(AsyncMaster*, const APDU&);
 	virtual void OnFinalResponse(AsyncMaster*, const APDU&);
 
+	virtual void OnUnsolResponse(AsyncMaster*, const APDU&);
+
 	virtual std::string Name() const = 0;
 
 	protected:
 
 	void ChangeState(AsyncMaster*, AMS_Base*);
+	void ChangeTask(AsyncMaster*, MasterTaskBase*);
 };
 
 /* AMS_Closed */
@@ -90,7 +94,7 @@ class AMS_Idle : public AMS_OpenBase
 {
 	MACRO_STATE_SINGLETON_INSTANCE(AMS_Idle);
 
-	void StartTask(AsyncMaster*, MasterTaskBase*);	
+	void StartTask(AsyncMaster* c, ITask*, MasterTaskBase*);	
 };
 
 /* AMS_Waiting */
@@ -104,6 +108,8 @@ class AMS_Waiting : public AMS_OpenBase
 	void OnFailure(AsyncMaster*);
 	void OnPartialResponse(AsyncMaster*, const APDU&);
 	void OnFinalResponse(AsyncMaster*, const APDU&);
+
+	void OnLowerLayerDown(AsyncMaster* c);
 };
 
 }} //ens ns

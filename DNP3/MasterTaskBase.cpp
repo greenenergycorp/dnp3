@@ -24,9 +24,8 @@
 
 namespace apl { namespace dnp {
 
-MasterTaskBase::MasterTaskBase(Logger* apLogger, ITaskCompletion* apCompletion) : 
-Loggable(apLogger),
-mpTaskCallback(apCompletion)
+MasterTaskBase::MasterTaskBase(Logger* apLogger) : 
+Loggable(apLogger)
 {}
 
 TaskResult MasterTaskBase::OnPartialResponse(const APDU& arAPDU)
@@ -41,17 +40,12 @@ TaskResult MasterTaskBase::OnFinalResponse(const APDU& arAPDU)
 	else return TR_FAIL;
 }
 
-void MasterTaskBase::OnCompleteTask(bool aIsSuccess)
-{
-	mpTaskCallback->OnComplete(aIsSuccess);
-}
-	
 bool MasterTaskBase::ValidateIIN(const IINField& GetIIN) const
 {
 	return true;
 }
 
-SingleRspBase::SingleRspBase(Logger* apLogger, ITaskCompletion* apTaskCallback) : MasterTaskBase(apLogger, apTaskCallback)
+SingleRspBase::SingleRspBase(Logger* apLogger) : MasterTaskBase(apLogger)
 {}
 
 TaskResult SingleRspBase::_OnPartialResponse(const APDU&)
@@ -60,7 +54,7 @@ TaskResult SingleRspBase::_OnPartialResponse(const APDU&)
 	return TR_FAIL;
 }
 
-SimpleRspBase::SimpleRspBase(Logger* apLogger, ITaskCompletion* apTaskCallback) : SingleRspBase(apLogger, apTaskCallback)
+SimpleRspBase::SimpleRspBase(Logger* apLogger) : SingleRspBase(apLogger)
 {}
 
 TaskResult SimpleRspBase::_OnFinalResponse(const APDU& arAPDU)

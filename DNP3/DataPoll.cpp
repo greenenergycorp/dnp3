@@ -18,29 +18,28 @@
 //
 
 #include <APL/ITimeSource.h>
+#include <APL/Exception.h>
 
 #include "DataPoll.h"
 #include "APDU.h"
 #include "ResponseLoader.h"
 #include "PointClass.h"
 
-
 namespace apl { namespace dnp {
 
 /* DataPoll - base class */
 
-DataPoll::DataPoll(Logger* apLogger, ITaskCompletion* apTaskCallback, IDataObserver* apObs, ITimeSource* apTimeSrc) : 
-MasterTaskBase(apLogger, apTaskCallback),
-mpObs(apObs),
-mpTimeSrc(apTimeSrc)
+DataPoll::DataPoll(Logger* apLogger, IDataObserver* apObs) : 
+MasterTaskBase(apLogger),
+mpObs(apObs)
 {
-
+	
 }
 
 TaskResult DataPoll::_OnPartialResponse(const APDU& f)
 {
 	this->ReadData(f);
-	return TR_SUCCESS;
+	return TR_CONTINUE;
 }
 
 TaskResult DataPoll::_OnFinalResponse(const APDU& f)
@@ -51,32 +50,25 @@ TaskResult DataPoll::_OnFinalResponse(const APDU& f)
 
 void DataPoll::ReadData(const APDU& f)
 {
-	ResponseLoader loader(mpLogger, mpTimeSrc->GetTimeStampUTC(), mpObs);
-	loader.Process(f.BeginRead());
+	ResponseLoader loader(mpLogger, mpObs);
+	for(HeaderReadIterator hdr = f.BeginRead(); !hdr.IsEnd(); ++hdr) loader.Process(hdr);
 }
 
-/* Integrity Poll */
+/* Class Poll */
 
-IntegrityPoll::IntegrityPoll(Logger* apLogger, ITaskCompletion* apTaskCallback, IDataObserver* apObs, ITimeSource* apTimeSrc) : 
-DataPoll(apLogger, apTaskCallback, apObs, apTimeSrc)
+ClassPoll::ClassPoll(Logger* apLogger, IDataObserver* apObs) : 
+DataPoll(apLogger, apObs),
+mClassMask(0)
 {}
 
-void IntegrityPoll::_ConfigureRequest(APDU& arAPDU)
-{	
-	arAPDU.Set(FC_READ);
-	arAPDU.DoPlaceholderWrite(Group60Var1::Inst());
-}
+void ClassPoll::Set(int aClassMask) { mClassMask = aClassMask; }
 
-/* Exception Scan */
-
-ExceptionPoll::ExceptionPoll(Logger* apLogger, ITaskCompletion* apTaskCallback, IDataObserver* apObs, ITimeSource* apTimeSrc, int aClassMask) : 
-DataPoll(apLogger, apTaskCallback, apObs, apTimeSrc),
-mClassMask(aClassMask)
-{}
-
-void ExceptionPoll::_ConfigureRequest(APDU& arAPDU)
+void ClassPoll::ConfigureRequest(APDU& arAPDU)
 {
+	if(mClassMask == 0) throw InvalidStateException(LOCATION, "Class mask has not been set");
+
 	arAPDU.Set(FC_READ);
+	if(mClassMask & PC_CLASS_0) arAPDU.DoPlaceholderWrite(Group60Var1::Inst());
 	if(mClassMask & PC_CLASS_1)	arAPDU.DoPlaceholderWrite(Group60Var2::Inst());
 	if(mClassMask & PC_CLASS_2) arAPDU.DoPlaceholderWrite(Group60Var3::Inst());
 	if(mClassMask & PC_CLASS_3)	arAPDU.DoPlaceholderWrite(Group60Var4::Inst());

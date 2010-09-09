@@ -19,7 +19,6 @@
 #ifndef __ASYNC_MASTER_H_
 #define __ASYNC_MASTER_H_
 
-
 #include <APL/Loggable.h>
 #include <APL/CommandTypes.h>
 #include <APL/CommandQueue.h>
@@ -32,11 +31,16 @@
 #include "ObjectReadIterator.h"
 #include "MasterConfig.h"
 #include "ObjectInterfaces.h"
+#include "MasterSchedule.h"
 
+// includes for tasks
+#include "StartupTasks.h"
+#include "DataPoll.h"
+#include "ControlTasks.h"
 
 namespace apl {
 	class IDataObserver;
-	class ITaskCompletion;
+	class ITask;
 	class AsyncTaskGroup;
 	class ITimerSource;
 	class ITimeSource;
@@ -53,23 +57,8 @@ class AMS_Base;
 
 	Coordination of tasks is handled by a higher level task scheduler.
 */
-class AsyncMaster : public Loggable, public IAsyncAppUser, public ICommandAcceptor
+class AsyncMaster : public Loggable, public IAsyncAppUser
 {
-	enum AsyncMasterPriority
-	{
-		AMP_POLL,
-		AMP_TIME_SYNC,
-		AMP_CLEAR_RESTART,
-		AMP_UNSOL_CHANGE,
-		AMP_COMMAND
-	};
-
-	enum TaskTypes
-	{
-		ONLINE_ONLY_TASKS = 1,
-		START_UP_TASKS = 2
-	};
-
 	enum CommsStatus
 	{
 		COMMS_DOWN = 0,
@@ -77,6 +66,10 @@ class AsyncMaster : public Loggable, public IAsyncAppUser, public ICommandAccept
 	};
 
 	friend class AMS_Base;
+	friend class AMS_Idle;
+	friend class AMS_OpenBase;
+	friend class AMS_Waiting;
+	friend class MasterSchedule;
 
 	public:
 
@@ -84,15 +77,6 @@ class AsyncMaster : public Loggable, public IAsyncAppUser, public ICommandAccept
 	virtual ~AsyncMaster() {}
 
 	ICommandAcceptor* GetCmdAcceptor() { return &mCommandQueue; }
-
-	/* Public task functions used for scheduling */
-
-	void WriteIIN(ITaskCompletion* apTask);
-	void IntegrityPoll(ITaskCompletion* apTask);
-	void EventPoll(ITaskCompletion* apTask, int aClassMask);
-	void ChangeUnsol(ITaskCompletion* apTask, bool aEnable, int aClassMask);
-	void SyncTime(ITaskCompletion* apTask);
-	void ExecuteCommand();
 
 	/* Implement IAsyncAppUser - callbacks from the app layer */
 
@@ -112,28 +96,28 @@ class AsyncMaster : public Loggable, public IAsyncAppUser, public ICommandAccept
 
 	bool IsMaster() { return true; }
 
-	/* Implement ICommandAcceptor. Used to dispatch command out of the command queue */
-
-	void AcceptCommand(const BinaryOutput&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
-	void AcceptCommand(const Setpoint&, size_t, int aSequence, IResponseAcceptor* apRspAcceptor);
-
 	private:
 
-	IINField mLastIIN;									/// last IIN received from the outstation
+	/* Task functions used for scheduling */
 
-	void ProcessIIN(const IINField& arIIN);				/// Analyze IIN bits and react accordingly
+	void WriteIIN(ITask* apTask);
+	void IntegrityPoll(ITask* apTask);
+	void EventPoll(ITask* apTask, int aClassMask);
+	void ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask);
+	void SyncTime(ITask* apTask);
+	void ProcessCommand(ITask* apTask);
 
-	void EnableOnlineTasks();							/// enable all tasks flaged ONLINE_ONLY
-	void DisableOnlineTasks();							/// disable ''
-	void CompleteCommandTask(CommandStatus aStatus);	/// finalize the execution of the command task
+	IINField mLastIIN;						/// last IIN received from the outstation
 
+	void ProcessIIN(const IINField& arIIN);	/// Analyze IIN bits and react accordingly
 	void ProcessDataResponse(const APDU&);	/// Read data output of solicited or unsolicited response and publish
+	void StartTask(MasterTaskBase*, bool aInit);		/// Starts a task running
+
+	CachedLogVariable mCommsStatus;			/// notifies the outside world of status
 
 	PostingNotifierSource mNotifierSource;	/// way to get special notifiers for the command queue / vto
 	CommandQueue mCommandQueue;				/// Threadsafe queue for buffering command requests
-	AMS_Base* mpState;						/// Pointer to active state, start in TLS_Closed
-	ITaskCompletion* mpTask;				/// Pointer to active task, NULL if no task
-
+	
 	APDU mRequest;							/// APDU that gets reused for requests
 
 	IAsyncAppLayer* mpAppLayer;				 /// lower application layer
@@ -141,14 +125,23 @@ class AsyncMaster : public Loggable, public IAsyncAppUser, public ICommandAccept
 	AsyncTaskGroup* mpTaskGroup;			 /// How task execution is controlled
 	ITimerSource* mpTimerSrc;				 /// Controls the posting of events to marshall across threads
 	ITimeSource* mpTimeSrc;					 /// Access to UTC, normally system time but can be a mock for testing
-	AsyncTaskContinuous* mpCommandTask;		 /// Task to read the command queue
-	AsyncTaskContinuous* mpTimeTask;		 /// Task to synchronize the time on outstation
-	AsyncTaskContinuous* mpClearRestartTask; /// Task to clear the restart IIN bit
 
-	CommandData mCmdInfo;
-	CachedLogVariable mCommsStatus;
+	AMS_Base* mpState;						 /// Pointer to active state, start in TLS_Closed
+	MasterTaskBase* mpTask;					 /// The current master task
+	ITask* mpScheduledTask;						 /// The current scheduled task
 
+	/* --- Task plumbing --- */
 
+	MasterSchedule mSchedule;				 /// The machinery needed for scheduling
+		
+	ClassPoll mClassPoll;					 /// used to perform integrity/exception scans
+	ClearRestartIIN mClearRestart;			 /// used to clear the restart 
+	ConfigureUnsol mConfigureUnsol;			 /// manipulates how the outstation does unsolictied reporting
+	TimeSync mTimeSync;						 /// performs time sync on the outstation
+	BinaryOutputTask mExecuteBO;			 /// task for executing binary output
+	SetpointTask mExecuteSP;				 /// task for executing setpoint
+
+	
 };
 
 
