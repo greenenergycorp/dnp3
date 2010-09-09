@@ -60,6 +60,17 @@ namespace apl
 		virtual CommandStatus HandleControl(Setpoint& aControl, size_t aIndex) = 0;
 	};
 
+	class FixedCommandHandler : public ICommandHandler
+	{
+		public:
+			FixedCommandHandler(CommandStatus aStatus) : mStatus(aStatus) {}
+
+			CommandStatus HandleControl(BinaryOutput&, size_t) { return mStatus; }
+			CommandStatus HandleControl(Setpoint&, size_t) { return mStatus; }
+
+			CommandStatus mStatus;
+	};
+
 
 	/**
 		Interface to the "command source" of the communications stack. When a command is recieved by the stack it

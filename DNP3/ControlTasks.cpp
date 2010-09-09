@@ -19,12 +19,14 @@
 
 #include "ControlTasks.h"
 #include "APDU.h"
+
 #include <boost/bind.hpp>
+#include <APL/Logger.h>
 
 namespace apl { namespace dnp {
 
 ControlTaskBase::ControlTaskBase(Logger* apLogger) : 
-SingleRspBase(apLogger),
+MasterTaskBase(apLogger),
 mState(INVALID)
 {}
 
@@ -38,12 +40,36 @@ bool ControlTaskBase::GetSelectBit()
 	}
 }
 
-/*
-TaskResult ControlTaskBase::_OnFinalResponse(const APDU& arAPDU)
+void ControlTaskBase::Respond(CommandStatus aStatus)
 {
+	mData.mpRspAcceptor->AcceptResponse(CommandResponse(aStatus), mData.mSequence);
+}
+
+void ControlTaskBase::OnFailure()
+{
+	this->Respond(CS_HARDWARE_ERROR);
+}
+
+TaskResult ControlTaskBase::_OnPartialResponse(const APDU& arAPDU)
+{
+	LOG_BLOCK(LEV_ERROR, "Non fin responses not allowed for control tasks");	
+	return TR_CONTINUE;
+}
+
+TaskResult ControlTaskBase::_OnFinalResponse(const APDU& arAPDU)
+{	
+	CommandStatus cs = mValidator(arAPDU);
+
+	if(mState == SELECT && cs == CS_SUCCESS) { 
+		mState = OPERATE;
+		return TR_CONTINUE;
+	}
+	else {
+		this->Respond(cs);
+		return TR_SUCCESS;
+	}
 	
 }
-*/
 
 /* -------- BinaryOutputTask -------- */
 
@@ -56,7 +82,8 @@ CommandObject<BinaryOutput>* BinaryOutputTask::GetObject(const BinaryOutput&)
 
 /* -------- SetpointTask -------- */
 
-SetpointTask::SetpointTask(Logger* apLogger) :  ControlTask<Setpoint>(apLogger)
+SetpointTask::SetpointTask(Logger* apLogger) :  
+ControlTask<Setpoint>(apLogger)
 {}
 
 CommandObject<Setpoint>* SetpointTask::GetOptimalEncoder(SetpointEncodingType aType)
@@ -73,7 +100,7 @@ CommandObject<Setpoint>* SetpointTask::GetOptimalEncoder(SetpointEncodingType aT
 
 CommandObject<Setpoint>* SetpointTask::GetObject(const Setpoint& arSetpoint) 
 {
-	return GetOptimalEncoder(arSetpoint.GetEncodingType());
+	return GetOptimalEncoder(arSetpoint.GetOptimalEncodingType());
 }
 
 

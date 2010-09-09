@@ -23,29 +23,34 @@
 #include "MasterTaskBase.h"
 #include "ObjectInterfaces.h"
 #include "ObjectReadIterator.h"
+#include "APDU.h"
+
+#include <boost/bind.hpp>
 
 #include <APL/CopyableBuffer.h>
 #include <APL/CommandTypes.h>
+#include <APL/CommandQueue.h>
 
 namespace apl { namespace dnp {
 
 /// Base class with machinery for performing control operations
-class ControlTaskBase : public SingleRspBase
-{	
-	// multi request task requires state
-	enum State {
-		SELECT,
-		OPERATE,
-		INVALID
-	};
-	
+class ControlTaskBase : public MasterTaskBase
+{		
 	public:
 		ControlTaskBase(Logger*);
+		virtual ~ControlTaskBase() {}
 
-	protected:		
+	protected:
+
+		// This multi request task requires state
+		enum State {
+			SELECT,
+			OPERATE,
+			INVALID
+		};
 
 		State mState;		
-		size_t mIndex;
+		CommandData mData;		
 		
 		boost::function<CommandStatus (const APDU&)> mValidator;
 
@@ -54,11 +59,19 @@ class ControlTaskBase : public SingleRspBase
 
 		bool GetSelectBit();
 
+		// override from base class
+		void OnFailure();
+
 	private:
 
+		void Respond(CommandStatus aStatus);
+
+		TaskResult _OnPartialResponse(const APDU&);
 		TaskResult _OnFinalResponse(const APDU&);
 };
 
+/// Base class that adds the ConfigureRequest and Set functions.
+/// Leaves the inherited classes only needing to define the GetObject() function
 template <class T>
 class ControlTask : public ControlTaskBase
 {
@@ -66,10 +79,12 @@ class ControlTask : public ControlTaskBase
 	ControlTask(Logger* apLogger) : ControlTaskBase(apLogger)
 	{}
 
-	void Set(const T& arCommand, size_t aIndex, bool aIsSBO) { 
+	virtual ~ControlTask() {}
+
+	void Set(const T& arCommand, const CommandData& arData, bool aIsSBO) { 
 		mCommand = arCommand;
-		mIndex = aIndex;
-		mIsSBO = aIsSBO;
+		mData = arData;		
+		mState = aIsSBO ? SELECT : OPERATE;
 	}
 
 	void ConfigureRequest(APDU& arAPDU);
@@ -81,20 +96,26 @@ class ControlTask : public ControlTaskBase
 	T mCommand;
 };
 
+/// Concrete class for BinaryOutput commands
 class BinaryOutputTask : public ControlTask<BinaryOutput>
 {
 	public:
 		BinaryOutputTask(Logger*);
 		
 		CommandObject<BinaryOutput>* GetObject(const BinaryOutput&);
+
+		std::string Name() const { return "BinaryOutputTask"; }
 };
 
+/// Concrete class for Setpoint commands
 class SetpointTask : public ControlTask<Setpoint>
 {
 	public:
 		SetpointTask(Logger*);
 
 		CommandObject<Setpoint>* GetObject(const Setpoint&);
+
+		std::string Name() const { return "SetpointTask"; }
 
 		static CommandObject<Setpoint>* GetOptimalEncoder(SetpointEncodingType aType);			
 };
@@ -104,11 +125,11 @@ void ControlTask<T>::ConfigureRequest(APDU& arAPDU)
 {	
 	CommandObject<T>* pObj = this->GetObject(mCommand);
 	arAPDU.Set(this->GetSelectBit() ? FC_SELECT : FC_OPERATE, true, true, false, false);
-	IndexedWriteIterator i = arAPDU.WriteIndexed(pObj, 1, mIndex);
-	i.SetIndex(mIndex);
+	IndexedWriteIterator i = arAPDU.WriteIndexed(pObj, 1, mData.mIndex);
+	i.SetIndex(mData.mIndex);
 	pObj->Write(*i, mCommand);
 	CopyableBuffer buffer = pObj->GetValueBytes(*i);
-	mValidator = boost::bind(&ControlTaskBase::ValidateCommandResponse<T>, _1, pObj, buffer, mIndex);
+	mValidator = boost::bind(&ControlTaskBase::ValidateCommandResponse<T>, _1, pObj, buffer, mData.mIndex);
 }
 
 template <class T>

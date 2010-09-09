@@ -42,67 +42,26 @@ namespace apl { namespace dnp {
 
 AsyncMaster::AsyncMaster(Logger* apLogger, MasterConfig aCfg, IAsyncAppLayer* apAppLayer, IDataObserver* apPublisher, AsyncTaskGroup* apTaskGroup, ITimerSource* apTimerSrc, ITimeSource* apTimeSrc) :
 Loggable(apLogger),
-mpState(AMS_Closed::Inst()),
-mpTask(NULL),
+mCommsStatus(apLogger, "comms_status"),
 mRequest(aCfg.FragSize),
 mpAppLayer(apAppLayer),
 mpPublisher(apPublisher),
 mpTaskGroup(apTaskGroup),
 mpTimerSrc(apTimerSrc),
 mpTimeSrc(apTimeSrc),
-mpCommandTask(NULL),
-mpTimeTask(NULL),
-mCommsStatus(apLogger, "comms_status")
+mpState(AMS_Closed::Inst()),
+mpTask(NULL),
+mpScheduledTask(NULL),
+mSchedule(MasterSchedule::GetSchedule(aCfg, this, apTaskGroup)),
+mClassPoll(apLogger, apPublisher),
+mClearRestart(apLogger),
+mConfigureUnsol(apLogger),
+mTimeSync(apLogger, apTimeSrc),
+mExecuteBO(apLogger),
+mExecuteSP(apLogger)
 {
-	AsyncTaskBase* pIntegrity = mpTaskGroup->Add(aCfg.IntegrityRate, aCfg.TaskRetryRate, AMP_POLL, bind(&AsyncMaster::IntegrityPoll, this, _1), "Integrity Poll");	
-	pIntegrity->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
-	
-	if(aCfg.DoUnsolOnStartup)
-	{
-		// DNP3Spec-V2-Part2-ApplicationLayer-_20090315.pdf, page 8 says that UNSOL should be disabled before an integrity scan is done 
-		TaskHandler handler = bind(&AsyncMaster::ChangeUnsol, this, _1, false, PC_ALL_EVENTS);
-		AsyncTaskBase* pUnsolDisable = mpTaskGroup->Add(-1, aCfg.TaskRetryRate, AMP_UNSOL_CHANGE, handler, "Unsol Disable");
-		pUnsolDisable->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
-		pIntegrity->AddDependency(pUnsolDisable);
-
-		if(aCfg.EnableUnsol)
-		{
-			TaskHandler handler = bind(&AsyncMaster::ChangeUnsol, this, _1, true, aCfg.UnsolClassMask);
-			AsyncTaskBase* pUnsolEnable = mpTaskGroup->Add(-1, aCfg.TaskRetryRate, AMP_UNSOL_CHANGE, handler, "Unsol Enable");
-			pUnsolEnable->AddDependency(pIntegrity);
-			pUnsolEnable->SetFlags(ONLINE_ONLY_TASKS | START_UP_TASKS);
-		}
-	}
-
-	// load any exception scans and make them dependent on the integrity poll
-	BOOST_FOREACH(ExceptionScan e, aCfg.mScans)
-	{
-		AsyncTaskBase* pEventScan = mpTaskGroup->Add(e.ScanRate, aCfg.TaskRetryRate, AMP_POLL, bind(&AsyncMaster::EventPoll, this, _1, e.ClassMask), "Event Scan");
-		pEventScan->SetFlags(ONLINE_ONLY_TASKS);
-		pEventScan->AddDependency(pIntegrity);
-	}
-
-	// Tasks are executed when the master is is idle
-	mpTimeTask = mpTaskGroup->AddContinuous(AMP_TIME_SYNC, boost::bind(&AsyncMaster::SyncTime, this, _1), "TimeSync");	
-	mpCommandTask = mpTaskGroup->AddContinuous(AMP_COMMAND, boost::bind(&AsyncMaster::ExecuteCommand, this), "Command");
-	mpClearRestartTask = mpTaskGroup->AddContinuous(AMP_CLEAR_RESTART, boost::bind(&AsyncMaster::WriteIIN, this, _1), "Clear IIN");
-
-	mpClearRestartTask->SetFlags(ONLINE_ONLY_TASKS);
-	mpTimeTask->SetFlags(ONLINE_ONLY_TASKS);
-
-	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mpCommandTask), mpTimerSrc));
-
+	mCommandQueue.SetNotifier(mNotifierSource.Get(boost::bind(&AsyncTaskBase::Enable, mSchedule.mpCommandTask), mpTimerSrc));
 	mCommsStatus.Set(COMMS_DOWN);
-}
-
-void AsyncMaster::EnableOnlineTasks()
-{
-	mpTaskGroup->Enable(ONLINE_ONLY_TASKS);
-}
-
-void AsyncMaster::DisableOnlineTasks()
-{
-	mpTaskGroup->Disable(ONLINE_ONLY_TASKS);
 }
 
 void AsyncMaster::ProcessIIN(const IINField& arIIN)
@@ -112,7 +71,7 @@ void AsyncMaster::ProcessIIN(const IINField& arIIN)
 	//The clear IIN task only happens in response to detecting an IIN bit.
 	if(arIIN.GetNeedTime()) {
 		LOG_BLOCK(LEV_INFO, "Need time detected");
-		mpTimeTask->SilentEnable();
+		mSchedule.mpTimeTask->SilentEnable();
 		check_state = true;
 	}
 
@@ -123,69 +82,91 @@ void AsyncMaster::ProcessIIN(const IINField& arIIN)
 	// If this is detected, we need to reset the startup tasks
 	if(mLastIIN.GetDeviceRestart()) {
 		LOG_BLOCK(LEV_WARNING, "Device restart detected");
-		mpTaskGroup->ResetTasks(START_UP_TASKS);
-		mpClearRestartTask->SilentEnable();
+		mSchedule.ResetStartupTasks();
+		mSchedule.mpClearRestartTask->SilentEnable();
 		check_state = true;
 	}
 
 	if(check_state) mpTaskGroup->CheckState();
 }
 
-void AsyncMaster::ExecuteCommand()
+void AsyncMaster::ProcessCommand(ITask* apTask)
 {
-	if(!mCommandQueue.DispatchCommand(this)) 
-		mpCommandTask->Disable();	
+	CommandData info;
+
+	if(mpState == AMS_Closed::Inst()) { //we're closed
+		if(!mCommandQueue.RespondToCommand(CS_HARDWARE_ERROR)) apTask->Disable();
+	}
+	else {
+
+		switch(mCommandQueue.Next()) 
+		{
+			case(apl::CT_BINARY_OUTPUT): 
+			{
+				apl::BinaryOutput cmd;
+				mCommandQueue.Read(cmd, info);
+				mExecuteBO.Set(cmd, info, true);
+				mpState->StartTask(this, apTask, &mExecuteBO);
+			}
+			break;
+			case(apl::CT_SETPOINT):
+			{
+				apl::Setpoint cmd;
+				mCommandQueue.Read(cmd, info);
+				mExecuteSP.Set(cmd, info, true);
+				mpState->StartTask(this, apTask, &mExecuteSP);
+			}
+			break;
+			default:
+				apTask->Disable(); //no commands to be read
+				break;					
+		}
+	}
 }
 
-void AsyncMaster::AcceptCommand(const BinaryOutput& arCmd, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor)
+void AsyncMaster::StartTask(MasterTaskBase* apMasterTask, bool aInit)
 {
-
-}
-
-void AsyncMaster::AcceptCommand(const Setpoint& arCmd, size_t aIndex, int aSequence, IResponseAcceptor* apRspAcceptor)
-{
-
-}
-
-void AsyncMaster::SyncTime(ITaskCompletion* apTask)
-{
-	/*
-	if(!mLastIIN.GetNeedTime()) mpTimeTask->Disable();
-	else mpState->SyncTime(this, apTask);
-	*/
-}
-
-void AsyncMaster::CompleteCommandTask(CommandStatus aStatus)
-{
-	CommandResponse	rsp(aStatus);
-	mCmdInfo.mpRspAcceptor->AcceptResponse(rsp, mCmdInfo.mSequence);
-	mpCommandTask->OnComplete(true);
+	if(aInit) apMasterTask->Init();
+	apMasterTask->ConfigureRequest(mRequest);
+	mpAppLayer->SendRequest(mRequest);
 }
 
 /* Tasks */
 
-void AsyncMaster::WriteIIN(ITaskCompletion* apTask)
+void AsyncMaster::SyncTime(ITask* apTask)
 {
-	if(mLastIIN.GetDeviceRestart())
+	if(mLastIIN.GetNeedTime())
 	{
-		//mpState->WriteIIN(this, apTask);
+		mpState->StartTask(this, apTask, &mTimeSync);
 	}
-	else mpClearRestartTask->Disable();
+	else apTask->Disable();
 }
 
-void AsyncMaster::IntegrityPoll(ITaskCompletion* apTask)
+void AsyncMaster::WriteIIN(ITask* apTask)
 {
-	//mpState->IntegrityPoll(this, apTask);
+	if(mLastIIN.GetDeviceRestart()) 
+	{
+		mpState->StartTask(this, apTask, &mClearRestart);
+	}
+	else apTask->Disable();
 }
 
-void AsyncMaster::EventPoll(ITaskCompletion* apTask, int aClassMask)
+void AsyncMaster::IntegrityPoll(ITask* apTask)
 {
-	//mpState->EventPoll(this, apTask, aClassMask);
+	mClassPoll.Set(PC_CLASS_0);
+	mpState->StartTask(this, apTask, &mClassPoll);
 }
 
-void AsyncMaster::ChangeUnsol(ITaskCompletion* apTask, bool aEnable, int aClassMask)
+void AsyncMaster::EventPoll(ITask* apTask, int aClassMask)
 {
-	//mpState->ChangeUnsol(this, apTask, aEnable, aClassMask);
+	mClassPoll.Set(aClassMask);
+	mpState->StartTask(this, apTask, &mClassPoll);
+}
+
+void AsyncMaster::ChangeUnsol(ITask* apTask, bool aEnable, int aClassMask)
+{
+	mConfigureUnsol.Set(aEnable, aClassMask);
+	mpState->StartTask(this, apTask, &mConfigureUnsol);
 }
 
 /* Implement IAsyncAppUser */
@@ -193,13 +174,13 @@ void AsyncMaster::ChangeUnsol(ITaskCompletion* apTask, bool aEnable, int aClassM
 void AsyncMaster::OnLowerLayerUp()
 {
 	mpState->OnLowerLayerUp(this);
-	this->EnableOnlineTasks();
+	mSchedule.EnableOnlineTasks();
 }
 
 void AsyncMaster::OnLowerLayerDown()
 {
 	mpState->OnLowerLayerDown(this);
-	this->DisableOnlineTasks();
+	mSchedule.DisableOnlineTasks();
 	mCommsStatus.Set(COMMS_DOWN);
 }
 
@@ -243,7 +224,7 @@ void AsyncMaster::OnUnsolResponse(const APDU& arAPDU)
 {
 	mLastIIN = arAPDU.GetIIN();
 	this->ProcessIIN(mLastIIN);
-	this->ProcessDataResponse(arAPDU);	
+	mpState->OnUnsolResponse(this, arAPDU);	
 	mCommsStatus.Set(COMMS_UP);
 }
 

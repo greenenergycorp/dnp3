@@ -32,7 +32,7 @@ namespace apl { namespace dnp {
 
 /* AMS_Base */
 
-void AMS_Base::StartTask(AsyncMaster*, MasterTaskBase*)
+void AMS_Base::StartTask(AsyncMaster*, ITask*, MasterTaskBase*)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
 void AMS_Base::OnLowerLayerUp(AsyncMaster*)
@@ -53,50 +53,19 @@ void AMS_Base::OnPartialResponse(AsyncMaster*, const APDU&)
 void AMS_Base::OnFinalResponse(AsyncMaster*, const APDU&)
 { throw InvalidStateException(LOCATION, this->Name()); }
 
+void AMS_Base::OnUnsolResponse(AsyncMaster*, const APDU&)
+{ throw InvalidStateException(LOCATION, this->Name()); }
+
 
 void AMS_Base::ChangeState(AsyncMaster* c, AMS_Base* apState)
 {
 	c->mpState = apState;
 }
 
-
-/*
-void AMS_Base::SetTask(AsyncMaster* c, ITaskCompletion* apTask)
+void AMS_Base::ChangeTask(AsyncMaster* c, MasterTaskBase* apTask)
 {
 	c->mpTask = apTask;
 }
-
-void AMS_Base::SetToOperate(AsyncMaster* c)
-{
-	//c->mFormatter(false);
-}
-
-void AMS_Base::SendRequest(AsyncMaster* c)
-{ c->mpAppLayer->SendRequest(c->mRequest); }
-
-void AMS_Base::CompleteTask(AsyncMaster* c, bool aSuccess)
-{ c->mpTask->OnComplete(aSuccess); }
-
-Logger* AMS_Base::GetLogger(AsyncMaster* c)
-{ return c->mpLogger; }
-
-void AMS_Base::ProcessDataResponse(AsyncMaster* c, const APDU& arAPDU)
-{ c->ProcessDataResponse(arAPDU); }
-
-void AMS_Base::CompleteCommandTask(AsyncMaster* c, CommandStatus aStatus)
-{ c->CompleteCommandTask(aStatus); }
-
-CommandStatus AMS_Base::Validate(AsyncMaster* c, const APDU& arAPDU)
-{
-	return CS_SUCCESS; //return c->mValidator(arAPDU);
-}
-
-bool AMS_Base::ValidateDelayMeas(AsyncMaster* c, const APDU& arAPDU, millis_t& arDelay)
-{
-	return true; //return c->mDelayValidator(arAPDU, arDelay);
-}
-*/
-
 
 /* AMS_Closed */
 
@@ -109,6 +78,11 @@ void AMS_Closed::OnLowerLayerUp(AsyncMaster* c)
 
 /* AMS_OpenBase */
 
+void AMS_OpenBase::OnUnsolResponse(AsyncMaster* c, const APDU& arAPDU)
+{
+	c->ProcessDataResponse(arAPDU);
+}
+
 void AMS_OpenBase::OnLowerLayerDown(AsyncMaster* c)
 {
 	ChangeState(c, AMS_Closed::Inst());
@@ -118,9 +92,12 @@ void AMS_OpenBase::OnLowerLayerDown(AsyncMaster* c)
 
 AMS_Idle AMS_Idle::mInstance;
 
-void AMS_Idle::StartTask(AsyncMaster* c, MasterTaskBase* t)
+void AMS_Idle::StartTask(AsyncMaster* c, ITask* apScheTask, MasterTaskBase* apMasterTask)
 {
-	
+	this->ChangeState(c, AMS_Waiting::Inst());
+	this->ChangeTask(c, apMasterTask);
+	c->mpScheduledTask = apScheTask;
+	c->StartTask(apMasterTask, true);	
 }
 
 
@@ -128,20 +105,48 @@ void AMS_Idle::StartTask(AsyncMaster* c, MasterTaskBase* t)
 
 AMS_Waiting AMS_Waiting::mInstance;
 
-void AMS_Waiting::OnFailure(AsyncMaster* c)
+void AMS_Waiting::OnLowerLayerDown(AsyncMaster* c)
 {
-	
-	
+	ChangeState(c, AMS_Closed::Inst());
+	c->mpTask->OnFailure();
 }
 
-void AMS_Waiting::OnPartialResponse(AsyncMaster* c, const APDU&)
+void AMS_Waiting::OnFailure(AsyncMaster* c)
+{	
+	this->ChangeState(c, AMS_Idle::Inst());
+	c->mpTask->OnFailure();
+	c->mpScheduledTask->OnComplete(false);	
+}
+
+void AMS_Waiting::OnPartialResponse(AsyncMaster* c, const APDU& arAPDU)
 {
-	
+	switch(c->mpTask->OnPartialResponse(arAPDU)) {		
+		case(TR_FAIL):
+			this->ChangeState(c, AMS_Idle::Inst());			
+			c->mpScheduledTask->OnComplete(false);
+			break;
+		case(TR_CONTINUE):
+			c->StartTask(c->mpTask, false);
+			break;
+		default:
+			throw InvalidStateException(LOCATION, "Tasks must return FAIL or CONTINUE in on partial responses");
+	}
 }
 
 void AMS_Waiting::OnFinalResponse(AsyncMaster* c, const APDU& arAPDU)
 {
-	
+	switch(c->mpTask->OnFinalResponse(arAPDU)) {		
+		case(TR_FAIL):
+			this->ChangeState(c, AMS_Idle::Inst());			
+			c->mpScheduledTask->OnComplete(false);
+			break;
+		case(TR_CONTINUE):	//multi request task!
+			c->StartTask(c->mpTask, false);
+			break;
+		case(TR_SUCCESS):
+			this->ChangeState(c, AMS_Idle::Inst());
+			c->mpScheduledTask->OnComplete(true);		
+	}
 }
 
 }} //ens ns

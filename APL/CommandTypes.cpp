@@ -198,15 +198,13 @@ namespace apl
 	}
 
 	double Setpoint::GetValue() const
-	{
-		//if(mEncodingType == SPET_UNSET) throw Exception(LOCATION, "Never set value of setpoint!");
+	{		
 		assert(mEncodingType != SPET_UNSET);
 		return mValue;
 	}
 
 	SetpointEncodingType Setpoint::GetOptimalEncodingType() const
-	{
-		//if(mEncodingType == SPET_UNSET) throw Exception(LOCATION, "Never set value of setpoint!");
+	{	
 		assert(mEncodingType != SPET_UNSET);
 		if(mEncodingType == SPET_AUTO_INT){
 			if(mValue <= Int16LE::Max && mValue >= Int16LE::Min) return SPET_INT16;

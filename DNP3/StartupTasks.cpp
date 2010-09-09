@@ -28,7 +28,8 @@ namespace apl { namespace dnp {
 
 /* ------ Clear Restart ------- */
 
-ClearRestartIIN::ClearRestartIIN(Logger* apLogger) : SimpleRspBase(apLogger)
+ClearRestartIIN::ClearRestartIIN(Logger* apLogger) : 
+SimpleRspBase(apLogger)
 {}
 
 void ClearRestartIIN::ConfigureRequest(APDU& arAPDU)
@@ -41,11 +42,17 @@ void ClearRestartIIN::ConfigureRequest(APDU& arAPDU)
 
 /* ------ Configure Unsol ------- */
 
-ConfigureUnsol::ConfigureUnsol(Logger* apLogger, bool aIsEnable, int aClassMask) :
+ConfigureUnsol::ConfigureUnsol(Logger* apLogger) :
 SimpleRspBase(apLogger),
-mIsEnable(aIsEnable),
-mClassMask(aClassMask)
+mIsEnable(false),
+mClassMask(0)
 {}
+
+void ConfigureUnsol::Set(bool aIsEnable, int aClassMask)
+{
+	mIsEnable = aIsEnable;
+	mClassMask = aClassMask;
+}
 
 void ConfigureUnsol::ConfigureRequest(APDU& arAPDU)
 {
@@ -60,11 +67,11 @@ void ConfigureUnsol::ConfigureRequest(APDU& arAPDU)
 		
 TimeSync::TimeSync(Logger* apLogger, ITimeSource* apTimeSrc) : 
 SingleRspBase(apLogger),
-mDelay(-1),
-mpTimeSrc(apTimeSrc)
+mpTimeSrc(apTimeSrc),
+mDelay(-1)
 {}
 
-void TimeSync::Reset() { mDelay = -1; }
+void TimeSync::Init() { mDelay = -1; }
 
 void TimeSync::ConfigureRequest(APDU& arAPDU)
 {

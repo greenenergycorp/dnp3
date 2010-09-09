@@ -63,11 +63,10 @@ namespace apl
 			*/	
 			bool ExecuteCommand(ICommandHandler* apHandler);
 
-			/** Asynchronous dispatches a command to another ICommandAcceptor, the other acceptor
-			*	is responsible for responding to the command
-			*	@return true if there was a command to execute
-			*/
-			bool DispatchCommand(ICommandAcceptor* apAcceptor);
+			/** Immediately respond to a command
+			*	@return true if there was a command to respond
+			*/	
+			bool RespondToCommand(CommandStatus aStatus);
 
 		protected:
 			apl::SigLock mLock;

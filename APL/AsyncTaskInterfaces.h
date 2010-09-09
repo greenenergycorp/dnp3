@@ -23,14 +23,26 @@
 
 namespace apl {
 
-class ITaskCompletion
+class ITask
 {
 	public:
 
 	virtual void OnComplete(bool aSuccess) = 0;
+
+	/// Enable the task and notify the task group which might execute another task
+	virtual void Enable() = 0;
+	
+	/// Disable ''
+	virtual void Disable()= 0;
+
+	/// Enable without notifying the task group
+	virtual void SilentEnable() = 0;
+
+	/// Diable ''
+	virtual void SilentDisable() = 0;
 };
 
-typedef boost::function<void (ITaskCompletion*)> TaskHandler;
+typedef boost::function<void (ITask*)> TaskHandler;
 
 }
 
