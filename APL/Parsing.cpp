@@ -19,6 +19,7 @@
 #include "Parsing.h"
 
 #include <sstream>
+#include <boost/numeric/conversion/converter.hpp>
 
 namespace apl {
 	
@@ -35,6 +36,21 @@ namespace apl {
 		else {
 			return Get<bool>(aArg, arValue);	
 		}
+	}
+
+	bool Parsing::Get(const std::string& aArg, byte_t& arValue)
+	{
+		int value;
+		if(Parsing::Get(aArg, value)) {
+			try {
+				arValue = boost::numeric::converter<byte_t,int>::convert(value);
+			}
+			catch(...) {
+				return false;
+			}
+			return true;
+		}
+		else return false;
 	}
 
 }
