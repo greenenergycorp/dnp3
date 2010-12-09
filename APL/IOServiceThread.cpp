@@ -36,7 +36,8 @@ class IOServiceExitException : public Exception
 		{}
 };
 
-IOServiceThread::IOServiceThread(boost::asio::io_service* apService) : 
+IOServiceThread::IOServiceThread(Logger* apLogger, boost::asio::io_service* apService) : 
+Loggable(apLogger),
 mpService(apService),
 mThread(this)
 {
@@ -65,7 +66,7 @@ void IOServiceThread::Run()
 		//clean exit		
 	}
 	catch(const std::exception& ex) {			
-		std::cout << ex.what() << std::endl;
+		LOG_BLOCK(LEV_ERROR, "IOService run() threw an exception: " << ex.what());
 	}
 
 }

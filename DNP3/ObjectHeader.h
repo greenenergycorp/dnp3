@@ -168,7 +168,7 @@ namespace apl { namespace dnp {
 	template <class T, ObjectHeaderTypes U>
 	CountHeader<T,U> CountHeader<T,U>::mInstance;
 
-	//Typedefs so you don't have to direcly use the templates
+	//Typedefs so you don't have to directly use the templates
 	typedef RangedHeader<apl::UInt8, OHT_RANGED_2_OCTET>	Ranged2OctetHeader;
 	typedef RangedHeader<apl::UInt16LE, OHT_RANGED_4_OCTET> Ranged4OctetHeader;
 	typedef RangedHeader<apl::UInt32LE, OHT_RANGED_8_OCTET> Ranged8OctetHeader;
