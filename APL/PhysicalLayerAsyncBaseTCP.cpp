@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -53,7 +53,7 @@ void PhysicalLayerAsyncBaseTCP::DoClose()
 void PhysicalLayerAsyncBaseTCP::DoOpenSuccess()
 {
 	//mSocket.set_option(ip::tcp::no_delay(true));
-	LOG_BLOCK(LEV_INFO, "Successful conneciton");
+	LOG_BLOCK(LEV_INFO, "Successful connection");
 }
 
 void PhysicalLayerAsyncBaseTCP::DoAsyncRead(byte_t* apBuffer, size_t aMaxBytes)
@@ -70,7 +70,7 @@ void PhysicalLayerAsyncBaseTCP::DoAsyncWrite(const byte_t* apBuffer, size_t aNum
 
 void PhysicalLayerAsyncBaseTCP::DoOpenFailure()
 {
-	LOG_BLOCK(LEV_INFO, "Failed socket open, reclosing");
+	LOG_BLOCK(LEV_INFO, "Failed socket open, re-closing");
 	DoClose();
 }
 

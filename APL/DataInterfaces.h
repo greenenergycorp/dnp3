@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -29,12 +29,12 @@ namespace apl
 /**
     A Transaction is a group of point Updates that occur together.
 	This is necessary because often times a single event will cause many values
-	to change and that should be handled as a group so the data isn't unecessarily
-	inconsistant. One example is a "master alarm" flag that is a summary of specific alarms,
-	if we couldn't group the updates toegether we might see the master alarm flag turn on
+	to change and that should be handled as a group so the data isn't unnecessarily
+	inconsistent. One example is a "master alarm" flag that is a summary of specific alarms,
+	if we couldn't group the updates together we might see the master alarm flag turn on
 	before any of the specific alarms had activated. Grouping the updates together also leads
-	to more effecient communications because large chunks of data get transmitted at a time and
-	we don't get into the pathelogical case of sending one update at a time.
+	to more efficient communications because large chunks of data get transmitted at a time and
+	we don't get into the pathological case of sending one update at a time.
 
 	\section Usage
 	\code
@@ -56,7 +56,7 @@ class ITransactable
 	ITransactable() : mInProgress(false) {}
 	virtual ~ITransactable(){}
 
-	// Enfore pre/post conditions on _Start/_End Operation
+	// Enforce pre/post conditions on _Start/_End Operation
 	void Start();
 	void End();
 
@@ -86,9 +86,9 @@ inline void ITransactable::End()
 
 /**
   This is a helper class that handles the starting and ending of the transaction
-  in an exeception safe manner. If we manually call Start, do some updates and
+  in an exception safe manner. If we manually call Start, do some updates and
   have an exception then its possible we wont end the transaction. By using this
-  transaction object the stack unwinding will guarentee that the transaction is
+  transaction object the stack unwinding will guarantee that the transaction is
   correctly cleaned up.
 */
 class Transaction{

@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -27,7 +27,7 @@ namespace apl{
 	/// Use this class to simplify writing do loops with a timeout
 	/// it minimizes the number of calls to get datetime and allows
 	/// us to easily replace the implementation later if we find an
-	/// even more effecient way to implement the timeout checking.
+	/// even more efficient way to implement the timeout checking.
 	///
 	/// Intended Usage:
   ///
@@ -40,14 +40,14 @@ namespace apl{
 	///		if(success) return or break;
 	///
 	///		//or go back around the loop, the next call to
-	///		//remaining will be guarnteed to be > 0
+	///		//remaining will be guaranteed to be > 0
 	/// }while(!to.IsExpired());
 	class Timeout{
 	public:
-		/// constuctor, timeout will expire this many mills in the future
+		/// constructor, timeout will expire this many mills in the future
 		Timeout(apl::millis_t aTimeout);
 
-		/// updates the remaing time (by default) and returns whether its expired
+		/// updates the remaining time (by default) and returns whether its expired
 		bool IsExpired(bool aUpdateRemaining = true);
 
 		/// returns how much time is left (by default since the last IsExpired() call)

@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -53,7 +53,7 @@ namespace apl { namespace dnp {
 
 	/** These func codes are a little different then those defined in the specification for the following reason.
 		For simplicity the PRM bit is included to make the Pri-To-Sec and Sec-To-Pri codes non-overlapping
-		This is much simplier and for all intents and purposes you don't have to deal with the PRM bit anymore.
+		This is much simpler and for all intents and purposes you don't have to deal with the PRM bit anymore.
 
 		No implementation of function code 1:
 

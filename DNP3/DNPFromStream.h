@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -25,7 +25,7 @@
 #include <iostream>
 
 #ifdef APL_PLATFORM_WIN
-//disable the type converstion warnings
+//disable the type conversion warnings
 #pragma warning ( push )
 #pragma warning ( disable : 4244 )
 #endif
@@ -39,7 +39,7 @@ namespace apl { namespace dnp {
 
 	/** Templates for read dnp3 data types from stream.
 		Used in the dnp3 object definitions to define how
-		they deserialize themeselves.
+		they deserialize themselves.
 	*/
 	class DNPFromStream
 	{
@@ -143,7 +143,7 @@ namespace apl { namespace dnp {
 }}
 
 #ifdef APL_PLATFORM_WIN
-//disable thes type converstion warnings
+//disable these type conversion warnings
 #pragma warning ( pop )
 #endif
 

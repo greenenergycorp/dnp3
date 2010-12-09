@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -29,7 +29,7 @@ namespace apl {
 		public:			
 			PhysicalLayerAsyncTCPServer(Logger*, boost::asio::io_service* apIOService, const std::string& arEndpoint, uint_16_t aPort);
 
-			/* Implement the remainging actions */
+			/* Implement the remaining actions */
 			void DoOpen();
 			void DoOpeningClose(); //override this to cancel the acceptor instead of the socket
 

@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -41,20 +41,20 @@ namespace apl
 	};
 
 	/**
-		When a command is recieved from a master the application sends a code to
-		indicate if it was successfull or if not what class of error was encountered.
+		When a command is received from a master the application sends a code to
+		indicate if it was successful or if not what class of error was encountered.
 		Each code has a description that indicates its customary meaning.
 	*/
 	enum CommandStatus
 	{
-		CS_SUCCESS = 0,			//!< command was successfully recieved and handled
-		CS_TIMEOUT = 1,			//!< command timedout before completing
+		CS_SUCCESS = 0,			//!< command was successfully received and handled
+		CS_TIMEOUT = 1,			//!< command timed out before completing
 		CS_NO_SELECT = 2,		//!< command requires being selected before operate, configuration issue
 		CS_FORMAT_ERROR = 3,	//!< bad control code or timing values
 		CS_NOT_SUPPORTED = 4,	//!< command is not implemented
-		CS_ALREADY_ACTIVE = 5,	//!< command is allready in progress or its allready in that mode
+		CS_ALREADY_ACTIVE = 5,	//!< command is already in progress or its already in that mode
 		CS_HARDWARE_ERROR = 6,	//!< something is stopping the command, often a local/remote interlock
-		CS_LOCAL = 7,			//!< the function goverened by the control is in local only control
+		CS_LOCAL = 7,			//!< the function governed by the control is in local only control
 		CS_TOO_MANY_OPS = 8,	//!< the command has been done too often and has been throttled
 		CS_NOT_AUTHORIZED = 9,	//!< the command was rejected because the device denied it or an RTU intercepted it
 		CS_UNDEFINED = 127		//!< 10 to 126 are currently reserved
@@ -77,7 +77,7 @@ namespace apl
 		CC_LATCH_ON = 0x03,		//!< a 'light-switch' moved to the ON position
 		CC_LATCH_OFF = 0x04,	//!< a 'light-switch' moved to the OFF position
 		CC_PULSE_CLOSE = 0x41,	//!< a 'doorbell' that rings while the button is depressed
-		CC_PULSE_TRIP = 0x81,	//!< a 'doorbell' that stops ringing (is normally on) while depreseed
+		CC_PULSE_TRIP = 0x81,	//!< a 'doorbell' that stops ringing (is normally on) while depressed
 		CC_UNDEFINED = 0xFF		//!< undefined command (used by DNP standard)
 	};
 
@@ -103,7 +103,7 @@ namespace apl
 
 	/**
 		Describes an incoming control request from the master. It is the applications responsibility to handle
-		the request and return an approiate status code.The PULSE_CLOSE and PULSE_TRIP ControlCodes require
+		the request and return an appropriate status code.The PULSE_CLOSE and PULSE_TRIP ControlCodes require
 		setting the mOnTimeMS,mOffTimeMS and mCount variables, otherwise just use the defaults.
 	*/
 	class BinaryOutput : public CommandRequest
@@ -147,7 +147,7 @@ namespace apl
 
 	/**
 		The object to represent a setpoint request from the master. Think of this like turning a
-		dial on the front of a machine to desired setting.  A setpoint is natively repersented as
+		dial on the front of a machine to desired setting.  A setpoint is natively represented as
 		a double but can be used to send both floating point and integer values. The key field is
 		mEncodingType which informs the protocol buffers how to treat and format the values. There
 		are smart defaults and behaviors to automatically determine the correct type of encoding

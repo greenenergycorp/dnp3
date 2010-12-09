@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -50,7 +50,7 @@ struct SlaveStackConfig;
 struct MasterStackConfig;
 
 /**
-	The interface for C++ projects for dnp3. Provides aninterface for starting/stopping
+	The interface for C++ projects for dnp3. Provides an interface for starting/stopping
 	master/slave protocol stacks. Any method may be called while the system is running.
 	Methods should only be called from a single thread at at a time.
 */
@@ -119,7 +119,7 @@ class AsyncStackManager : private Threadable, private Loggable
 		/// @return a vector of all the port names
 		std::vector<std::string> GetPortNames();
 
-		/// Start the thead if it isn't running
+		/// Start the thread if it isn't running
 		void Start();
 
 		/// Stop the thread, doesn't delete anything until the stack manager destructs

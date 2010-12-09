@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -46,7 +46,7 @@ struct PointInfoBase
 
 	PointInfoBase() : mClass(PC_CLASS_0) {}
 
-	T mValue;						/// current measurment (i.e. Binary, Analog, etc)
+	T mValue;						/// current measurement (i.e. Binary, Analog, etc)
 	PointClass mClass;				/// class of the point (PC_CLASS<0-3>)
 	size_t mIndex;					/// index of the measurement
 

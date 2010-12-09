@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -63,7 +63,7 @@ struct MasterConfig
 	/// If true, the master will enable/disable unsol on startup
 	bool DoUnsolOnStartup;
 
-	/// If DoUnsolOnStartup == true, the master will use this bit to decide wether to enable (true) or disable (false)
+	/// If DoUnsolOnStartup == true, the master will use this bit to decide whether to enable (true) or disable (false)
 	bool EnableUnsol;
 
 	///	Bitwise mask used determine which classes are enabled/disabled for unsol

@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -120,17 +120,17 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	int mSequence;							/// control sequence
 	CommandResponseQueue mRspQueue;			/// how command responses are received
 	AS_Base* mpState;						/// current state for the state pattern
-	SlaveConfig mConfig;					/// houses the configurable paramters of the outstation
+	SlaveConfig mConfig;					/// houses the configurable parameters of the outstation
 	SlaveResponseTypes mRspTypes;			/// converts the group/var in the config to dnp singletons
 
-	ITimer* mpUnsolTimer;					/// timer for sending unsol responsess
+	ITimer* mpUnsolTimer;					/// timer for sending unsol responses
 
 	IINField mIIN;							/// IIN bits that persist between requests (i.e. NeedsTime/Restart/Etc)
 	IINField mRspIIN;						/// Transient IIN bits that get merged before a response is issued
 	APDU mResponse;							/// APDU used to form responses
 	APDU mRequest;							/// APDU used to save Deferred requests
 	SequenceInfo mSeqInfo;
-	APDU mUnsol;							/// APDY used to form unsol respones
+	APDU mUnsol;							/// APDY used to form unsol responses
 	AsyncResponseContext mRspContext;		/// Used to track and construct response fragments
 
 	bool mHaveLastRequest;
@@ -150,7 +150,7 @@ class AsyncSlave : public Loggable, public IAsyncAppUser
 	bool mStartupNullUnsol;					/// Tracks whether the device has completed the NULL unsol startup message
 
 	void OnDataUpdate();					/// internal event dispatched when user code commits an update to mChangeBuffer
-	void OnUnsolTimerExpiration();			/// internal event dispatched when the unsolicted pack/retry timer expires
+	void OnUnsolTimerExpiration();			/// internal event dispatched when the unsolicited pack/retry timer expires
 
 	void ConfigureAndSendSimpleResponse();
 	void Send(APDU&);

@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -48,7 +48,7 @@ class IAsyncAppLayer
 
 		OnLowerLayerDown() - The transaction failed because the lower layer went down.
 
-		OnSendSuccess() - The data was transmitted succesfully and valid confirmation
+		OnSendSuccess() - The data was transmitted successfully and valid confirmation
 		was received within the timeout (if requested)
 	*/
 	virtual void SendResponse(APDU&) = 0;
@@ -56,23 +56,23 @@ class IAsyncAppLayer
 	/** Start an unsolicited transaction with optional confirmation and retries. This
 		sequence is almost identical to a response transaction.
 
-		FIR and FIN must both be set for unsolcited responses since they cannot
+		FIR and FIN must both be set for unsolicited responses since they cannot
 		be multifragmented.
 
-		A callback to one of the following is gauranteed:
+		A callback to one of the following is guaranteed:
 
 		OnFailure() - The transaction failed, either because the send failed or
 		the confirmation timed out.
 
 		OnLowerLayerDown() - The transaction failed because the lower layer went down.
 
-		OnSendSucces() - The data was transmitted succesfully and valid confirmation
+		OnSendSucces() - The data was transmitted successfully and valid confirmation
 		was received within the timeout (if requested)
 	*/
 	virtual void SendUnsolicited(APDU&) = 0;
 
 	/** Start a send transaction with optional confirmation and retries,
-		that should result in a resposne.
+		that should result in a response.
 
 		Callbacks are as follows:
 
@@ -96,7 +96,7 @@ class IAsyncAppLayer
 		Cancel a running response transaction. The outstation must still wait for an OnFailure()
 		from the application layer before proceeding with another response.
 
-		This is necessary to implement the behavior decribed in in DNP3Spec-V2-Part1-ApplicationLayer:
+		This is necessary to implement the behavior described in in DNP3Spec-V2-Part1-ApplicationLayer:
 
 		4.2.1 - ReadRules - Rule 1
 	*/

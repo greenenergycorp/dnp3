@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -22,10 +22,10 @@
 namespace apl
 {
 	/**
-		A generic interface that defines a notification function. Modeled loosly on a lock
+		A generic interface that defines a notification function. Modeled loosely on a lock
 		type interaction. Generally used for the multi-threaded observer pattern to indicate
 		that a shared _thread_safe_ object has had a change occur. The application then knows
-		that it needs to look at that shared object which it can do immediatley or at some point
+		that it needs to look at that shared object which it can do immediately or at some point
 		in the future (ie. when the "application" thread is ready).
 
 		It is critical to remember that the calls to Notify() can potentially come from any thread!

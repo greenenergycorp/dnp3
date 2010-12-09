@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -25,7 +25,7 @@
 namespace apl
 {
 
-	/** Interface that defines how reponses are reported to an object.
+	/** Interface that defines how responses are reported to an object.
 	*/
 	class IResponseAcceptor
 	{
@@ -73,7 +73,7 @@ namespace apl
 
 
 	/**
-		Interface to the "command source" of the communications stack. When a command is recieved by the stack it
+		Interface to the "command source" of the communications stack. When a command is received by the stack it
 		will call Notify() on the passed in notifier. When Notify() is called (or on a schedule) the application
 		should call bool moreCommands = ExecuteCommand(&handler); until moreCommands is false, which means that all
 		of the commands available have been handled.

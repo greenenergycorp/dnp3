@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -44,7 +44,7 @@ namespace apl {
 			int ErrorCode() const{ return this->mErrorCode; }
 			int SubCode() const{ return this->mSubCode; }
 
-			std::string GetErrorString() const; //returns a concatentated description of the exception
+			std::string GetErrorString() const; //returns a concatenated description of the exception
 
 		protected:
 
@@ -52,7 +52,7 @@ namespace apl {
 			int mErrorCode;
 			int mSubCode;
 
-			std::string mSource;	// The funciton or module that produced the exception
+			std::string mSource;	// The function or module that produced the exception
 			std::string mMessage;	// A textual description of the exception
 			std::string mWhat;
 

@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -118,7 +118,7 @@ namespace apl { namespace dnp {
 		assert(mpAppHeader != NULL);
 		assert(mpAppHeader->GetType() == AHT_RESPONSE);
 		/*if(mpAppHeader == NULL || mpAppHeader->GetType() != AHT_RESPONSE)
-		{ throw Exception(LOCATION, "IIN only valid with resposne header"); }*/
+		{ throw Exception(LOCATION, "IIN only valid with response header"); }*/
 
 		static_cast<ResponseHeader*>(mpAppHeader)->SetIIN(mBuffer, arIIN);
 	}
@@ -404,7 +404,7 @@ namespace apl { namespace dnp {
 		size_t count = (requested < maxObjects) ? requested : maxObjects;
 		size_t stop = aStart+count-1;
 
-		//we're commited to writing some data, so proceed
+		//we're committed to writing some data, so proceed
 		byte_t* pHeaderPos = mBuffer+mFragmentSize;
 		pHdr->Set(pHeaderPos, apObj->GetGroup(), apObj->GetVariation(), aCode);
 		byte_t* pPos = pHeaderPos+pHdr->GetSize();
@@ -436,7 +436,7 @@ namespace apl { namespace dnp {
 		size_t count = (requested < maxObjects) ? requested : maxObjects;
 		size_t stop = aStart+count-1;
 
-		//we're commited to writing some data, so proceed
+		//we're committed to writing some data, so proceed
 		byte_t* pHeaderPos = mBuffer+mFragmentSize;
 		pHdr->Set(pHeaderPos, apObj->GetGroup(), apObj->GetVariation(), aCode);
 		byte_t* pPos = pHeaderPos+pHdr->GetSize();
@@ -524,7 +524,7 @@ namespace apl { namespace dnp {
 		size_t data_size = count*obj_plus_prefix_size;
 		byte_t* pHeaderPos = mBuffer+mFragmentSize;
 
-		//commited to writing at this point, so set the header
+		//committed to writing at this point, so set the header
 		pHdr->Set(pHeaderPos, aGrp, aVar, aQual);
 		pHdr->SetCount(pHeaderPos, count);
 		mFragmentSize += pHdr->GetSize();
@@ -641,7 +641,7 @@ namespace apl { namespace dnp {
 		}
 		catch(Exception)
 		{
-			oss << " Malformed header data preceeds";
+			oss << " Malformed header data precedes";
 		}	
 
 		oss << ", Size: " << this->Size();

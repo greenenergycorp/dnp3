@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -181,10 +181,10 @@ bool AsyncTaskBase::LessThanGroupLevel(const AsyncTaskBase* l, const AsyncTaskBa
 
 	/*
 	if(less_than) {
-		std::cout << r->Name() << " higher prioity than " << l->Name() << std::endl;
+		std::cout << r->Name() << " higher priority than " << l->Name() << std::endl;
 	}
 	else {
-		std::cout << l->Name() << " higher prioity than " << r->Name() << std::endl;
+		std::cout << l->Name() << " higher priority than " << r->Name() << std::endl;
 	}
 	*/
 

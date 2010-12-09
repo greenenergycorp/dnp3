@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -65,7 +65,7 @@ namespace apl
 	};
 
 	//this is some c++ trickery to make sure that we get strong
-	//typesaftey on the 2 different types of timestamp
+	//type safety on the 2 different types of timestamp
 	typedef TimeStamp_t_Explicit TimeStamp_t;
 	typedef UTCTimeStamp_t_Explicit UTCTimeStamp_t;
 

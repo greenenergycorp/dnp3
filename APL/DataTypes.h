@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -81,8 +81,8 @@ namespace apl
 	/**
 	  Base class shared by all of the DataPoint types. There are 5 major data types and they all have
 	  a value, timestamp and a quality field. The timestamp should reflect when the value was measured
-	  or calculated. The quality field should be set approriately depending on the data type. Each datatype
-	  has a its own defintion of the quality field that indicate specific conditions but all of the
+	  or calculated. The quality field should be set appropriately depending on the data type. Each datatype
+	  has a its own definition of the quality field that indicate specific conditions but all of the
 	  datatypes define an XX_ONLINE bit, that is the default "nominal" value. This quality field is not
 	  for applying alarming information, that needs to be done with Binaries or in other channels.
 	*/
@@ -219,7 +219,7 @@ namespace apl
 		{ return GetValue() == rhs.GetValue() && GetQuality() == rhs.GetQuality(); }
 
 		protected:
-		// IntDataPoints have seperate fields for quality and value
+		// IntDataPoints have separate fields for quality and value
 		//IntDataPoint(const IntDataPoint& arRHS);
 		TypedDataPoint(byte_t aQuality, DataTypes aType);
 		T mValue;
@@ -325,7 +325,7 @@ namespace apl
 	};
 
 	/**
-		Analogs are used for variable data points that usuually reflect a real world value.
+		Analogs are used for variable data points that usually reflect a real world value.
 		Good examples are current, voltage, sensor readouts, etc. Think of a speedometer gauge.
 	*/
 
@@ -382,8 +382,8 @@ namespace apl
 	};
 
 	/**
-		Descibes the last set value of the setpoint. Like the ControlStatus data type it is not
-		well supportted and its generally better practice to use an explict analog.
+		Describes the last set value of the setpoint. Like the ControlStatus data type it is not
+		well supported and its generally better practice to use an explicit analog.
 	*/
 	class SetpointStatus : public TypedDataPoint<double>
 	{

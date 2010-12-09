@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -52,7 +52,7 @@ namespace apl{
 			virtual void AsyncOpen() = 0;
 
 			/** Starts a close operation. Callback is IHandlerAsync::OnLowerLayerDown.
-				Callback occurs after all Asynchronous operations have occured. If the user code
+				Callback occurs after all Asynchronous operations have occurred. If the user code
 				has an outstanding read or write, those handlers will not be called. */
 			virtual void AsyncClose() = 0;
 

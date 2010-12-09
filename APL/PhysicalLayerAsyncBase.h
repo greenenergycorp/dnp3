@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -83,7 +83,7 @@ namespace apl {
 			virtual void DoAsyncRead(byte_t*, size_t) = 0;
 			virtual void DoAsyncWrite(const byte_t*, size_t) = 0;
 
-			// These can be optionally overriden to do something more interesting, i.e. specific logging
+			// These can be optionally overridden to do something more interesting, i.e. specific logging
 			virtual void DoOpenSuccess() {}
 			virtual void DoOpenFailure() {}
 
@@ -101,7 +101,7 @@ namespace apl {
 			void OnReadCallback(const boost::system::error_code& arError, byte_t*, size_t aSize);
 			void OnWriteCallback(const boost::system::error_code& arError, size_t aSize);
 
-			/// "user" object that recieves the callbacks
+			/// "user" object that receives the callbacks
 			IHandlerAsync* mpHandler;
 
 			/// State object that tracks the activities of the class, state pattern too heavy

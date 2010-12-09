@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -30,7 +30,7 @@ namespace apl {
 /**
  * This is a wrapper for ASIO timers that are used to post events
  * on a queue. Events can be posted for immediate consumption or
- * some time in the future. Events can be consumbed by the posting
+ * some time in the future. Events can be consumed by the posting
  * thread or another thread.
  *
  * @section Class Goals
@@ -56,7 +56,7 @@ typedef boost::function<void ()> ExpirationHandler;
 
 /**
  * Interface for posting events to a queue.  Events can be posted for
- * immediate consumption or some time in the future.  Events can be consumbed
+ * immediate consumption or some time in the future.  Events can be consumed
  * by the posting thread or another thread.
  *
  * @section Usage

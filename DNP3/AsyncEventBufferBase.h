@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -40,7 +40,7 @@ namespace apl { namespace dnp {
 
 		/**
 			Adds an event to the buffer, tracking insertion order. Calls
-			_Update which can be overriden to do special types of insertion.
+			_Update which can be overridden to do special types of insertion.
 
 			@param arVal Event update to add the to the buffer
 			@param aClass Class of the measurement

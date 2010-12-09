@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -103,10 +103,10 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	/// @returns the completion status of the task
 	bool IsComplete() const { return mIsComplete; }
 
-	/// @return wether the task is expired
+	/// @return whether the task is expired
 	bool IsExpired() const { return mIsExpired; }
 
-	/// @return wether the task is running
+	/// @return whether the task is running
 	bool IsRunning() const { return mIsRunning; }
 
 	/// @returns max_date_time if the task is currently running or will not run again
@@ -117,7 +117,7 @@ class AsyncTaskBase : public ITask, private Uncopyable
 	std::string mName;						/// Every task has a name
 	bool mIsEnabled;						/// Tasks can be enabled or disabled
 	bool mIsComplete;						/// Every task has a flag that executes it's completion status
-	bool mIsExpired;						/// Indicate wether the time from the last UpdateTime call >= mNextRunTime
+	bool mIsExpired;						/// Indicate whether the time from the last UpdateTime call >= mNextRunTime
 	bool mIsRunning;						/// Every task has an execution status
 	int mPriority;							/// Every task has a pr
 	TaskHandler mHandler;					/// Every task has a handler for executing the task

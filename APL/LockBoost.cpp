@@ -2,7 +2,7 @@
 // Licensed to Green Energy Corp (www.greenenergycorp.com) under one
 // or more contributor license agreements. See the NOTICE file
 // distributed with this work for additional information
-// regarding copyright ownership.  Green Enery Corp licenses this file
+// regarding copyright ownership.  Green Energy Corp licenses this file
 // to you under the Apache License, Version 2.0 (the
 // "License"); you may not use this file except in compliance
 // with the License.  You may obtain a copy of the License at
@@ -32,7 +32,7 @@ SigLock_Boost::SigLock_Boost() : mLockCount(0)
 SigLock_Boost::~SigLock_Boost()
 {
 #ifdef DEBUG_LOCKS
-	//make sure we havn;t missed a lock somewhere
+	//make sure we haven't missed a lock somewhere
 	assert(mLockPtr.get() == NULL);
 #endif
 	assert(mLockCount == 0);
