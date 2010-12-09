@@ -55,16 +55,16 @@ namespace apl
 		mSettingsMap.erase(arName);
 	}
 
-	void PhysicalLayerManager ::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, uint_16_t aPort)
+	void PhysicalLayerManager ::AddTCPClient(const std::string& arName, PhysLayerSettings s, TCPSettings aTcp)
 	{		
-		IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPClientAsync(arAddr, aPort);
+		IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPClientAsync(aTcp);
 		PhysLayerInstance pli(fac);
 		this->AddLayer(arName, s, pli);
 	}
 
-	void PhysicalLayerManager ::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, uint_16_t aPort)
+	void PhysicalLayerManager ::AddTCPServer(const std::string& arName, PhysLayerSettings s, TCPSettings aTcp)
 	{		
-		IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPServerAsync(arEndpoint, aPort);
+		IPhysicalLayerAsyncFactory fac = PhysicalLayerFactory::GetTCPServerAsync(aTcp);
 		PhysLayerInstance pli(fac);
 		this->AddLayer(arName, s, pli);
 	}

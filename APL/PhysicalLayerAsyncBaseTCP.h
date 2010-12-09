@@ -20,6 +20,7 @@
 #define __PHYSICAL_LAYER_ASYNC_BASE_TCP_H_
 
 #include "PhysicalLayerAsyncASIO.h"
+#include "TCPTypes.h"
 #include <boost/asio/ip/tcp.hpp>
 #include <memory>
 
@@ -31,7 +32,7 @@ namespace apl {
 	class PhysicalLayerAsyncBaseTCP : public PhysicalLayerAsyncASIO
 	{
 		public:
-			PhysicalLayerAsyncBaseTCP(Logger*, boost::asio::io_service* apIOService);
+			PhysicalLayerAsyncBaseTCP(Logger*, boost::asio::io_service* apIOService, TCPSettings aTcp);
 
 			virtual ~PhysicalLayerAsyncBaseTCP(){}
 
@@ -44,6 +45,7 @@ namespace apl {
 
 		protected:
 			boost::asio::ip::tcp::socket mSocket;
+                        TCPSettings mTcp;
 	};
 }
 

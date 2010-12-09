@@ -67,10 +67,10 @@ class AsyncStackManager : private Threadable, private Loggable
 		// All the io_service marshalling now occurs here. It's now safe to add/remove while the manager is running.
 
 		/// Adds a TCPClient port, excepts if the port already exists
-		void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, uint_16_t aPort);
+		void AddTCPClient(const std::string& arName, PhysLayerSettings, TCPSettings);
 
 		/// Adds a TCPServer port, excepts if the port already exists
-		void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, uint_16_t aPort);
+		void AddTCPServer(const std::string& arName, PhysLayerSettings, TCPSettings);
 
 		/// Adds a Serial port, excepts if the port already exists
 		void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);

@@ -46,7 +46,8 @@ mTimerSource(this->GetService())
 		ostringstream oss;
 		oss << "pair" << port;
 		Logger* pLogger = mpLogger->GetSubLogger(oss.str());
-		TransportStackPair* pPair = new TransportStackPair(aClientCfg, aServerCfg, pLogger, this->GetService(), &mTimerSource, port);
+		TCPSettings tcp("127.0.0.1", port);
+		TransportStackPair* pPair = new TransportStackPair(aClientCfg, aServerCfg, pLogger, this->GetService(), &mTimerSource, tcp);
 		mPairs.push_back(pPair);
 	}
 }

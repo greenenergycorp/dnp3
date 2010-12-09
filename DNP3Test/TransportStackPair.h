@@ -41,7 +41,7 @@ class TransportStackPair
 			Logger* apLogger,
 			boost::asio::io_service* apService,
 			ITimerSource* apTimerSrc,
-			uint_16_t aPort);
+			TCPSettings aTcp);
 
 		void Start();
 

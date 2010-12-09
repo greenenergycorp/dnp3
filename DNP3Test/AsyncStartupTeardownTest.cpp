@@ -37,7 +37,8 @@ void AsyncStartupTeardownTest::CreatePort(const std::string& arName, FilterLevel
 {
 	std::string name = arName + " router";
 	PhysLayerSettings s(aLevel, 1000);
-	mMgr.AddTCPClient(arName, s, "127.0.0.1", 30000);
+	TCPSettings tcp("127.0.0.1", 30000);
+	mMgr.AddTCPClient(arName, s, tcp);
 }
 
 void AsyncStartupTeardownTest::AddMaster(const std::string& arStackName, const std::string& arPortName, uint_16_t aLocalAddress, FilterLevel aLevel)

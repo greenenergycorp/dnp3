@@ -38,11 +38,11 @@ void StackManager::AddLogHook(ILogBase* apHook)
 StackManager::~StackManager() { delete mpImpl; delete mpLog; }
 
 //used for defining ports
-void StackManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, const std::string& arAddr, uint_16_t aPort)
-{ mpImpl->AddTCPClient(arName, s, arAddr, aPort); }
+void StackManager::AddTCPClient(const std::string& arName, PhysLayerSettings s, TCPSettings aTcp)
+{ mpImpl->AddTCPClient(arName, s, aTcp); }
 
-void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, const std::string& arEndpoint, uint_16_t aPort)
-{ mpImpl->AddTCPServer(arName, s, arEndpoint, aPort); }
+void StackManager::AddTCPServer(const std::string& arName, PhysLayerSettings s, TCPSettings aTcp)
+{ mpImpl->AddTCPServer(arName, s, aTcp); }
 
 void StackManager::AddSerial(const std::string& arName, PhysLayerSettings s, SerialSettings aSerial)
 { mpImpl->AddSerial(arName, s, aSerial); }

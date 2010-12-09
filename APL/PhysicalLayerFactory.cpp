@@ -34,14 +34,14 @@ namespace apl {
 		return boost::bind(&PhysicalLayerFactory::FGetSerialAsync, s, _2, _1);
 	}
 
-	IPhysicalLayerAsyncFactory PhysicalLayerFactory :: GetTCPClientAsync(std::string aAddress, uint_16_t aPort)
+	IPhysicalLayerAsyncFactory PhysicalLayerFactory :: GetTCPClientAsync(TCPSettings aTcp)
 	{
-		return boost::bind(&PhysicalLayerFactory::FGetTCPClientAsync, aAddress, aPort, _2, _1);
+		return boost::bind(&PhysicalLayerFactory::FGetTCPClientAsync, aTcp, _2, _1);
 	}
 	
-	IPhysicalLayerAsyncFactory PhysicalLayerFactory :: GetTCPServerAsync(std::string aEndpoint, uint_16_t aPort)
+	IPhysicalLayerAsyncFactory PhysicalLayerFactory :: GetTCPServerAsync(TCPSettings aTcp)
 	{
-		return boost::bind(&PhysicalLayerFactory::FGetTCPServerAsync, aEndpoint, aPort, _2, _1);
+		return boost::bind(&PhysicalLayerFactory::FGetTCPServerAsync, aTcp, _2, _1);
 	}
 	
 	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger)
@@ -49,14 +49,14 @@ namespace apl {
 		return new PhysicalLayerAsyncSerial(apLogger, apSrv, s);
 	}
 	
-	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetTCPClientAsync(std::string aAddress, uint_16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger)
+	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetTCPClientAsync(TCPSettings aTcp, boost::asio::io_service* apSrv, Logger* apLogger)
 	{
-		return new PhysicalLayerAsyncTCPClient(apLogger, apSrv, aAddress, aPort);
+		return new PhysicalLayerAsyncTCPClient(apLogger, apSrv, aTcp);
 	}
 	
-	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetTCPServerAsync(std::string aEndpoint, uint_16_t aPort, boost::asio::io_service* apSrv, Logger* apLogger)
+	IPhysicalLayerAsync* PhysicalLayerFactory :: FGetTCPServerAsync(TCPSettings aTcp, boost::asio::io_service* apSrv, Logger* apLogger)
 	{
-		return new PhysicalLayerAsyncTCPServer(apLogger, apSrv, aEndpoint, aPort);
+		return new PhysicalLayerAsyncTCPServer(apLogger, apSrv, aTcp);
 	}
 
 }

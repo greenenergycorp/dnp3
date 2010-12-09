@@ -22,6 +22,7 @@
 
 #include "PhysicalLayerMap.h"
 #include "SerialTypes.h"
+#include "TCPTypes.h"
 
 namespace apl
 {
@@ -37,8 +38,8 @@ namespace apl
 
 			//function for manually adding entries
 
-			void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, uint_16_t aPort);
-			void AddTCPServer(const std::string& arName, PhysLayerSettings, const std::string& arEndpoint, uint_16_t aPort);
+			void AddTCPClient(const std::string& arName, PhysLayerSettings, TCPSettings);
+			void AddTCPServer(const std::string& arName, PhysLayerSettings, TCPSettings);
 			void AddSerial(const std::string& arName, PhysLayerSettings, SerialSettings);
 
 			/// Removes a physical layer and deletes it if the manager has ownership.

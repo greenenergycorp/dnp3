@@ -36,12 +36,9 @@ namespace apl {
 PhysicalLayerAsyncTCPClient::PhysicalLayerAsyncTCPClient(
 	Logger* apLogger,
 	boost::asio::io_service* apIOService,
-	const std::string& arAddress,
-	uint_16_t aPort) :
+	TCPSettings aTcp) :
 	
-	PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
-	mAddr(arAddress),
-	mPort(aPort)
+	PhysicalLayerAsyncBaseTCP(apLogger, apIOService, aTcp)
 {
 
 }
@@ -51,11 +48,11 @@ void PhysicalLayerAsyncTCPClient::DoOpen()
 {
 	ip::address_v4 address;
 	boost::system::error_code ec;
-	string ipstring(mAddr);
+	string ipstring(mTcp.mAddress);
 	address = address.from_string(ipstring, ec);
 	if(ec) throw ArgumentException(LOCATION, "string Address: " + ipstring + " is invalid");
 	
-	ip::tcp::endpoint serverEndpoint(address, mPort);
+	ip::tcp::endpoint serverEndpoint(address, mTcp.mPort);
 
 	mSocket.async_connect(serverEndpoint, boost::bind(&PhysicalLayerAsyncTCPClient::OnOpenCallback, this, placeholders::error));
 }

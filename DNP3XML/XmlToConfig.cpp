@@ -47,13 +47,13 @@ namespace apl { namespace dnp {
 		{
 			TCPClient_t* pCfg = arList.TCPClientVector[i];
 			PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-			arMgr.AddTCPClient(pCfg->Name, s, pCfg->Address, pCfg->Port);
+			arMgr.AddTCPClient(pCfg->Name, s, TCPSettings(pCfg->Address, pCfg->Port));
 		}
 		for (size_t i = 0; i < arList.TCPServerVector.size(); i++ )
 		{
 			TCPServer_t* pCfg = arList.TCPServerVector[i];
 			PhysLayerSettings s(aLevel, pCfg->OpenRetryMS);
-			arMgr.AddTCPServer(pCfg->Name, s, pCfg->Endpoint, pCfg->Port);
+			arMgr.AddTCPServer(pCfg->Name, s, TCPSettings(pCfg->Endpoint, pCfg->Port));
 		}
 		for (size_t i = 0; i < arList.SerialVector.size(); i++ )
 		{

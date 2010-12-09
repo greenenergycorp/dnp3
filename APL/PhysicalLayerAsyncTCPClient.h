@@ -26,14 +26,10 @@ namespace apl {
 	class PhysicalLayerAsyncTCPClient : public PhysicalLayerAsyncBaseTCP
 	{
 		public:
-			PhysicalLayerAsyncTCPClient(Logger*, boost::asio::io_service* apIOService, const std::string&, uint_16_t aPort);
+			PhysicalLayerAsyncTCPClient(Logger*, boost::asio::io_service* apIOService, TCPSettings aTcp);
 
 			/* Implement the remaining actions */
 			void DoOpen();
-
-		private:
-			std::string mAddr;
-			uint_16_t mPort;
 	};
 }
 

@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_SUITE(PhysicalLayerAsyncTCPSuite)
 		Logger* serverLogger = serverLog.GetLogger(LEV_DEBUG, "server");			
 		boost::asio::io_service loopservice;
 		TimerSourceASIO timer_src(&loopservice);
-		PhysicalLayerAsyncTCPServer server(serverLog.GetLogger(LEV_INFO, "server"), &loopservice, "127.0.0.1", 30000);
+		PhysicalLayerAsyncTCPServer server(serverLog.GetLogger(LEV_INFO, "server"), &loopservice, TCPSettings("127.0.0.1", 30000));
 		AsyncLoopback t(serverLog.GetLogger(LEV_INFO, "loopback"), &server, &timer_src, LEV_WARNING, false);
 		IOServiceThread iost(serverLogger, &loopservice);				
 		t.Start();
@@ -171,7 +171,7 @@ BOOST_AUTO_TEST_SUITE(PhysicalLayerAsyncTCPSuite)
 		EventLog clientLog;		
 		Logger* clientLogger = clientLog.GetLogger(LEV_DEBUG, "client");			
 		AsyncTestObjectASIO test;
-		PhysicalLayerAsyncTCPClient client(clientLogger, test.GetService(), "127.0.0.1", 30000);
+		PhysicalLayerAsyncTCPClient client(clientLogger, test.GetService(), TCPSettings("127.0.0.1", 30000));
 		LowerLayerToPhysAdapter adapter(clientLogger, &client);
 		MockUpperLayer upper(clientLogger);
 		adapter.SetUpperLayer(&upper);

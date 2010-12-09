@@ -16,32 +16,33 @@
 // specific language governing permissions and limitations
 // under the License.
 //
-#ifndef _PHYSICAL_LAYER_FACTORY_H_
-#define _PHYSICAL_LAYER_FACTORY_H_
+#ifndef __TCP_TYPES_H_
+#define __TCP_TYPES_H_
 
-
-#include "SerialTypes.h"
-#include "TCPTypes.h"
 #include "Types.h"
-#include "Exception.h"
-#include "PhysicalLayerFunctors.h"
-#include <map>
 
-namespace apl{
+#include <string>
 
-	class PhysicalLayerFactory
+namespace apl {
+
+	struct TCPSettings
 	{
-	public:
+		TCPSettings(const std::string aAddress,
+			const uint_16_t aPort,
+			const bool aEnableKeepalive = false,
+			const int aKeepaliveTime = 0,
+			const int aKeepaliveInterval = 0,
+			const int aKeepaliveProbes = 0);
 
-		static IPhysicalLayerAsyncFactory GetSerialAsync(SerialSettings s);
-		static IPhysicalLayerAsyncFactory GetTCPClientAsync(TCPSettings aTcp);
-		static IPhysicalLayerAsyncFactory GetTCPServerAsync(TCPSettings aTcp);
-
-		//normal factory functions
-		static IPhysicalLayerAsync* FGetSerialAsync(SerialSettings s, boost::asio::io_service* apSrv, Logger* apLogger);
-		static IPhysicalLayerAsync* FGetTCPClientAsync(TCPSettings aTcp, boost::asio::io_service* apSrv, Logger* apLogger);
-		static IPhysicalLayerAsync* FGetTCPServerAsync(TCPSettings aTcp, boost::asio::io_service* apSrv, Logger* apLogger);
+		std::string mAddress;
+		uint_16_t mPort;
+		bool mEnableKeepalive;
+		int mKeepaliveTime;
+		int mKeepaliveInterval;
+		int mKeepaliveProbes;
 	};
+
 }
 
 #endif
+

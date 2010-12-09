@@ -58,14 +58,14 @@ AsyncStackManager::~AsyncStackManager()
 std::vector<std::string> AsyncStackManager::GetStackNames() { return GetKeys<PortMap, string>(mStackToPort); }
 std::vector<std::string> AsyncStackManager::GetPortNames()  {  return GetKeys<PortMap, string>(mPortToPort); }
 
-void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, const std::string& arAddr, uint_16_t aPort)
+void AsyncStackManager::AddTCPClient(const std::string& arName, PhysLayerSettings aSettings, TCPSettings aTcp)
 {	
-	mMgr.AddTCPClient(arName, aSettings, arAddr, aPort);
+	mMgr.AddTCPClient(arName, aSettings, aTcp);
 }
 
-void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, const std::string& arEndpoint, uint_16_t aPort)
+void AsyncStackManager::AddTCPServer(const std::string& arName, PhysLayerSettings aSettings, TCPSettings aTcp)
 {	
-	mMgr.AddTCPServer(arName, aSettings, arEndpoint, aPort);
+	mMgr.AddTCPServer(arName, aSettings, aTcp);
 }
 
 void AsyncStackManager::AddSerial(const std::string& arName, PhysLayerSettings aSettings, SerialSettings aSerial)

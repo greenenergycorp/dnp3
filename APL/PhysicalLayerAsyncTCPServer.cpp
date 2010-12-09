@@ -33,15 +33,15 @@ using namespace std;
 
 namespace apl {
 
-PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, io_service* apIOService, const std::string& arEndpoint, uint_16_t aPort) :
-PhysicalLayerAsyncBaseTCP(apLogger, apIOService),
-mEndpoint(ip::tcp::v4(), aPort),
+PhysicalLayerAsyncTCPServer::PhysicalLayerAsyncTCPServer(Logger* apLogger, io_service* apIOService, TCPSettings aTcp) :
+PhysicalLayerAsyncBaseTCP(apLogger, apIOService, aTcp),
+mEndpoint(ip::tcp::v4(), aTcp.mPort),
 mAcceptor(*apIOService)
 {
 	//set the endpoint's address
 	boost::system::error_code ec;
-	ip::address_v4 addr = ip::address_v4::from_string(arEndpoint, ec);	
-	if(ec) throw ArgumentException(LOCATION, "endpoint: " + arEndpoint + " is invalid ");	
+	ip::address_v4 addr = ip::address_v4::from_string(aTcp.mAddress, ec);	
+	if(ec) throw ArgumentException(LOCATION, "endpoint: " + aTcp.mAddress + " is invalid ");	
 	mEndpoint.address(addr);
 }
 
@@ -62,7 +62,7 @@ void PhysicalLayerAsyncTCPServer::DoOpen()
 		if(ec) throw Exception(LOCATION, ec.message());
 	}
 	
-	mAcceptor.async_accept(mSocket, mEndpoint, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
+	mAcceptor.async_accept(mSocket, boost::bind(&PhysicalLayerAsyncTCPServer::OnOpenCallback, this, placeholders::error));
 }
 
 void PhysicalLayerAsyncTCPServer::DoOpeningClose()

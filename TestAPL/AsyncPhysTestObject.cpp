@@ -29,8 +29,8 @@ namespace apl {
 AsyncPhysTestObject::AsyncPhysTestObject(FilterLevel aLevel, bool aImmediate, bool aAutoRead) :
 AsyncTestObjectASIO(),
 LogTester(aImmediate),
-mTCPClient(mLog.GetLogger(aLevel,"TCPClient"), this->GetService(), "127.0.0.1", 50000),
-mTCPServer(mLog.GetLogger(aLevel,"TCPSever"), this->GetService(), "127.0.0.1", 50000),
+mTCPClient(mLog.GetLogger(aLevel,"TCPClient"), this->GetService(), TCPSettings("127.0.0.1", 50000)),
+mTCPServer(mLog.GetLogger(aLevel,"TCPSever"), this->GetService(), TCPSettings("127.0.0.1", 50000)),
 mClientAdapter(mLog.GetLogger(aLevel,"ClientAdapter"), &mTCPClient, aAutoRead),
 mServerAdapter(mLog.GetLogger(aLevel,"ServerAdapter"), &mTCPServer, aAutoRead),
 mClientUpper(mLog.GetLogger(aLevel,"MockUpperClient")),

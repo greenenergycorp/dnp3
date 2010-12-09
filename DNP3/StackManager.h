@@ -24,6 +24,7 @@
 #include <APL/CommandInterfaces.h>
 #include <APL/LogBase.h>
 #include <APL/SerialTypes.h>
+#include <APL/TCPTypes.h>
 
 #include <DNP3/MasterStackConfig.h>
 #include <DNP3/SlaveStackConfig.h>
@@ -49,8 +50,8 @@ class StackManager
 		StackManager(bool aAutoStart);
 		~StackManager();
 
-		void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, const std::string& arAddr, uint_16_t aPort);
-		void AddTCPServer(const std::string& arName, PhysLayerSettings  aPhys, const std::string& arEndpoint, uint_16_t aPort);
+		void AddTCPClient(const std::string& arName, PhysLayerSettings aPhys, TCPSettings aTcp);
+		void AddTCPServer(const std::string& arName, PhysLayerSettings aPhys, TCPSettings aTcp);
 		void AddSerial(const std::string& arName, PhysLayerSettings aPhys, SerialSettings aSerial);
 
 		ICommandAcceptor* AddMaster(const std::string& arPortName,

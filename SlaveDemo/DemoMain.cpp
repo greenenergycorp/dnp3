@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
 	// add a TCPServer to the manager on port 4999 with the name "tcpserver"
 	// The server will wait 3000 ms in between failed bind calls
 	// The server will *only* respond to connections on the loopback
-	mgr.AddTCPServer("tcpserver", PhysLayerSettings(LOG_LEVEL, 3000), "127.0.0.1", 4999);
+	mgr.AddTCPServer("tcpserver", PhysLayerSettings(LOG_LEVEL, 3000), TCPSettings("127.0.0.1", 4999));
 
 	// The master config object for a slave. The default are useable, but understaning the options are important
 	SlaveStackConfig stackConfig;

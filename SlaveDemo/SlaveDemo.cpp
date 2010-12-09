@@ -24,7 +24,6 @@ using namespace std;
 namespace apl { namespace dnp {
 
 SlaveDemoBase::SlaveDemoBase(Logger* apLogger) : 
-Loggable(apLogger),
 IOService(),
 IOServiceThread(apLogger, this->Get()),
 mTimerSource(this->Get())

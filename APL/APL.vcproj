@@ -305,6 +305,14 @@
 						RelativePath=".\PhysicalLayerAsyncTCPServer.h"
 						>
 					</File>
+					<File
+						RelativePath=".\TCPTypes.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\TCPTypes.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

@@ -107,8 +107,9 @@ void AsyncIntegrationTest::AddStackPair(FilterLevel aLevel, size_t aNumPoints)
 	std::string server = oss.str() + " Server ";
 
 	PhysLayerSettings s(aLevel, 1000);
-	this->AddTCPClient(client, s, "127.0.0.1", port);
-	this->AddTCPServer(server, s, "127.0.0.1", port);
+	TCPSettings tcp("127.0.0.1", port);
+	this->AddTCPClient(client, s, tcp);
+	this->AddTCPServer(server, s, tcp);
 
 	{
 	MasterStackConfig cfg;

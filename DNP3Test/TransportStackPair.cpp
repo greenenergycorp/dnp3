@@ -29,10 +29,10 @@ TransportStackPair::TransportStackPair(
 	Logger* apLogger,
 	boost::asio::io_service* apService,
 	ITimerSource* apTimerSrc,
-	uint_16_t aPort) :
+	TCPSettings aTcp) :
 
-mClient(apLogger->GetSubLogger("TCPClient"), apService, "127.0.0.1", aPort),
-mServer(apLogger->GetSubLogger("TCPServer"), apService, "127.0.0.1", aPort),
+mClient(apLogger->GetSubLogger("TCPClient"), apService, aTcp),
+mServer(apLogger->GetSubLogger("TCPServer"), apService, aTcp),
 mClientStack(apLogger->GetSubLogger("ClientStack"), apTimerSrc, &mClient, aClientCfg),
 mServerStack(apLogger->GetSubLogger("ServerStack"), apTimerSrc, &mServer, aServerCfg)
 {
