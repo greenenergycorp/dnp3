@@ -21,7 +21,9 @@ INSTALL_DIR=$TOOLS_HOME/boostlib/boost_1_43
 echo "Boost will be installed to $INSTALL_DIR"
 
 if [ ! -e $TEMP_DIR/boost_1_43_0.tar.bz2 ]; then
-  wget -P $TEMP_DIR http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.bz2/download
+  # Make wget save the file with the expected name, even if we're redirected to some other document.
+  mkdir -p $TEMP_DIR
+  wget http://sourceforge.net/projects/boost/files/boost/1.43.0/boost_1_43_0.tar.bz2/download --output-document $TEMP_DIR/boost_1_43_0.tar.bz2
 fi
 
 cd $TEMP_DIR
