@@ -58,14 +58,14 @@ void DataPoll::ReadData(const APDU& f)
 
 ClassPoll::ClassPoll(Logger* apLogger, IDataObserver* apObs) : 
 DataPoll(apLogger, apObs),
-mClassMask(0)
+mClassMask(PC_INVALID)
 {}
 
 void ClassPoll::Set(int aClassMask) { mClassMask = aClassMask; }
 
 void ClassPoll::ConfigureRequest(APDU& arAPDU)
 {
-	if(mClassMask == 0) throw InvalidStateException(LOCATION, "Class mask has not been set");
+	if(mClassMask == PC_INVALID) throw InvalidStateException(LOCATION, "Class mask has not been set");
 
 	arAPDU.Set(FC_READ);
 	if(mClassMask & PC_CLASS_0) arAPDU.DoPlaceholderWrite(Group60Var1::Inst());

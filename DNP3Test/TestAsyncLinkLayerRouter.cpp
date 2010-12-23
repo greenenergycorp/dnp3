@@ -20,6 +20,7 @@
 #include <APLTestTools/TestHelpers.h>
 
 #include <APL/Exception.h>
+#include <APL/ToHex.h>
 
 #include "AsyncLinkLayerRouterTest.h"
 #include "MockFrameSink.h"
@@ -104,8 +105,18 @@ BOOST_AUTO_TEST_SUITE(AsyncLinkLayerRouterSuite)
 		BOOST_REQUIRE(t.phys.BufferEquals(f2.GetBuffer(), f2.GetSize()));
 		t.phys.SignalSendSuccess();
 		BOOST_REQUIRE_EQUAL(t.phys.NumWrites(), 2);
+	}
 
-
+	BOOST_AUTO_TEST_CASE(ReentrantCloseWorks){
+		AsyncLinkLayerRouterTest t;
+		MockFrameSink mfs;
+		t.router.AddContext(&mfs, 1024);
+		t.router.Start(); t.phys.SignalOpenSuccess();
+		BOOST_REQUIRE(mfs.mLowerOnline);
+		mfs.AddAction(boost::bind(&AsyncLinkLayerRouter::Stop, &t.router));
+		LinkFrame f; f.FormatAck(true, false, 1024, 2);
+		t.phys.TriggerRead(toHex(f.GetBuffer(), f.GetSize()));
+		BOOST_REQUIRE(t.IsLogErrorFree());
 	}
 	
 	/// Test that the second bind fails when a non-unique address is added

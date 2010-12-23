@@ -57,35 +57,35 @@ bool MockFrameSink::CheckLastWithDFC(FuncCodes aCode, bool aIsMaster, bool aIsRc
 //	Sec to Pri
 	
 void MockFrameSink::Ack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
-{
-	this->Update(FC_SEC_ACK, aIsMaster, aDest, aSrc);
+{	
 	mIsRcvBuffFull = aIsRcvBuffFull;
+	this->Update(FC_SEC_ACK, aIsMaster, aDest, aSrc);
 }
 
 void MockFrameSink::Nack(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
-{
-	this->Update(FC_SEC_NACK, aIsMaster, aDest, aSrc);
+{	
 	mIsRcvBuffFull = aIsRcvBuffFull;
+	this->Update(FC_SEC_NACK, aIsMaster, aDest, aSrc);
 }
 
 void MockFrameSink::LinkStatus(bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
-{
-	this->Update(FC_SEC_LINK_STATUS, aIsMaster, aDest, aSrc);
+{	
 	mIsRcvBuffFull = aIsRcvBuffFull;
+	this->Update(FC_SEC_LINK_STATUS, aIsMaster, aDest, aSrc);
 }
 
 void MockFrameSink::NotSupported (bool aIsMaster, bool aIsRcvBuffFull, uint_16_t aDest, uint_16_t aSrc)
-{
-	this->Update(FC_SEC_NOT_SUPPORTED, aIsMaster, aDest, aSrc);
+{	
 	mIsRcvBuffFull = aIsRcvBuffFull;
+	this->Update(FC_SEC_NOT_SUPPORTED, aIsMaster, aDest, aSrc);
 }
 
 //	Pri to Sec
 	
 void MockFrameSink::TestLinkStatus(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc)
 {
-	this->Update(FC_PRI_TEST_LINK_STATES, aIsMaster, aDest, aSrc);
 	mFcb = aFcb;
+	this->Update(FC_PRI_TEST_LINK_STATES, aIsMaster, aDest, aSrc);
 }
 
 void MockFrameSink::ResetLinkStates(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
@@ -99,16 +99,30 @@ void MockFrameSink::RequestLinkStatus(bool aIsMaster, uint_16_t aDest, uint_16_t
 }
 
 void MockFrameSink::ConfirmedUserData(bool aIsMaster, bool aFcb, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
-{
-	this->Update(FC_PRI_CONFIRMED_USER_DATA, aIsMaster, aDest, aSrc);
-	this->WriteToBuffer(apData, aDataLength);
+{	
 	mFcb = aFcb;
+	this->WriteToBuffer(apData, aDataLength);	
+	this->Update(FC_PRI_CONFIRMED_USER_DATA, aIsMaster, aDest, aSrc);
 }
 
 void MockFrameSink::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, uint_16_t aSrc, const apl::byte_t* apData, size_t aDataLength)
-{
-	this->Update(FC_PRI_UNCONFIRMED_USER_DATA, aIsMaster, aDest, aSrc);
+{	
 	this->WriteToBuffer(apData, aDataLength);
+	this->Update(FC_PRI_UNCONFIRMED_USER_DATA, aIsMaster, aDest, aSrc);
+}
+
+void MockFrameSink::AddAction(boost::function<void ()> aFunc)
+{
+	mActions.push_back(aFunc);
+}
+
+void MockFrameSink::ExecuteAction()
+{
+	if(mActions.size() > 0) {
+		boost::function<void ()> f = mActions.front();
+		mActions.pop_front();
+		f();
+	}
 }
 
 void MockFrameSink::Update(FuncCodes aCode, bool aIsMaster, uint_16_t aDest, uint_16_t aSrc)
@@ -118,6 +132,7 @@ void MockFrameSink::Update(FuncCodes aCode, bool aIsMaster, uint_16_t aDest, uin
 	mIsMaster = aIsMaster;
 	mDest = aDest;
 	mSrc = aSrc;
+	this->ExecuteAction();
 }
 
 }}
