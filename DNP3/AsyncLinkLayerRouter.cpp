@@ -141,9 +141,13 @@ void AsyncLinkLayerRouter::UnconfirmedUserData(bool aIsMaster, uint_16_t aDest, 
 }
 
 void AsyncLinkLayerRouter::_OnReceive(const apl::byte_t*, size_t aNumBytes)
-{
-	mReceiver.OnRead(aNumBytes); //this may trigger callbacks to the local ILinkContext interface
-	mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes()); //start another read
+{	
+	// The order is important here. You must let the receiver process the byte or another read could write
+	// over the buffer before it is processed
+	mReceiver.OnRead(aNumBytes); //this may trigger callbacks to the local ILinkContext interface	
+	if(mpPhys->CanRead()) { // this is required because the call above could trigger the layer to be closed
+		mpPhys->AsyncRead(mReceiver.WriteBuff(), mReceiver.NumWriteBytes()); //start another read
+	}
 }
 
 void AsyncLinkLayerRouter::Transmit(const LinkFrame& arFrame)

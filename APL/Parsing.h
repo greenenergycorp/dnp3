@@ -22,6 +22,8 @@
 #include <string>
 #include <sstream>
 
+#include "Types.h"
+
 namespace apl {
 
 	class Parsing
@@ -38,6 +40,8 @@ namespace apl {
 		}
 
 		static bool Get(const std::string& aArg, bool& arValue);
+
+		static bool Get(const std::string& aArg, byte_t& arValue);
 
 		template <class T>
 		static bool GetPositive(const std::string& aArg, T& arValue)

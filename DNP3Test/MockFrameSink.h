@@ -22,6 +22,8 @@
 #include <DNP3/ILinkContext.h>
 #include <DNP3/LinkLayerConstants.h>
 #include <APLTestTools/BufferTestObject.h>
+#include <boost/function.hpp>
+#include <queue>
 
 namespace apl { namespace dnp {
 
@@ -67,7 +69,16 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 
 	bool mLowerOnline;
 
+	/// Add a function to execute the next time a frame is received
+	/// This allows us to test re-entrant behaviors
+	void AddAction(boost::function<void ()> aFunc);
+
 	private:
+
+	/// Executes one action, if one is available
+	void ExecuteAction();
+
+	std::deque<boost::function<void ()>> mActions;
 
 	void Update(FuncCodes aCode, bool aIsMaster, uint_16_t aSrc, uint_16_t aDest);
 };
