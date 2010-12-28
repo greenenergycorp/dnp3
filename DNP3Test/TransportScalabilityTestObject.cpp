@@ -16,10 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 
 #include "TransportScalabilityTestObject.h"
 #include <sstream>
+
+#include <boost/asio.hpp>
 #include <boost/foreach.hpp>
 
 using namespace std;

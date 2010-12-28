@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\JNI_INCLUDES.vsprops;..\config\output_dirs.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops"
+			InheritedPropertySheets=".\JNI_INCLUDES.vsprops;..\config\output_dirs.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -93,7 +93,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\JNI_INCLUDES.vsprops;..\config\output_dirs.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops"
+			InheritedPropertySheets=".\JNI_INCLUDES.vsprops;..\config\output_dirs.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>

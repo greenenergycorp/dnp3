@@ -78,7 +78,7 @@ class MockFrameSink : public ILinkContext, public BufferTestObject
 	/// Executes one action, if one is available
 	void ExecuteAction();
 
-	std::deque<boost::function<void ()>> mActions;
+	std::deque< boost::function<void ()> > mActions;
 
 	void Update(FuncCodes aCode, bool aIsMaster, uint_16_t aSrc, uint_16_t aDest);
 };

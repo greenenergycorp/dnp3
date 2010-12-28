@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "ASIOIncludes.h"
+
 #include "PhysicalLayerFactory.h"
 
 #include "PhysicalLayerAsyncSerial.h"
@@ -25,6 +25,7 @@
 
 #include "Log.h"
 
+#include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
 namespace apl {

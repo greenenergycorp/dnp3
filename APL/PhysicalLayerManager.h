@@ -35,6 +35,8 @@ namespace apl
 			PhysicalLayerManager(Logger*, bool aOwnsLayers = true);
 			virtual ~PhysicalLayerManager();
 
+			void SetLayerOwnership(bool aOwnsLayers) { mOwnsLayers = aOwnsLayers; }
+
 			//function for manually adding entires
 
 			void AddTCPClient(const std::string& arName, PhysLayerSettings, const std::string& arAddr, uint_16_t aPort);

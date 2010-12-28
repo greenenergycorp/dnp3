@@ -29,11 +29,14 @@ COMPILER_VERSION = case $hw_os
   '-gcc33'
 end
 
+#common to all platforms
+preprocessor = ['BOOST_ASIO_ENABLE_CANCELIO', 'BOOST_REGEX_NO_LIB']
+
 preprocessor = case $hw_os
  when 'pc_cygwin'
-  ['APL_CYGWIN']
+  ['APL_CYGWIN','_WIN32_WINNT=0x0501', '__USE_W32_SOCKETS']
  when 'pc_linux_arm'
-  ['ARM']
+  ['ARM','BOOST_ASIO_DISABLE_EPOLL']
  else []
 end
 

@@ -16,9 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "TransportLoopbackTestObject.h"
 
+#include <boost/asio.hpp>
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 

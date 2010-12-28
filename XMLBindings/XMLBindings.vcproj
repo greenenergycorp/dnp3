@@ -20,7 +20,7 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -83,7 +83,7 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>

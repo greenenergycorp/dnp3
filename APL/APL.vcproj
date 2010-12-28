@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -85,7 +85,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops;..\config\boost_includes.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -154,10 +154,6 @@
 			<Filter
 				Name="PhysicalLayer"
 				>
-				<File
-					RelativePath=".\ASIOIncludes.h"
-					>
-				</File>
 				<File
 					RelativePath=".\IPhysicalLayerSource.h"
 					>

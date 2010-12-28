@@ -16,11 +16,14 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "AsyncStackManager.h"
 #include "AsyncPort.h"
 
+#include <boost/asio.hpp>
 #include <boost/foreach.hpp>
+#include <boost/bind.hpp>
+
 #include <APL/TimerSourceASIO.h>
 #include <APL/Exception.h>
 #include <APL/Logger.h>
@@ -30,7 +33,7 @@
 #include <DNP3/DeviceTemplate.h>
 
 #include <iostream>
-#include <boost/bind.hpp>
+
 
 using namespace std;
 

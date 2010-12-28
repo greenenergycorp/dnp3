@@ -16,12 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "AsyncStartupTeardownTest.h"
 
 #include <DNP3/AsyncMasterStack.h>
 #include <APL/PhysicalLayerAsyncTCPClient.h>
 
+#include <boost/asio.hpp>
 #include <boost/foreach.hpp>
 
 namespace apl { namespace dnp {

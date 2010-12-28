@@ -20,7 +20,7 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -96,7 +96,7 @@
 			OutputDirectory="$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -171,11 +171,11 @@
 	<References>
 		<ProjectReference
 			ReferencedProjectIdentifier="{761218B0-F2B7-42DA-9C9B-413FA34886DF}"
-			RelativePathToProject=".\PSI\PSI.vcproj"
+			RelativePathToProject=".\APL\APL.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{41D4B22B-F06E-4230-9AA8-3BFF096CC710}"
-			RelativePathToProject=".\PSITestTools\PSITestTools.vcproj"
+			RelativePathToProject=".\APLTestTools\APLTestTools.vcproj"
 		/>
 		<ProjectReference
 			ReferencedProjectIdentifier="{FB9D36B0-102F-4E11-BF45-C80A3709D098}"

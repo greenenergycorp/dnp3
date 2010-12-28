@@ -16,11 +16,12 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "ASIOIncludes.h"
+
 #include "PhysicalLayerAsyncBaseTCP.h"
 
 #include <boost/bind.hpp>
 #include <string>
+#include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 
 #include "Exception.h"

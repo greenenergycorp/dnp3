@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "AsyncIntegrationTest.h"
 
 #include <sstream>
@@ -30,6 +30,7 @@
 #include <DNP3/AsyncMasterStack.h>
 #include <DNP3/AsyncSlaveStack.h>
 
+#include <boost/asio.hpp>
 #include <boost/foreach.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_int.hpp>
