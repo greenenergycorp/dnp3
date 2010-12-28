@@ -6,6 +6,6 @@
 	>
 	<Tool
 		Name="VCCLCompilerTool"
-		PreprocessorDefinitions="_WIN32_WINNT 0x0501;BOOST_ASIO_ENABLE_CANCELIO;BOOST_REGEX_NO_LIB"
+		PreprocessorDefinitions="_WIN32_WINNT=0x0501;BOOST_ASIO_ENABLE_CANCELIO;BOOST_REGEX_NO_LIB"
 	/>
 </VisualStudioPropertySheet>
