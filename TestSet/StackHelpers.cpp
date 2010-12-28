@@ -41,14 +41,14 @@ IPhysicalLayerAsync* FGetTerminalPhys(Logger* apLogger, boost::asio::io_service*
 StackBase::StackBase(const APLXML_Base::PhysicalLayerList_t& arList, FilterLevel aLevel, const std::string& arLogFile, bool aRemote, apl::uint_16_t aRemotePort) :
 	log(),
 	logToFile(&log, arLogFile),
-	pTermLogger(log.GetLogger(aLevel, "terminal")),	
+	pTermLogger(log.GetLogger(aLevel, "terminal")),
 	mService(),
 	mTermThread(mService.Get()),
 	mTimerSrc(mService.Get()),
 	pTermPhys(FGetTerminalPhys(pTermLogger, mTermThread.GetService(), aRemote, aRemotePort)),
 	fdo(),
 	fte(&fdo),
-	lte(&log),	    
+	lte(&log),
 	trm(pTermLogger, pTermPhys.get(), &mTimerSrc, "Test Set Terminal (DNP)", true),
 	mgr(log.GetLogger(aLevel, "dnp"))
 {
@@ -67,11 +67,11 @@ void StackBase::Run() {
 }
 
 
-SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel) : 
+SlaveXMLStack::SlaveXMLStack(APLXML_STS::SlaveTestSet_t* pCfg, FilterLevel aLevel) :
 	StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile, pCfg->Remote, pCfg->RemotePort),
-	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate, pCfg->StartOnline))),	
-	crte(log.GetLogger(LEV_INTERPRET, "commands"), pCfg->LinkCommandStatus, pObs),
+	pObs(mgr.AddSlave(pCfg->PhysicalLayer, "sts", aLevel, crte.GetCmdAcceptor(), XmlToConfig::GetSlaveConfig(pCfg->Slave, pCfg->DeviceTemplate, pCfg->StartOnline))),
 	mdo(pObs, &fdo),
+	crte(log.GetLogger(LEV_INTERPRET, "commands"), pCfg->LinkCommandStatus, &mdo),
 	dote(&mdo)
 {
 	trm.AddExtension(&dote);
@@ -88,11 +88,11 @@ MasterXMLStack::MasterXMLStack(APLXML_MTS::MasterTestSet_t* pCfg, FilterLevel aL
 StackBase(pCfg->PhysicalLayerList, aLevel, pCfg->LogFile),
 accept(mgr.AddMaster(pCfg->PhysicalLayer, "mts", aLevel, &fdo, XmlToConfig::GetMasterConfig(pCfg->Master))),
 cte(accept)
-{	
+{
 	trm.AddExtension(&cte);
 }
-	
-	
+
+
 
 }}
 
