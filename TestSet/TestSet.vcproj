@@ -18,7 +18,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -97,7 +97,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="1"
-			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops"
+			InheritedPropertySheets="..\config\boost_includes.vsprops;..\config\boost_lib.vsprops;..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -207,6 +207,14 @@
 		<Filter
 			Name="Source Files"
 			>
+			<File
+				RelativePath=".\AddressScanner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AddressScanner.h"
+				>
+			</File>
 			<File
 				RelativePath=".\main.cpp"
 				>

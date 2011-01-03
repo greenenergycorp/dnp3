@@ -17,7 +17,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\boost_includes.vsprops"
+			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\boost_includes.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -79,7 +79,7 @@
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="4"
-			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\boost_includes.vsprops"
+			InheritedPropertySheets="..\config\local_dir.vsprops;..\config\output_dirs.vsprops;..\config\boost_includes.vsprops;..\config\common_boost_defines.vsprops"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>

@@ -62,7 +62,7 @@ protected:
 	IOServiceThread mTermThread;
 	TimerSourceASIO mTimerSrc;
 	auto_ptr<IPhysicalLayerAsync> pTermPhys;
-	
+
 	QueueingFDO fdo;
 	FlexibleObserverTerminalExtension fte;
 	LogTerminalExtension lte;
@@ -82,8 +82,8 @@ public:
 private:
 
 	IDataObserver* pObs;
-	ControlResponseTE crte;
 	MultiplexingDataObserver mdo;
+	ControlResponseTE crte;
 	DOTerminalExtension dote;
 };
 

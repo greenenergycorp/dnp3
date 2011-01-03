@@ -16,11 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
 #include "AsyncStartupTeardownTest.h"
+
+#include <boost/asio.hpp>
 
 using namespace std;
 using namespace apl;

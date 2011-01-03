@@ -16,9 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "AsyncPhysTestObject.h"
 
+#include <boost/asio.hpp>
 #include <APL/Exception.h>
 #include <sstream>
 

@@ -16,11 +16,13 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include "ASIOIncludes.h"
+
 #include "ASIOSerialHelpers.h"
 
 #include <sstream>
 #include "Exception.h"
+
+#include <boost/asio.hpp>
 
 using namespace boost::asio;
 using namespace boost::system;

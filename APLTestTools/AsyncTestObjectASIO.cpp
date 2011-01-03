@@ -16,8 +16,9 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "AsyncTestObjectASIO.h"
+#include <boost/asio.hpp>
 
 namespace apl {
 

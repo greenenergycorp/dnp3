@@ -16,7 +16,7 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include <boost/test/unit_test.hpp>
 #include <APLTestTools/TestHelpers.h>
 
@@ -27,123 +27,123 @@
 
 #include <map>
 #include <boost/bind.hpp>
+#include <boost/asio.hpp>
 
 using namespace std;
 using namespace apl;
 
-
-	class MockTimerHandler
-	{
-		public:
-			MockTimerHandler() : mCount(0)
-			{}
-
-			void OnExpiration() { ++mCount; }
-			size_t GetCount() { return mCount; }
-			
-		private:
-			size_t mCount;
-	};
-
-	class MonotonicReceiver : private Threadable
-	{
-		public:
-		MonotonicReceiver(boost::asio::io_service* apSrv) : 
-		mLast(-1),
-		mNum(0),
-		mMonotonic(true),
-		mpSrv(apSrv),
-		mThread(this) 
+class MockTimerHandler
+{
+	public:
+		MockTimerHandler() : mCount(0)
 		{}
 
-		void Receive(int aVal) {
-			if(aVal <= mLast) mMonotonic = false;
-			++mNum;
-			mLast = aVal;
-		}
-
-		bool IsMonotonic() { return mMonotonic; }
-		int Num() { return mNum; }
-
-		void Start() { mThread.Start(); }
-		void Stop()  { mThread.WaitForStop(); }
-
-		private:
-
-		int mLast;
-		int mNum;
-		bool mMonotonic;
-
-		boost::asio::io_service* mpSrv;
-
-		void Run()   { mpSrv->run(); }
+		void OnExpiration() { ++mCount; }
+		size_t GetCount() { return mCount; }
 		
-		Thread mThread;
-	};
+	private:
+		size_t mCount;
+};
 
-	BOOST_AUTO_TEST_SUITE(Timers)
-		BOOST_AUTO_TEST_CASE(TestOrderedDispatch)
-		{			
-			const int NUM = 10000;
+class MonotonicReceiver : private Threadable
+{
+	public:
+	MonotonicReceiver(boost::asio::io_service* apSrv) : 
+	mLast(-1),
+	mNum(0),
+	mMonotonic(true),
+	mpSrv(apSrv),
+	mThread(this) 
+	{}
 
-			boost::asio::io_service srv;
-			TimerSourceASIO ts(&srv);
-			MonotonicReceiver rcv(&srv);
-			
-			for(int i=0; i<NUM; ++i) { ts.Post(boost::bind(&MonotonicReceiver::Receive, &rcv, i)); }
+	void Receive(int aVal) {
+		if(aVal <= mLast) mMonotonic = false;
+		++mNum;
+		mLast = aVal;
+	}
 
-			rcv.Start();
-			rcv.Stop();
+	bool IsMonotonic() { return mMonotonic; }
+	int Num() { return mNum; }
 
-			BOOST_REQUIRE_EQUAL(NUM, rcv.Num());
-			BOOST_REQUIRE(rcv.IsMonotonic());
-		}
+	void Start() { mThread.Start(); }
+	void Stop()  { mThread.WaitForStop(); }
 
+	private:
 
-		BOOST_AUTO_TEST_CASE(ExpirationAndReuse)
-		{
-			MockTimerHandler mth;
-			boost::asio::io_service srv;
-			TimerSourceASIO ts(&srv);
-			ITimer* pT1 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
-			BOOST_REQUIRE_EQUAL(srv.run_one(), 1);
-			BOOST_REQUIRE_EQUAL(1, mth.GetCount());
-			ITimer* pT2 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
-			BOOST_REQUIRE_EQUAL(pT1, pT2); //The ASIO implementation should reuse timers
-		}
+	int mLast;
+	int mNum;
+	bool mMonotonic;
 
-		BOOST_AUTO_TEST_CASE(Cancelation)
-		{
-			MockTimerHandler mth;
-			boost::asio::io_service srv;
-			TimerSourceASIO ts(&srv);
-			ITimer* pT1 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
-			pT1->Cancel();
-			BOOST_REQUIRE_EQUAL(1, srv.run_one());
-			BOOST_REQUIRE_EQUAL(0, mth.GetCount());
-			ITimer* pT2 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
-			BOOST_REQUIRE_EQUAL(pT1, pT2);
-		}
+	boost::asio::io_service* mpSrv;
 
+	void Run()   { mpSrv->run(); }
+	
+	Thread mThread;
+};
+
+BOOST_AUTO_TEST_SUITE(Timers)
+	BOOST_AUTO_TEST_CASE(TestOrderedDispatch)
+	{			
+		const int NUM = 10000;
+
+		boost::asio::io_service srv;
+		TimerSourceASIO ts(&srv);
+		MonotonicReceiver rcv(&srv);
 		
-		BOOST_AUTO_TEST_CASE(MultipleOutstanding)
-		{
-			MockTimerHandler mth1;
-			MockTimerHandler mth2;
-			boost::asio::io_service srv;
-			TimerSourceASIO ts(&srv);
-			ITimer* pT1 = ts.Start(0, boost::bind(&MockTimerHandler::OnExpiration, &mth1));
-			ITimer* pT2 = ts.Start(100, boost::bind(&MockTimerHandler::OnExpiration, &mth2));
+		for(int i=0; i<NUM; ++i) { ts.Post(boost::bind(&MonotonicReceiver::Receive, &rcv, i)); }
 
-			BOOST_REQUIRE_NOT_EQUAL(pT1, pT2);
-			
-			BOOST_REQUIRE_EQUAL(1, srv.run_one());
-			BOOST_REQUIRE_EQUAL(1, mth1.GetCount());
-			BOOST_REQUIRE_EQUAL(0, mth2.GetCount());
-			
-			BOOST_REQUIRE_EQUAL(1, srv.run_one());
-			BOOST_REQUIRE_EQUAL(1, mth1.GetCount());
-			BOOST_REQUIRE_EQUAL(1, mth2.GetCount());
-		}
+		rcv.Start();
+		rcv.Stop();
+
+		BOOST_REQUIRE_EQUAL(NUM, rcv.Num());
+		BOOST_REQUIRE(rcv.IsMonotonic());
+	}
+
+
+	BOOST_AUTO_TEST_CASE(ExpirationAndReuse)
+	{
+		MockTimerHandler mth;
+		boost::asio::io_service srv;
+		TimerSourceASIO ts(&srv);
+		ITimer* pT1 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
+		BOOST_REQUIRE_EQUAL(srv.run_one(), 1);
+		BOOST_REQUIRE_EQUAL(1, mth.GetCount());
+		ITimer* pT2 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
+		BOOST_REQUIRE_EQUAL(pT1, pT2); //The ASIO implementation should reuse timers
+	}
+
+	BOOST_AUTO_TEST_CASE(Cancelation)
+	{
+		MockTimerHandler mth;
+		boost::asio::io_service srv;
+		TimerSourceASIO ts(&srv);
+		ITimer* pT1 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
+		pT1->Cancel();
+		BOOST_REQUIRE_EQUAL(1, srv.run_one());
+		BOOST_REQUIRE_EQUAL(0, mth.GetCount());
+		ITimer* pT2 = ts.Start(1, boost::bind(&MockTimerHandler::OnExpiration, &mth));
+		BOOST_REQUIRE_EQUAL(pT1, pT2);
+	}
+
+	
+	BOOST_AUTO_TEST_CASE(MultipleOutstanding)
+	{
+		MockTimerHandler mth1;
+		MockTimerHandler mth2;
+		boost::asio::io_service srv;
+		TimerSourceASIO ts(&srv);
+		ITimer* pT1 = ts.Start(0, boost::bind(&MockTimerHandler::OnExpiration, &mth1));
+		ITimer* pT2 = ts.Start(100, boost::bind(&MockTimerHandler::OnExpiration, &mth2));
+
+		BOOST_REQUIRE_NOT_EQUAL(pT1, pT2);
 		
-	BOOST_AUTO_TEST_SUITE_END()
+		BOOST_REQUIRE_EQUAL(1, srv.run_one());
+		BOOST_REQUIRE_EQUAL(1, mth1.GetCount());
+		BOOST_REQUIRE_EQUAL(0, mth2.GetCount());
+		
+		BOOST_REQUIRE_EQUAL(1, srv.run_one());
+		BOOST_REQUIRE_EQUAL(1, mth1.GetCount());
+		BOOST_REQUIRE_EQUAL(1, mth2.GetCount());
+	}
+	
+BOOST_AUTO_TEST_SUITE_END()

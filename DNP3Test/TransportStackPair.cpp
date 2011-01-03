@@ -16,8 +16,10 @@
 // specific language governing permissions and limitations
 // under the License.
 // 
-#include <APL/ASIOIncludes.h>
+
 #include "TransportStackPair.h"
+
+#include <boost/asio.hpp>
 
 #include <APL/Logger.h>
 
