@@ -1,0 +1,15 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>reef.protocol.dnp3</groupId>    
+  <artifactId>dnp3java</artifactId>
+  <packaging>jar</packaging>
+  <version>0.9.3</version>
+  <distributionManagement>
+    <repository>
+      <id>gec-release</id>
+      <name>gec releases</name>
+      <url>http://svn.plymouthsystems.com:8082/archiva/repository/internal</url>
+    </repository>    
+  </distributionManagement>  
+</project>

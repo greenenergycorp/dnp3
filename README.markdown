@@ -115,10 +115,18 @@ Rake is a ruby gem. To install rake:
 
 ## Creating Native -> Java (JNI) Bindings ##
 
-We have created native bindings for java using SWIG. The native libraries are embedded into the jar file 
-and extracted before use on the target, this allow us to keep the versions perfectly in-sync and keep 
-installation time and complexity to a minimum. We make use of the "buildr" tool to automate uploading the
-jar to the repository.
+We have created native bindings for java using SWIG. Prior to version 0.9.3, the native libraries where
+embedded into the jar file and extracted before use on the target. This caused us problems with OSGi
+and made integrating the jar difficult with some build tools.
+
+The shared library must now be installed in a directory found on the java.library.path. Typical locations are
+/usr/lib or C:\<windir>\System32.
+
+We keep some precompiled versions of the library on the project site for various platforms.
+
+1) Use rake to generate the bindings and build the shared library. This step also outputs the java code.
+2) Cd to the DNP3Java dir and use Maven to build/deploy the jar.
+
 
 ## Building the libraries and tests ##
 
