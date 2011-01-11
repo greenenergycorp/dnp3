@@ -29,11 +29,11 @@ namespace apl { namespace dnp {
 
 /* DataPoll - base class */
 
-DataPoll::DataPoll(Logger* apLogger, IDataObserver* apObs) : 
+DataPoll::DataPoll(Logger* apLogger, IDataObserver* apObs) :
 MasterTaskBase(apLogger),
 mpObs(apObs)
 {
-	
+
 }
 
 TaskResult DataPoll::_OnPartialResponse(const APDU& f)
@@ -56,7 +56,7 @@ void DataPoll::ReadData(const APDU& f)
 
 /* Class Poll */
 
-ClassPoll::ClassPoll(Logger* apLogger, IDataObserver* apObs) : 
+ClassPoll::ClassPoll(Logger* apLogger, IDataObserver* apObs) :
 DataPoll(apLogger, apObs),
 mClassMask(PC_INVALID)
 {}
@@ -75,4 +75,4 @@ void ClassPoll::ConfigureRequest(APDU& arAPDU)
 }
 
 
-}} //ens ns
+}} //end ns
